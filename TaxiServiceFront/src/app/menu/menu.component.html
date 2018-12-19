@@ -1,0 +1,46 @@
+<div *ngIf = "!isntLoggedOn()">
+  <ul>
+    <li>
+      <button (click)="LogOut()" class="buttonMeni"><i>LogOut</i></button>
+    </li>
+    <li>
+        <a [routerLink]="['/userHome']">
+          <i>Home</i>
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/myProfile']">
+          <i>My Information</i>
+        </a>
+      </li>
+      <li>
+          <a [routerLink]="['/search']">
+            <i>search</i>
+          </a>
+        </li>
+  </ul>
+  </div>
+  
+  
+  <div *ngIf = "isAdmin()" >
+    <ul>
+      <li>
+        <button (click)="LogOut()" class="buttonMeni"><i>LogOut</i></button>
+      </li>
+      <li>
+          <a [routerLink]="['/adminDashboard']">
+            <i>Home</i>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/myProfile']">
+            <i>My Information</i>
+          </a>
+        </li>
+        <li>
+            <a [routerLink]="['/search']">
+              <i>search</i>
+            </a>
+          </li>
+    </ul>
+    </div>
