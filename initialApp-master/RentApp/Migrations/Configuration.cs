@@ -38,11 +38,11 @@ namespace RentApp.Migrations
                 manager.Create(role);
             }
 
-            if (!context.Roles.Any(r => r.Name == "Manager"))
+            if (!context.Roles.Any(r => r.Name == "Driver"))
             {
                 var store = new RoleStore<IdentityRole>(context);
                 var manager = new RoleManager<IdentityRole>(store);
-                var role = new IdentityRole { Name = "Manager" };
+                var role = new IdentityRole { Name = "Driver" };
 
                 manager.Create(role);
             }

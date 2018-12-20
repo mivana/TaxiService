@@ -1,3 +1,23 @@
 <p>
   home works!
 </p>
+
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="loginDiv">
+  <div>
+      <label>Email</label><br/>
+      <input type="text" formControlName="email" />
+      <div *ngIf="submitted && f.email.errors" >
+          <div *ngIf="f.email.errors.required">Email is required</div>
+      </div>
+  </div>
+  <div>
+      <label>Password</label><br/>
+      <input type="text" formControlName="password"  />
+      <div *ngIf="submitted && f.password.errors" >
+          <div *ngIf="f.password.errors.required">Password is required</div>
+      </div>
+  </div>
+  <div>
+      <button >Login</button>
+  </div>
+</form>
