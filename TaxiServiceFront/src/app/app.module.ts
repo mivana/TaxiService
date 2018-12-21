@@ -12,20 +12,25 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { UserHomeComponent } from './user-home/user-home.component';
 import { JwtInterceptor } from './helper/jwt.interceptor';
 import { AppUserAuthGuard } from './guards/appUser.guard';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { UserService } from './services/userService.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     MenuComponent,
     HomeComponent,
-    UserHomeComponent
+    UserHomeComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [
         {
@@ -35,6 +40,7 @@ import { AppUserAuthGuard } from './guards/appUser.guard';
         },
     AuthenticationService,
     SessionService,
+    UserService,
     AppUserAuthGuard
   ],
   bootstrap: [AppComponent]
