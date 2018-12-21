@@ -281,6 +281,14 @@
     <Compile Include="Migrations\201812191057322_firstmigration3.Designer.cs">
       <DependentUpon>201812191057322_firstmigration3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812211314123_secondMigration.cs" />
+    <Compile Include="Migrations\201812211314123_secondMigration.Designer.cs">
+      <DependentUpon>201812211314123_secondMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812211328292_thridMigration.cs" />
+    <Compile Include="Migrations\201812211328292_thridMigration.Designer.cs">
+      <DependentUpon>201812211328292_thridMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -387,6 +395,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812191057322_firstmigration3.resx">
       <DependentUpon>201812191057322_firstmigration3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812211314123_secondMigration.resx">
+      <DependentUpon>201812211314123_secondMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812211328292_thridMigration.resx">
+      <DependentUpon>201812211328292_thridMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

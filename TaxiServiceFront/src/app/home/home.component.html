@@ -48,6 +48,7 @@
         <input type="text" formControlName="username" />
         <div *ngIf="submitted && f.username.errors" class="errorText">
             <div *ngIf="f.username.errors.required">User Name is required</div>
+            <div *ngIf="showError">User Name is not avaible</div>
         </div>
     </div>
     <div>
@@ -59,6 +60,7 @@
             <div *ngIf="registerForm.controls['password'].hasError('hasCapitalCase')">Must have at least one upper case letter</div>
             <div *ngIf="registerForm.controls['password'].hasError('hasSmallCase')">Must have at least one lower case letter</div>
             <div *ngIf="registerForm.controls['password'].hasError('hasSpecialCharacters')">Must have at least one special character</div>
+            <div *ngIf="registerForm.controls['password'].hasError('minlength')">Must be at least 6 character long</div>
         </div>
     </div>
     <div>

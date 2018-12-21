@@ -7,23 +7,24 @@ using System.Web;
 
 namespace RentApp.Models.Entities
 {
-    public enum UserRole
-    {
-        AppUser = 0,
-        Driver = 1,
-        Admin = 2
-    }
-
     public class AppUser
     {
+        public enum UserRole
+        {
+            AppUser = 0,
+            Driver = 1,
+            Admin = 2
+        }
+
         public int Id { get; set; }
 
         [Column(TypeName = "VARCHAR")]
         [StringLength(100)]
         public string Email { get; set; }
         public string FullName { get; set; }
-        public int? JMBG { get; set; }
-        public int? ContactNumber { get; set; }
+        public string Username { get; set; }
+        public string JMBG { get; set; }
+        public string ContactNumber { get; set; }
         public string Gender { get; set; }
         public bool DriverFree { get; set; }
         public bool Deleted { get; set; }

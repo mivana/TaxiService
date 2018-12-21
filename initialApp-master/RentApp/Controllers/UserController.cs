@@ -42,5 +42,18 @@ namespace RentApp.Controllers
             return unitOfWork.AppUsers.GetAll().Where(u => u.Deleted == false);
         }
 
+        [AllowAnonymous]
+        [Route("Unique")]
+        public bool Unique(string username)
+        {
+            var result = unitOfWork.AppUsers.Find(u => u.Username.Equals(username));
+            if(result != null)
+            {
+                return false;
+            }
+            return true;
+        }
+       
+
     }
 }

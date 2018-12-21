@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -15,6 +16,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using RentApp.Models;
 using RentApp.Models.Entities;
+using RentApp.Persistance.UnitOfWork;
 using RentApp.Providers;
 using RentApp.Results;
 
@@ -25,9 +27,11 @@ namespace RentApp.Controllers
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
+        private readonly IUnitOfWork unitOfWork;
 
-        public AccountController()
+        public AccountController(IUnitOfWork unitOfWork)
         {
+            this.unitOfWork = unitOfWork;
         }
 
         public AccountController(ApplicationUserManager userManager,
@@ -316,16 +320,48 @@ namespace RentApp.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+
             }
 
-            var user = new RAIdentityUser() { UserName = model.Email, Email = model.Email };
-
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
+            if (model.Role != "AppUser" && model.Role != "Driver")
             {
-                return GetErrorResult(result);
+                return BadRequest();
             }
+
+            AppUser.UserRole userRole;
+
+            if (model.Role == "AppUser")
+            {
+                userRole = AppUser.UserRole.AppUser;
+            }
+            else
+            {
+                userRole = AppUser.UserRole.Driver;
+            }
+
+            var appUser = new AppUser()
+            {
+                Email = model.Email,
+                Username = model.Username,
+                FullName = model.FullName,
+                Role = userRole,
+                JMBG = model.JMBG,
+                ContactNumber = model.ContactNumber,
+                Blocked = false,
+                DriverFree = true,
+                Deleted = false
+            };
+
+            var user = new RAIdentityUser()
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                AppUser = appUser,
+                PasswordHash = RAIdentityUser.HashPassword(model.Password)
+            };
+
+            UserManager.Create(user);
+            UserManager.AddToRole(user.Id, model.Role);
 
             return Ok();
         }

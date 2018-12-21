@@ -15,5 +15,9 @@ export class UserService {
         return this.http.post(AppSettings.API_ENDPOINT+'/api/Account/Register', user);
     }
 
+    CheckIfUnique(username: string):Observable<any>{
+        debugger
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/User/Unique', username);
+    }
 
 }

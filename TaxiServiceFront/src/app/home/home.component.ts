@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
 
   genders: string[] = ['Male','Female'];
   default: string = 'Male';
+  showError: boolean;
 
   constructor(private fb: FormBuilder,
               private service: UserService) { }
@@ -40,8 +41,8 @@ export class HomeComponent implements OnInit {
          PasswordValidation.patternValidator(/[a-z]/, { hasSmallCase: true }),
          // 5. check whether the entered password has a special character
          PasswordValidation.patternValidator(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, { hasSpecialCharacters: true }),
-         // 6. Has a minimum length of 8 characters
-         Validators.minLength(8)
+         // 6. Has a minimum length of 6 characters
+         Validators.minLength(6)
         ]],
       confirmPassword: ['',Validators.required]
     },
@@ -66,16 +67,28 @@ export class HomeComponent implements OnInit {
     }
 
     //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value));
-    this.service.register(this.registerForm.value,"AppUser")
-    .pipe(first())
-        .subscribe(
-            data => {
-                  alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value));
-            },
-            error => {
-                  alert("GRESKA")
-            });
-
+    
+    this.service.CheckIfUnique(this.f.username.value).subscribe(
+        data => 
+        {
+          this.service.register(this.registerForm.value,"AppUser")
+          .pipe(first())
+            .subscribe(
+                data => {
+                      alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value));
+                },
+                error => {
+                      var errMesage = error.error;
+                      
+                });
+        },
+        error=> {
+          var errMesage = error.error;
+          if(errMesage == "Username not unique")
+            this.showError = true;
+        });
+    
+    
   
   }
 
