@@ -1,8 +1,11 @@
 <p>
   Already have an account?  <a [routerLink]="['/login']">Login</a> here
 </p>
-
-
+<div class="errorText">
+    <div *ngIf="resultError" class="errorText">Error while trying to register, please try again</div>
+    <div *ngIf="showError" class="errorText">Username is not avaible</div>
+    <div *ngIf="mailError" class="errorText">This mail already has an account</div>
+</div>
 <div>
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="registerDiv">
     <div>
@@ -48,7 +51,7 @@
         <input type="text" formControlName="username" />
         <div *ngIf="submitted && f.username.errors" class="errorText">
             <div *ngIf="f.username.errors.required">User Name is required</div>
-            <div *ngIf="showError">User Name is not avaible</div>
+            
         </div>
     </div>
     <div>

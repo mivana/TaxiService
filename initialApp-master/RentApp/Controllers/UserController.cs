@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using RentApp.Models;
 using RentApp.Models.Entities;
 using RentApp.Persistance.UnitOfWork;
 using System;
@@ -7,6 +9,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -42,18 +45,68 @@ namespace RentApp.Controllers
             return unitOfWork.AppUsers.GetAll().Where(u => u.Deleted == false);
         }
 
+        // POST api/Account/Register
         [AllowAnonymous]
-        [Route("Unique")]
-        public bool Unique(string username)
+        [Route("Register")]
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
-            var result = unitOfWork.AppUsers.Find(u => u.Username.Equals(username));
-            if(result != null)
+            if (!ModelState.IsValid)
             {
-                return false;
+                return BadRequest(ModelState);
+
             }
-            return true;
+
+            if (model.Role != "AppUser" && model.Role != "Driver")
+            {
+                return BadRequest();
+            }
+
+            AppUser.UserRole userRole;
+
+            if (model.Role == "AppUser")
+            {
+                userRole = AppUser.UserRole.AppUser;
+            }
+            else
+            {
+                userRole = AppUser.UserRole.Driver;
+            }
+
+            var result = unitOfWork.AppUsers.Find(u => u.Username == model.Username);
+            if (result.Count() != 0)
+                return BadRequest("Username not unique");
+
+            var resultE = unitOfWork.AppUsers.Find(u => u.Email == model.Email);
+            if (resultE.Count() != 0)
+                return BadRequest("Email has account");
+
+            var appUser = new AppUser()
+            {
+                Email = model.Email,
+                FullName = model.FullName,
+                Gender = model.Gender,
+                Username = model.Username,
+                Role = userRole,
+                JMBG = model.JMBG,
+                ContactNumber = model.ContactNumber,
+                Blocked = false,
+                DriverFree = true,
+                Deleted = false
+            };
+
+            var user = new RAIdentityUser()
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                AppUser = appUser,
+                PasswordHash = RAIdentityUser.HashPassword(model.Password)
+            };
+
+            UserManager.Create(user);
+            UserManager.AddToRole(user.Id, model.Role);
+
+            return Ok();
         }
-       
 
     }
 }

@@ -12,12 +12,7 @@ export class UserService {
 
     register(user: User, role: string) {
         user.Role = role;
-        return this.http.post(AppSettings.API_ENDPOINT+'/api/Account/Register', user);
-    }
-
-    CheckIfUnique(username: string):Observable<any>{
-        debugger
-        return this.http.post(AppSettings.API_ENDPOINT + '/api/User/Unique', username);
+        return this.http.post(AppSettings.API_ENDPOINT+'/api/User/Register', user);
     }
 
 }

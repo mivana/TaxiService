@@ -15,6 +15,9 @@ import { AppUserAuthGuard } from './guards/appUser.guard';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { UserService } from './services/userService.service';
+import { AdminAuthGuard } from './guards/admin.guard';
+import { DriverAuthGuard } from './guards/driver.guard';
+import { MyProfileComponent } from './my-profile/my-profile.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,8 @@ import { UserService } from './services/userService.service';
     HomeComponent,
     UserHomeComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    MyProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +45,9 @@ import { UserService } from './services/userService.service';
     AuthenticationService,
     SessionService,
     UserService,
-    AppUserAuthGuard
+    AppUserAuthGuard,
+    AdminAuthGuard,
+    DriverAuthGuard
   ],
   bootstrap: [AppComponent]
 })

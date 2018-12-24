@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../services/userService.service';
 import { PasswordValidation } from '../Validators/password-validation.validation';
 import { first } from 'rxjs/operators';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,9 @@ export class RegisterComponent implements OnInit {
   
     genders: string[] = ['Male','Female'];
     default: string = 'Male';
-    showError: boolean;
+    showError: boolean = false;
+  resultError: boolean = false;
+  mailError: boolean;
   
     constructor(private fb: FormBuilder,
                 private service: UserService) { }
@@ -59,6 +62,9 @@ export class RegisterComponent implements OnInit {
   
     onSubmit() {
       this.submitted = true;
+      this.showError = false;
+      this.mailError = false;
+      this.resultError = false;
   
       // stop here if form is invalid
       if (this.registerForm.invalid) {
@@ -67,9 +73,6 @@ export class RegisterComponent implements OnInit {
   
       //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value));
       
-      this.service.CheckIfUnique(this.f.username.value).subscribe(
-          data => 
-          {
             this.service.register(this.registerForm.value,"AppUser")
             .pipe(first())
               .subscribe(
@@ -78,16 +81,13 @@ export class RegisterComponent implements OnInit {
                   },
                   error => {
                         var errMesage = error.error;
-                        
+                        if(errMesage.Message == "Username not unique")
+                          this.showError = true;
+                        if(errMesage.Message == "Email has account")
+                          this.mailError = true;
+                        else
+                          this.resultError = true;          
                   });
-          },
-          error=> {
-            var errMesage = error.error;
-            if(errMesage == "Username not unique")
-              this.showError = true;
-          });
-      
-      
     
     }
   

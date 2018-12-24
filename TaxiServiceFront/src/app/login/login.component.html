@@ -1,7 +1,10 @@
 <p>
     Don't have an account?  <a [routerLink]="['/register']">Register</a> here
   </p>
-
+<div class="errorText">
+    <div *ngIf="showResult">The mail or password is incorrect!</div>
+    <div *ngIf="showError">Error while trying to log in, please try again</div>
+</div>
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="loginDiv">
   <div>
       <label>Email</label><br/>
@@ -12,7 +15,7 @@
   </div>
   <div>
       <label>Password</label><br/>
-      <input type="text" formControlName="password"  />
+      <input type="password" formControlName="password"  />
       <div *ngIf="submitted && f.password.errors" class="errorText">
           <div *ngIf="f.password.errors.required">Password is required</div>
       </div>

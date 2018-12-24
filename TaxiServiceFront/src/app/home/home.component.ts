@@ -68,9 +68,6 @@ export class HomeComponent implements OnInit {
 
     //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value));
     
-    this.service.CheckIfUnique(this.f.username.value).subscribe(
-        data => 
-        {
           this.service.register(this.registerForm.value,"AppUser")
           .pipe(first())
             .subscribe(
@@ -81,14 +78,6 @@ export class HomeComponent implements OnInit {
                       var errMesage = error.error;
                       
                 });
-        },
-        error=> {
-          var errMesage = error.error;
-          if(errMesage == "Username not unique")
-            this.showError = true;
-        });
-    
-    
   
   }
 

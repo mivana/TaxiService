@@ -18,49 +18,13 @@ export class AuthenticationService {
             let headers = new HttpHeaders();
             headers = headers.append('Content-type', 'application/x-www-form-urlencoded');
             
-            let x = this.http.post
+            return this.http.post
             (AppSettings.API_ENDPOINT+'/oauth/token','username='+email+'&password='+password+'&grant_type=password',
             {"headers": headers}) as Observable<any>
             
            /* let x = this.http.post<any>(AppSettings.API_ENDPOINT+'/oauth/token',
             { email: email, password: password, grant_type: 'AppUser' })*/
 
-            x.subscribe(
-                res => {
-                    console.log(res.access_token);
-          
-                    let jwt = res.access_token;
-
-                    let jwtData = jwt.split('.')[1]
-                    let decodedJwtJsonData = window.atob(jwtData)
-                    let decodedJwtData = JSON.parse(decodedJwtJsonData)
-
-                    let role = decodedJwtData.role
-
-                    console.log('jwtData: ' + jwtData)
-                    console.log('decodedJwtJsonData: ' + decodedJwtJsonData)
-                    console.log('decodedJwtData: ' + decodedJwtData)
-                    console.log('Role ' + role)
-
-                    localStorage.setItem('jwt', jwt)
-                    localStorage.setItem('role', role);
-
-                    if(SessionService.isAdmin())
-                    {
-                        this.router.navigate(['/adminDashboard']);
-                    }
-                    else
-                    {
-                        this.router.navigate(['/userHome']);
-                    }
-
-                },
-                err => {
-                    console.log("Error occured");
-                });
-            }
-
-            
 
 
             /* let x = this.http.get(AppSettings.API_ENDPOINT+'/api/Services') as Observable<any>
@@ -74,6 +38,7 @@ export class AuthenticationService {
                 }
             );  */
     }
+}
  
     logout() {
         // remove user from local storage to log user out
