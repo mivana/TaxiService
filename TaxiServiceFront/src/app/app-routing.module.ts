@@ -8,12 +8,18 @@ import { AppUserAuthGuard } from './guards/appUser.guard';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { AdminAuthGuard } from './guards/admin.guard';
 import { DriverAuthGuard } from './guards/driver.guard';
+import { MenuComponent } from './menu/menu.component';
+import { AllUsersGuard } from './guards/allUsers.guard';
 
 export const routes: Routes = [
   {
     path: "",
     redirectTo: "register",
     pathMatch: "full"
+  },
+  {
+    path: "menu",
+    component: MenuComponent,
   },
   {
     path: "register",
@@ -31,7 +37,7 @@ export const routes: Routes = [
   {
     path: "myProfile",
     component: MyProfileComponent,
-    canActivate: [[AppUserAuthGuard],[AdminAuthGuard],[DriverAuthGuard]]
+    canActivate: [AllUsersGuard]
   },
   {
     path: "login",

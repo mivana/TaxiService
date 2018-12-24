@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'TaxiServiceFront';
+  constructor()
+  {
+    localStorage.removeItem("role");
+    localStorage.removeItem("jwt");
+  }
 }

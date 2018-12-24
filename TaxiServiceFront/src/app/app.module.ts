@@ -18,6 +18,7 @@ import { UserService } from './services/userService.service';
 import { AdminAuthGuard } from './guards/admin.guard';
 import { DriverAuthGuard } from './guards/driver.guard';
 import { MyProfileComponent } from './my-profile/my-profile.component';
+import { AllUsersGuard } from './guards/allUsers.guard';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { MyProfileComponent } from './my-profile/my-profile.component';
     UserService,
     AppUserAuthGuard,
     AdminAuthGuard,
-    DriverAuthGuard
+    DriverAuthGuard,
+    AllUsersGuard
   ],
   bootstrap: [AppComponent]
 })
