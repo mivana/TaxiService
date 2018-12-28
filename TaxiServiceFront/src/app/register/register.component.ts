@@ -4,6 +4,7 @@ import { UserService } from '../services/userService.service';
 import { PasswordValidation } from '../Validators/password-validation.validation';
 import { first } from 'rxjs/operators';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -21,6 +22,7 @@ export class RegisterComponent implements OnInit {
   mailError: boolean;
   
     constructor(private fb: FormBuilder,
+                private router: Router,
                 private service: UserService) { }
   
     ngOnInit() {
@@ -55,6 +57,16 @@ export class RegisterComponent implements OnInit {
       this.registerForm.controls['gender'].setValue(this.default, {onlySelf: true});
     }
     
+    
+    ngAfterViewInit()
+    {
+      this.registerForm.valueChanges.subscribe(
+        data =>{
+          this.submitted = false;
+        }
+      )
+    }
+
    
     get f() { return this.registerForm.controls; }
   
@@ -77,7 +89,7 @@ export class RegisterComponent implements OnInit {
             .pipe(first())
               .subscribe(
                   data => {
-                        alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value));
+                      this.router.navigate(['userHome']);
                   },
                   error => {
                         var errMesage = error.error;
@@ -86,7 +98,8 @@ export class RegisterComponent implements OnInit {
                         if(errMesage.Message == "Email has account")
                           this.mailError = true;
                         else
-                          this.resultError = true;          
+                          this.resultError = true;  
+                        this.submitted = false;        
                   });
     
     }

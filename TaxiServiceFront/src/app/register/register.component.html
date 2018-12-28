@@ -76,7 +76,7 @@
     <div class="errorText" *ngIf="registerForm.controls.confirmPassword.errors?.MatchPassword">Password not match</div>
    
     <div>
-        <button >Register</button>
+        <button [disabled]="submitted">Register</button>
     </div>
   </form>
   </div>

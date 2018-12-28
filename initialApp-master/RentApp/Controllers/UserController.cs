@@ -45,6 +45,27 @@ namespace RentApp.Controllers
             return unitOfWork.AppUsers.GetAll().Where(u => u.Deleted == false);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "AppUser,Driver,Admin")]
+        [Route("GetActiveInfo")]
+        [ResponseType(typeof(AppUser))]
+        public IHttpActionResult GetActiveInfo()
+        {
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+
+            if (user != null)
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                return Ok(user);
+            }
+            return BadRequest();
+
+        }
+
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
@@ -107,6 +128,108 @@ namespace RentApp.Controllers
 
             return Ok();
         }
+
+        [HttpPut]
+        [Authorize(Roles ="Admin,AppUser")]
+        [ResponseType(typeof(AppUser))]
+        public IHttpActionResult PutUser(int id, AppUser user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != user.Id)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                
+                var result = unitOfWork.AppUsers.Find(n => n.Username == user.Username && n.Id != user.Id);
+                if (result.Count() != 0)
+                    return BadRequest("Username not Unique");
+
+                unitOfWork.AppUsers.Update(user);
+                unitOfWork.Complete();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+
+        }
+
+        [HttpPut]
+        [Route("UpdateUsername")]
+        [Authorize(Roles = "Admin,AppUser")]
+        [ResponseType(typeof(AppUser))]
+        public IHttpActionResult UpdateUsername(int id, AppUser user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var us = unitOfWork.AppUsers.FirstOrDefault(i => i.Id == id);
+            if(us == null)
+            {
+                return BadRequest();
+            }
+
+            //if (id != user.Id)
+            //{
+            //    return BadRequest();
+            //}
+
+            try
+            {
+                var result = unitOfWork.AppUsers.Find(n => n.Username == user.Username);
+                if (result.Count() != 0)
+                    return BadRequest("Username not Unique");
+
+                user.Username = user.Username;
+
+                unitOfWork.AppUsers.Update(user);
+                unitOfWork.Complete();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+
+        }
+
+
+        private bool UserExists(int id)
+        {
+            var entity = unitOfWork.AppUsers.Get(id);
+
+            if (entity == null || entity.Deleted == true)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
 
     }
 }

@@ -2,7 +2,8 @@ export class User {
     Id: string;
     Email: string;
     FullName: string;
-    SocialSecurityNumber: string;
+    Username: string;
+    JMBG: string;
     ContactNumber: string;
     DriverFree: boolean;
     Deleted: boolean;

@@ -25,9 +25,17 @@ export class LoginComponent implements OnInit {
       email: ['', Validators.required],
       password: ['', Validators.required],
     });
-
-
   }
+
+  ngAfterViewInit()
+    {
+      this.loginForm.valueChanges.subscribe(
+        data =>{
+          this.submitted = false;
+        }
+      )
+    }
+
 
    // convenience getter for easy access to form fields
    get f() { return this.loginForm.controls; }
@@ -79,6 +87,7 @@ export class LoginComponent implements OnInit {
                 this.showResult = true;
             else   
                 this.showError = true;
+            this.submitted = false;
         });
   }
 

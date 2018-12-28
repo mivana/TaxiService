@@ -118,7 +118,7 @@ namespace RentApp.Controllers
             }
 
             IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
-                model.NewPassword);
+                model.Password);
             
             if (!result.Succeeded)
             {
