@@ -10,6 +10,10 @@ import { AdminAuthGuard } from './guards/admin.guard';
 import { DriverAuthGuard } from './guards/driver.guard';
 import { MenuComponent } from './menu/menu.component';
 import { AllUsersGuard } from './guards/allUsers.guard';
+import { OrderTaxiComponent } from './order-taxi/order-taxi.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { AddDriverComponent } from './add-driver/add-driver.component';
+import { AdminAppUserAuthGuard } from './guards/adminAppUser.guard';
 
 export const routes: Routes = [
   {
@@ -42,7 +46,23 @@ export const routes: Routes = [
   {
     path: "login",
     component: LoginComponent,
-  }
+  },
+  {
+    path: "orderTaxi",
+    component: OrderTaxiComponent,
+    canActivate: [AdminAppUserAuthGuard]
+  },
+  {
+    path: "adminDashboard",
+    component: AdminDashboardComponent,
+    canActivate: [AdminAuthGuard]
+  },
+  {
+    path: "addDriver",
+    component: AddDriverComponent,
+    canActivate: [AdminAuthGuard]
+  },
+  
 ];
 
 @NgModule({

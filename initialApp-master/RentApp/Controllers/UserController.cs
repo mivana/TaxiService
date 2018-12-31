@@ -129,6 +129,8 @@ namespace RentApp.Controllers
             return Ok();
         }
 
+
+
         [HttpPut]
         [Authorize(Roles ="Admin,AppUser")]
         [ResponseType(typeof(AppUser))]
@@ -146,10 +148,9 @@ namespace RentApp.Controllers
 
             try
             {
-                
-                var result = unitOfWork.AppUsers.Find(n => n.Username == user.Username && n.Id != user.Id);
+                var result = unitOfWork.AppUsers.Find(n => n.Username == user.Username && n.Id.ToString() != user.Id.ToString());
                 if (result.Count() != 0)
-                    return BadRequest("Username not Unique");
+                        return BadRequest("Username not Unique");
 
                 unitOfWork.AppUsers.Update(user);
                 unitOfWork.Complete();
@@ -216,6 +217,91 @@ namespace RentApp.Controllers
             return StatusCode(HttpStatusCode.NoContent);
 
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [Route("RegisterDriver")]
+        public IHttpActionResult RegisterDriver(RegisterDriverBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+
+            }
+
+            if (model.Role != "AppUser" && model.Role != "Driver")
+            {
+                return BadRequest();
+            }
+
+            AppUser.UserRole userRole;
+
+            if (model.Role == "AppUser")
+            {
+                userRole = AppUser.UserRole.AppUser;
+            }
+            else
+            {
+                userRole = AppUser.UserRole.Driver;
+            }
+
+            var result = unitOfWork.AppUsers.Find(u => u.Username == model.Username);
+            if (result.Count() != 0)
+                return BadRequest("Username not unique");
+
+            var resultE = unitOfWork.AppUsers.Find(u => u.Email == model.Email);
+            if (resultE.Count() != 0)
+                return BadRequest("Email has account");
+
+            var appUser = new AppUser()
+            {
+                Email = model.Email,
+                FullName = model.FullName,
+                Gender = model.Gender,
+                Username = model.Username,
+                Role = userRole,
+                JMBG = model.JMBG,
+                ContactNumber = model.ContactNumber,
+                Blocked = false,
+                DriverFree = true,
+                Deleted = false
+            };
+
+            var user = new RAIdentityUser()
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                AppUser = appUser,
+                PasswordHash = RAIdentityUser.HashPassword(model.Password)
+            };
+
+            UserManager.Create(user);
+            UserManager.AddToRole(user.Id, model.Role);
+
+            CarType ct;
+            if(model.CarType == "Standard")
+            {
+                ct = CarType.Standard;
+            }
+            else
+            {
+                ct = CarType.Combi;
+            }
+
+            var resultT = unitOfWork.Cars.Find(u => u.TaxiNumber == model.TaxiNumber);
+            if (resultT.Count() != 0)
+                return BadRequest("TaxiNumber not unique");
+
+            Car newCar = new Car() { RegistrationPlate = model.RegistrationPlate, YearMade = model.YearMade, TaxiNumber = model.TaxiNumber, CarType = ct };
+            newCar.Driver = user.AppUser;
+            newCar.AppUserID = user.AppUser.Id;
+
+            unitOfWork.Cars.Add(newCar);
+            unitOfWork.Complete();
+
+            return Ok();
+        }
+
 
 
         private bool UserExists(int id)

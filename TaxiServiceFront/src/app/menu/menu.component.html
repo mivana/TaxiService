@@ -1,45 +1,66 @@
 <div *ngIf = "!isntLoggedOn()">
-<ul>
+  <ul>
     <li>
-      <button (click)="LogOut()" class="buttonMeni"><i>LogOut</i></button>
+      <a [routerLink]="['/userHome']">
+        <i>HomeUSER</i>
+      </a>
     </li>
     <li>
-        <a [routerLink]="['/userHome']">
-          <i>HomeUSER</i>
-        </a>
-      </li>
-      <li>
-        <a [routerLink]="['/myProfile']">
-          <i>My Information</i>
-        </a>
-      </li>
-      <li>
-          <a [routerLink]="['/search']">
-            <i>search</i>
-          </a>
-        </li>
+      <a [routerLink]="['/myProfile']">
+        <i>My Information</i>
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/search']">
+        <i>search</i>
+      </a>
+    </li>
+    <li class="order">
+      <a [routerLink]="['/orderTaxi']">
+        <i>Order a Taxi</i>
+      </a>
+    </li>
+    <li style="float: right">
+      <button (click)="LogOut()" class="buttonMeni"><i>LogOut</i></button>
+    </li>
   </ul>
 </div>
   
   <div *ngIf = "isAdmin()" >
     <ul>
       <li>
-        <button (click)="LogOut()" class="buttonMeni"><i>LogOut</i></button>
+        <a [routerLink]="['/adminDashboard']">
+          <i>Home</i>
+        </a>
       </li>
       <li>
-          <a [routerLink]="['/adminDashboard']">
-            <i>Home</i>
-          </a>
-        </li>
-        <li>
-          <a [routerLink]="['/myProfile']">
-            <i>My Information</i>
-          </a>
-        </li>
-        <li>
-            <a [routerLink]="['/search']">
-              <i>search</i>
-            </a>
-          </li>
+        <a [routerLink]="['/addDriver']">
+          <i>Add a Driver</i>
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/addCar']">
+          <i>Add a Car</i>
+        </a>
+      </li>
+      <li class="order">
+        <a [routerLink]="['/orderTaxi']">
+          <i>Order a Taxi</i>
+        </a>
+      </li>
+      <li style="float: right">
+        <button (click)="LogOut()" class="buttonMeni"><i>LogOut</i></button>
+      </li>
+      <li style="float: right">
+        <a [routerLink]="['/search']">
+          <i>search</i>
+        </a>
+      </li>
+      <li style="float: right">
+        <a [routerLink]="['/myProfile']">
+          <i>My Information</i>
+        </a>
+      </li>
+      
     </ul>
-    </div>
+  </div>

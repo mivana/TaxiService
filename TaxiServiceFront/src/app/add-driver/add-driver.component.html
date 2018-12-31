@@ -1,0 +1,117 @@
+<div class="margins">
+  <h3>Add a new Driver</h3>
+
+  <div class="errorText">
+    <div *ngIf="result" class="resultText">Driver added successfully!</div>
+    <div *ngIf="resultError" class="errorText">Error while trying to register, please try again</div>
+    <div *ngIf="showError" class="errorText">Username is not avaible</div>
+    <div *ngIf="mailError" class="errorText">This mail already has an account</div>
+</div>
+
+<form [formGroup]="driverForm" (ngSubmit)="onSubmit()">
+<div class="column">
+    <h4>Personal information</h4>
+    <div>
+        <label>Full Name</label><br/>
+        <input type="text" formControlName="fullName" />
+        <div *ngIf="submitted && f.fullName.errors" class="errorText">
+            <div *ngIf="f.fullName.errors.required" >First Name is required</div>
+        </div>
+    </div>
+    <div>
+        <label>Gender</label><br/>
+        <select id="gender" formControlName="gender">
+            <option *ngFor="let g of genders" [ngValue]="g">{{ g }}</option>
+        </select>
+    </div>
+    <div>
+        <label>JMBG</label><br/>
+        <input type="text" formControlName="jmbg"  />
+        <div *ngIf="submitted && f.jmbg.errors" class="errorText">
+            <div *ngIf="f.jmbg.errors.required">JMBG is required</div>
+        </div>
+    </div>
+    <div>
+        <label>Contact Number</label><br/>
+        <input type="text" formControlName="contactNumber" />
+        <div *ngIf="submitted && f.contactNumber.errors" class="errorText">
+            <div *ngIf="f.contactNumber.errors.required">Contact Number is required</div>
+        </div>
+    </div>
+    <div>
+        <label>Email</label><br/>
+        <input type="text" formControlName="email" />
+        <div *ngIf="submitted && f.email.errors" class="errorText">
+            <div *ngIf="f.email.errors.required">Email is required</div>
+            <div *ngIf="f.email.errors.email">Email format is incorrect</div>
+        </div>
+    </div>
+    <div>
+        <label>User Name</label><br/>
+        <input type="text" formControlName="username" />
+        <div *ngIf="submitted && f.username.errors" class="errorText">
+            <div *ngIf="f.username.errors.required">User Name is required</div>
+            
+        </div>
+    </div>
+    <div>
+        <label>Password</label><br/>
+        <input type="password" formControlName="password" />
+        <div *ngIf="submitted && f.password.errors" class="errorText">
+            <div *ngIf="f.password.errors.required">Password is required</div>
+            <div *ngIf="driverForm.controls['password'].hasError('hasNumber')">Must have at least one number</div>
+            <div *ngIf="driverForm.controls['password'].hasError('hasCapitalCase')">Must have at least one upper case letter</div>
+            <div *ngIf="driverForm.controls['password'].hasError('hasSmallCase')">Must have at least one lower case letter</div>
+            <div *ngIf="driverForm.controls['password'].hasError('hasSpecialCharacters')">Must have at least one special character</div>
+            <div *ngIf="driverForm.controls['password'].hasError('minlength')">Must be at least 6 character long</div>
+        </div>
+    </div>
+    <div>
+        <label>Confirm Password</label><br/>
+        <input type="password" formControlName="confirmPassword" />
+        <div *ngIf="submitted && f.confirmPassword.errors" class="errorText">
+            <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+        </div>
+    </div>
+    <div class="errorText" *ngIf="driverForm.controls.confirmPassword.errors?.MatchPassword">Password not match</div>
+   
+    
+</div>
+    
+<div class="column">
+        <h4>Car</h4>
+        <label>Registration Plate</label><br/>
+        <input type="text" formControlName="registrationPlate" />
+        <div *ngIf="submitted && f.RegistrationPlate.errors" class="errorText">
+            <div *ngIf="f.RegistrationPlate.errors.required" >Registration Plate is required</div>
+        </div>
+
+        <label>Taxi Number</label><br/>
+        <input type="text" formControlName="taxiNumber" />
+        <div *ngIf="submitted && f.taxiNumber.errors" class="errorText">
+            <div *ngIf="f.taxiNumber.errors.required" >Taxi Number is required</div>
+        </div>
+
+        <label>Year Made</label><br/>
+        <input type="date" formControlName="yearMade" />
+        <div *ngIf="submitted && f.yearMade.errors" class="errorText">
+            <div *ngIf="f.yearMade.errors.required">Year Made is required</div>
+        </div>
+
+        <label>Car Type</label><br/>
+        <select id="carType" formControlName="carType">
+            <option *ngFor="let c of carTypes" [ngValue]="c">{{ c }}</option>
+        </select>
+</div>
+
+    <div>
+        <button [disabled]="submitted">Register</button>
+    </div>
+
+</form>
+
+
+
+
+
+</div>

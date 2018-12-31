@@ -3,12 +3,9 @@ import { HttpClient } from '@angular/common/http';
  
 import { AppSettings } from '../app.settings'
 import { Observable } from 'rxjs/internal/Observable';
-import { retry } from 'rxjs/internal/operators/retry';
 import { User } from '../models/User.model';
-import { Variable } from '@angular/compiler/src/render3/r3_ast';
-import { templateJitUrl } from '@angular/compiler';
-import { AppUserAuthGuard } from '../guards/appUser.guard';
 import { Password } from '../models/Password.model';
+import { RegisterDriver } from '../models/RegisterDriver.model';
  
 @Injectable()
 export class UserService {
@@ -17,6 +14,11 @@ export class UserService {
     register(user: User, role: string) {
         user.Role = role;
         return this.http.post(AppSettings.API_ENDPOINT+'/api/User/Register', user);
+    }
+
+    registerDriver(regDriver: RegisterDriver, role: string) {
+        regDriver.Role = role;
+        return this.http.post(AppSettings.API_ENDPOINT+'/api/User/RegisterDriver', regDriver);
     }
 
     getUser() : Observable<any>

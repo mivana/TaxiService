@@ -40,3 +40,8 @@ li a:hover {
 .buttonMeni:hover{
     background-color: #111;
 }
+
+.order :hover {
+    background-color: #FED90D;
+    color: black;
+}

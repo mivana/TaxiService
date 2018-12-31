@@ -19,6 +19,10 @@ import { AdminAuthGuard } from './guards/admin.guard';
 import { DriverAuthGuard } from './guards/driver.guard';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { AllUsersGuard } from './guards/allUsers.guard';
+import { OrderTaxiComponent } from './order-taxi/order-taxi.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { AddDriverComponent } from './add-driver/add-driver.component';
+import { AdminAppUserAuthGuard } from './guards/adminAppUser.guard';
 
 @NgModule({
   declarations: [
@@ -28,7 +32,10 @@ import { AllUsersGuard } from './guards/allUsers.guard';
     UserHomeComponent,
     LoginComponent,
     RegisterComponent,
-    MyProfileComponent
+    MyProfileComponent,
+    OrderTaxiComponent,
+    AdminDashboardComponent,
+    AddDriverComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +56,8 @@ import { AllUsersGuard } from './guards/allUsers.guard';
     AppUserAuthGuard,
     AdminAuthGuard,
     DriverAuthGuard,
-    AllUsersGuard
+    AllUsersGuard,
+    AdminAppUserAuthGuard
   ],
   bootstrap: [AppComponent]
 })

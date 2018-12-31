@@ -1,0 +1,27 @@
+.margins{
+    margin-top: 3%;
+    margin-left: 3%;
+}
+h3 {
+    font-style: italic;
+}
+
+.errorText {
+    color: red;
+}
+
+.resultText {
+    color: green;
+}
+
+.row {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .column {
+    flex: 50%;
+  }
+  

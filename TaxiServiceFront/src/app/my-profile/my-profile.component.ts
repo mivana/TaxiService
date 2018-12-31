@@ -4,11 +4,22 @@ import { UserService } from '../services/userService.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PasswordValidation } from '../Validators/password-validation.validation';
 import { error } from 'util';
+import { AllUsersGuard } from '../guards/allUsers.guard';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JwtInterceptor } from '../helper/jwt.interceptor';
 
 @Component({
   selector: 'app-my-profile',
   templateUrl: './my-profile.component.html',
-  styleUrls: ['./my-profile.component.css']
+  styleUrls: ['./my-profile.component.css'],
+  providers:[
+    AllUsersGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    },
+  ]
 })
 export class MyProfileComponent implements OnInit {
   activeUser: User;
@@ -186,6 +197,12 @@ export class MyProfileComponent implements OnInit {
         var res = data;
         this.activeUser = res;
         this.loaded = true;
+        if(this.activeUser.Role == "0")
+          this.activeUser.Role = "User"
+        else if(this.activeUser.Role == "1")
+          this.activeUser.Role = "Driver"
+        else if(this.activeUser.Role == "2")
+          this.activeUser.Role = "Admin"
       }
       );
   }

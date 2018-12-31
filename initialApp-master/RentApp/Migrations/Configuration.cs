@@ -60,7 +60,7 @@ namespace RentApp.Migrations
 
                   u => u.FullName,
 
-                  new AppUser() { FullName = "Admin Adminovic" }
+                  new AppUser() { FullName = "Admin Adminovic", Username = "admin", JMBG = "023", Email = "admin", Gender = "Male", Role = AppUser.UserRole.Admin, ContactNumber = "025888777" }
 
             );
 
@@ -72,6 +72,31 @@ namespace RentApp.Migrations
 
             );
 
+            context.AppUsers.AddOrUpdate(
+
+                  u => u.FullName,
+
+                  new AppUser() { FullName = "Adminin Adminirovic", Username = "adminin", JMBG = "589", Email = "adminin", Gender = "Female", Role = AppUser.UserRole.Admin, ContactNumber = "021444777" }
+
+            );
+
+            context.AppUsers.AddOrUpdate(
+
+                p => p.FullName,
+
+                new AppUser() { FullName = "Adminic Adminic", Username = "adminic", JMBG = "021", Email = "adminic", Gender = "Male", Role = AppUser.UserRole.Admin, ContactNumber = "0218884785" }
+
+            );
+
+            context.AppUsers.AddOrUpdate(
+
+                  u => u.FullName,
+
+                  new AppUser() { FullName = "Adminov Adminovovic", Username = "adminov", JMBG = "011", Email = "adminov", Gender = "Female", Role = AppUser.UserRole.Admin, ContactNumber = "023587548" }
+
+            );
+
+
             context.SaveChanges();
 
             var userStore = new UserStore<RAIdentityUser>(context);
@@ -80,7 +105,7 @@ namespace RentApp.Migrations
             if (!context.Users.Any(u => u.UserName == "admin"))
             {
                 var _appUser = context.AppUsers.FirstOrDefault(a => a.FullName == "Admin Adminovic");
-                var user = new RAIdentityUser() { Id = "admin", UserName = "admin", Email = "admin@yahoo.com", PasswordHash = RAIdentityUser.HashPassword("admin"), AppUserId = _appUser.Id };
+                var user = new RAIdentityUser() { Id = "admin", UserName = "admin"    , Email = "admin@yahoo.com", PasswordHash = RAIdentityUser.HashPassword("admin"), AppUserId = _appUser.Id };
                 userManager.Create(user);
                 userManager.AddToRole(user.Id, "Admin");
             }
@@ -95,6 +120,34 @@ namespace RentApp.Migrations
                 userManager.AddToRole(user.Id, "AppUser");
 
             }
+
+            if (!context.Users.Any(u => u.UserName == "adminin"))
+            {
+                var _appUser = context.AppUsers.FirstOrDefault(a => a.FullName == "Adminin Adminirovic");
+                var user = new RAIdentityUser() { Id = "adminin", UserName = "adminin", Email = "adminin@yahoo.com", PasswordHash = RAIdentityUser.HashPassword("adminin"), AppUserId = _appUser.Id };
+                userManager.Create(user);
+                userManager.AddToRole(user.Id, "Admin");
+            }
+
+            if (!context.Users.Any(u => u.UserName == "adminic"))
+
+            {
+
+                var _appUser = context.AppUsers.FirstOrDefault(a => a.FullName == "Adminic Adminic");
+                var user = new RAIdentityUser() { Id = "adminic", UserName = "adminic", Email = "adminic@yahoo.com", PasswordHash = RAIdentityUser.HashPassword("adminic"), AppUserId = _appUser.Id };
+                userManager.Create(user);
+                userManager.AddToRole(user.Id, "Admin");
+
+            }
+
+            if (!context.Users.Any(u => u.UserName == "adminov"))
+            {
+                var _appUser = context.AppUsers.FirstOrDefault(a => a.FullName == "Adminov Adminovovic");
+                var user = new RAIdentityUser() { Id = "adminov", UserName = "adminov", Email = "adminov@yahoo.com", PasswordHash = RAIdentityUser.HashPassword("adminov"), AppUserId = _appUser.Id };
+                userManager.Create(user);
+                userManager.AddToRole(user.Id, "Admin");
+            }
+
         }
     }
 }

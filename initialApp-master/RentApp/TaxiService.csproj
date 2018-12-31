@@ -262,6 +262,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CarController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RideController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -288,6 +289,14 @@
     <Compile Include="Migrations\201812211328292_thridMigration.cs" />
     <Compile Include="Migrations\201812211328292_thridMigration.Designer.cs">
       <DependentUpon>201812211328292_thridMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812301741065_fourthMigration.cs" />
+    <Compile Include="Migrations\201812301741065_fourthMigration.Designer.cs">
+      <DependentUpon>201812301741065_fourthMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812301807023_fourthMigration2.cs" />
+    <Compile Include="Migrations\201812301807023_fourthMigration2.Designer.cs">
+      <DependentUpon>201812301807023_fourthMigration2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -401,6 +410,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812211328292_thridMigration.resx">
       <DependentUpon>201812211328292_thridMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812301741065_fourthMigration.resx">
+      <DependentUpon>201812301741065_fourthMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812301807023_fourthMigration2.resx">
+      <DependentUpon>201812301807023_fourthMigration2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
