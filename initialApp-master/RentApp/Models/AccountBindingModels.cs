@@ -159,4 +159,31 @@ namespace RentApp.Models
         [Display(Name = "CarType")]
         public string CarType { get; set; }
     }
+
+    public class RideBindingModel
+    {
+        [Required]
+        [Display(Name ="StreetName")]
+        
+        public string StreetName { get; set; }
+
+        [Required]
+        [Display(Name = "Number")]
+        public int Number { get; set; }
+
+        [Required]
+        [Display(Name = "Town")]
+        public string Town { get; set; }
+
+        [Required]
+        [Display(Name = "AreaCode")]
+        [DataType(DataType.PostalCode)]
+        public int AreaCode { get; set; }
+
+        [Required]
+        [Display(Name = "CarType")]
+        public string CarType { get; set; }
+    }
+
+
 }

@@ -7,6 +7,17 @@ using System.Web;
 
 namespace RentApp.Models.Entities
 {
+    public enum Status
+    {
+        Created = 0,
+        Cancelled,
+        Formed,
+        Proccessed,
+        Accepted,
+        Failed,
+        Successfull
+    }
+
     public class Ride
     {
         public int Id { get; set; }
@@ -14,7 +25,7 @@ namespace RentApp.Models.Entities
         public DateTime OrderDT { get; set; }
         public string CarType { get; set; }
         public double Price { get; set; }
-        public string Status { get; set; }
+        public Status Status { get; set; }
         public bool Deleted { get; set; }
 
 

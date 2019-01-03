@@ -46,6 +46,21 @@ namespace RentApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "AppUser")]
+        [Route("GetUserRides")]
+        [ResponseType(typeof(IEnumerable<Ride>))]
+        public IHttpActionResult GetUserRides()
+        {
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+            if(user != null)
+            {
+                return Ok(user.CustomerRides);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
         [Authorize(Roles = "AppUser,Driver,Admin")]
         [Route("GetActiveInfo")]
         [ResponseType(typeof(AppUser))]

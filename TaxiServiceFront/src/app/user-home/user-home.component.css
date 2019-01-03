@@ -2,3 +2,20 @@
     margin-top: 3%;
     margin-left: 3%;
 }
+
+.row {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+.column {
+    flex: 50%;
+}
+
+.right {
+    float: right;
+    margin-right: 15%;
+    margin-top: -10%;
+}

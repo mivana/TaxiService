@@ -1,0 +1,14 @@
+.row {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+.column {
+    flex: 50%;
+}
+
+.errorText{
+    color: red;
+}

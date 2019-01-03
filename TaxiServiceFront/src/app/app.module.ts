@@ -23,6 +23,7 @@ import { OrderTaxiComponent } from './order-taxi/order-taxi.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { AddDriverComponent } from './add-driver/add-driver.component';
 import { AdminAppUserAuthGuard } from './guards/adminAppUser.guard';
+import { DriverHomeComponent } from './driver-home/driver-home.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { AdminAppUserAuthGuard } from './guards/adminAppUser.guard';
     MyProfileComponent,
     OrderTaxiComponent,
     AdminDashboardComponent,
-    AddDriverComponent
+    AddDriverComponent,
+    DriverHomeComponent
   ],
   imports: [
     BrowserModule,

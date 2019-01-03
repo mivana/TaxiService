@@ -1,66 +1,24 @@
-<p>
-  user-home works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
-<p>
-  my-profile works!
-</p>
+<div class="profile">
+  <div class="column row">
+    <h3>My rides</h3>
+
+    <table>
+      <tr *ngFor="let ride of myRides">
+          <h2>NOVO RIDE</h2>
+          <td>{{ride.StartLocationID}}</td><br/>
+          <td>{{ride.Status}}</td><br/>
+          <td>{{ride.CarType}}</td><br/>
+      </tr>
+    </table>
+
+  </div>
+  <div class="column right row">
+      <div *ngIf="!orderShow"><button (click)="showOrder()" >showOrder</button></div>
+      <div *ngIf="orderShow">
+        <app-order-taxi></app-order-taxi>
+      </div>
+  </div>
+
+</div>
+
+

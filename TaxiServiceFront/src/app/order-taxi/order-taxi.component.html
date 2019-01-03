@@ -1,3 +1,48 @@
-<p>
-  order-taxi works!
-</p>
+<h2>Need a ride?</h2>
+
+
+
+<form [formGroup]="orderForm" (ngSubmit)="OnSubmit()">
+    <h3>Current Address:</h3>
+    
+    <div class="row">
+        <label>Street Name</label>
+        <input type="text" formControlName="streetName"/>
+        <div *ngIf="submitted && f.streetName.errors"  class="errorText">
+        <div *ngIf="f.streetName.errors.required">Street Name is required</div>
+        </div>
+
+        <label>Number</label>
+        <input type="text" formControlName="number"/>
+        <div *ngIf="submitted && f.number.errors"  class="errorText">
+        <div *ngIf="f.number.errors.required">Number is required</div>
+        <div class="errorText" *ngIf="orderForm.controls.number.errors?.invalidNumber">Number must be a number</div>
+        </div>
+    </div>
+    <div class="row">
+    <label>Town</label>
+        <input type="text" formControlName="town"/>
+        <div *ngIf="submitted && f.town.errors"  class="errorText">
+        <div *ngIf="f.town.errors.required">Town is required</div>
+        </div>
+    </div>
+
+    <div class="row">
+    <label>Area Code</label>
+        <input type="text" formControlName="areaCode"/>
+        <div *ngIf="submitted && f.areaCode.errors"  class="errorText">
+        <div *ngIf="f.areaCode.errors.required">Area Code is required</div>
+        <div *ngIf="orderForm.controls.areaCode.errors?.invalidNumber">Area Code must be a number</div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <label>Car Type</label><br/>
+        <select id="carType" formControlName="carType">
+            <option *ngFor="let c of carTypes" [ngValue]="c">{{ c }}</option>
+        </select>
+    </div>
+
+    <button [disabled]="submitted">Order</button>
+    <button (click)="Cancel()">Cancel</button>
+</form>

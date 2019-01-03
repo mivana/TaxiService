@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { User } from '../models/User.model';
 import { Password } from '../models/Password.model';
 import { RegisterDriver } from '../models/RegisterDriver.model';
+import { NewRide } from '../models/NewRide.model';
  
 @Injectable()
 export class UserService {
@@ -38,5 +39,7 @@ export class UserService {
         return this.http.post(AppSettings.API_ENDPOINT + '/api/Account/ChangePassword',password);
     }
 
-
+    PostRide(ride: NewRide): Observable<any> {
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/PostNewRide',ride);        
+    }
 }
