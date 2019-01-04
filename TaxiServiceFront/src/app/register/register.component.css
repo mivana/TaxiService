@@ -1,3 +1,16 @@
 .errorText{
     color: red;
 }
+
+.leftColumn{
+    float:left;
+    width: 50%;
+    margin-top: 10%;
+    margin-left: 30%;
+}
+
+.rightColumn{
+    float: right;
+    width: 50%;
+    margin-top: -15%;
+}

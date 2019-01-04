@@ -104,5 +104,20 @@ namespace RentApp.Controllers
 
         }
 
+        [HttpDelete]
+        [Authorize(Roles = "AppUser")]
+        [Route("CancelUserRide")]
+        public IHttpActionResult CancelUserRide(int id)
+        {
+            Ride ride = unitOfWork.Rides.Get(id);
+            if(ride == null || ride.Deleted == true)
+            {
+                return NotFound();
+            }
+            return Ok();
+
+        }
+
+
     }
 }

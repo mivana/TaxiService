@@ -1,5 +1,9 @@
-<p>
+<div class="leftColumn">
+<!-- <p>
   Already have an account?  <a [routerLink]="['/login']">Login</a> here
+</p> -->
+<p>
+    Don't have an account? Register here
 </p>
 <div class="errorText">
     <div *ngIf="resultError" class="errorText">Error while trying to register, please try again</div>
@@ -80,3 +84,8 @@
     </div>
   </form>
   </div>
+</div>
+
+<div class="rightColumn">
+    <app-login></app-login>
+</div>

@@ -50,4 +50,8 @@ export class UserService {
     PostRide(ride: NewRide): Observable<any> {
         return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/PostNewRide',ride);        
     }
+
+    CancelUserRide(id: string): Observable<any> {
+        return this.http.delete(AppSettings.API_ENDPOINT + '/api/Ride/CancelUserRide'+id);
+    }
 }

@@ -13,7 +13,7 @@ export class Ride {
     DestinationLocationID: string;
     CarType: string;
     AppUserID: string;
-    Customer: User;
+    // Customer: User;
     DispatcherID: string;
     Dispatcher: User;
     TaxiDriverID: string;

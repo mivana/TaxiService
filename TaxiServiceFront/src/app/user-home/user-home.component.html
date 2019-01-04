@@ -1,16 +1,133 @@
-<div class="profile">
-    <h3>My rides</h3>
+<div class="row">
+    <div class="leftColumn">
+        <div>
+        <h3>My History</h3>
 
-    <table>
-      <tr *ngFor="let ride of myRides">
-          <h2>NOVO RIDE</h2>
-          <td>{{ride.StartLocationID}}</td><br/>
-          <td>{{ride.Status}}</td><br/>
-          <td>{{ride.CarType}}</td><br/>
-      </tr>
-    </table>
+        <table class="ridesTable">
+        <tr class="tRow">
+            <th class="header"><h3>Status</h3></th>
+            <th class="header"><h3>Date Time Booked</h3></th>
+            <th class="header"><h3>Start Location</h3></th>
+            <th class="header"><h3>Destination Location</h3></th>
+            <th class="header"><h3>Car Type</h3></th>
+            <th class="header"><h3>Dispatcher</h3></th>
+            <th class="header"><h3>Driver</h3></th>
+            <th class="header"><h3>Price</h3></th>
+            <!-- <th>Comment</th> -->
+        </tr>
+        <tr *ngFor="let ride of myRides" class="tRow">
+            
+            <td class="statuses">
+                <div *ngIf="ride.Status == 0" style="color: rgb(0, 163, 141);">Created</div>
+                <div *ngIf="ride.Status == 1" style="color: rgb(128, 0, 96);">Cancelled</div>
+                <div *ngIf="ride.Status == 2" style="color: rgb(90, 44, 0);">Formed</div>
+                <div *ngIf="ride.Status == 3" style="color: rgb(0, 2, 128);">Proccessed</div>
+                <div *ngIf="ride.Status == 4" style="color: rgb(0, 0, 0);">Accepted</div>
+                <div *ngIf="ride.Status == 5" style="color: rgb(139, 0, 0);">Failed</div>
+                <div *ngIf="ride.Status == 6" style="color: green;">Successfull</div>
+            </td>
+            
+            <td>{{ride.OrderDT | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+
+            <td>{{ride.StartLocation.Address.StreetName || ""}} {{ride.StartLocation.Address.Number || ""}} <br/>
+                {{ride.StartLocation.Address.Town || ""}} {{ride.StartLocation.Address.AreaCode || ""}}</td>
+            
+            <td><div *ngIf="ride.DestinationLocation != null">{{ride.DestinationLocation.Address.StreetName || ""}} {{ride.DestinationLocation.Address.Number || ""}} <br/>
+                {{ride.DestinationLocation.Address.Town || ""}} {{ride.DestinationLocation.Address.AreaCode || ""}}</div>
+            <div *ngIf="ride.DestinationLocation == null">No Destination Location defined</div></td>
+                
+            <td>{{ride.CarType}}</td>
+
+            <td><div *ngIf="ride.Dispatcher != null">{{ride.Dispatcher.FullName || "No Dispatcher"}}</div>
+            <div *ngIf="ride.Dispatcher == null">No Dispatcher defined</div></td>
+
+            <td><div *ngIf="ride.TaxiDriver != null">{{ride.TaxiDriver.FullName || "No Driver"}}</div>
+            <div *ngIf="ride.TaxiDriver == null">No TaxiDriver defined</div></td>
+            
+            <td><div *ngIf="ride.Price != null">{{ride.Price || "No Price"}}</div>
+            <div *ngIf="ride.Price == null">No Price defined</div></td>
+            <!-- <td>{{ride.Price || "No Comment"}}</td> -->
+        </tr>
+        </table>
+
+        </div>
+    </div>
+
+    <div class="rigthColumn">
+        <h1>Active Ride</h1>
+        
+        <div>
+      
+        <div *ngIf="hasActive">
+        <table class="activeTable">
+            <tr>
+                <td class="prop">Status:</td>
+                    <td class="statuses">
+                        <div *ngIf="activeRide.Status == 0" style="color: rgb(0, 163, 141);">Created</div>
+                        <div *ngIf="activeRide.Status == 1" style="color: rgb(128, 0, 96);">Cancelled</div>
+                        <div *ngIf="activeRide.Status == 2" style="color: rgb(90, 44, 0);">Formed</div>
+                        <div *ngIf="activeRide.Status == 3" style="color: rgb(0, 2, 128);">Proccessed</div>
+                        <div *ngIf="activeRide.Status == 4" style="color: rgb(0, 0, 0);">Accepted</div>
+                        <div *ngIf="activeRide.Status == 5" style="color: rgb(139, 0, 0);">Failed</div>
+                        <div *ngIf="activeRide.Status == 6" style="color: green;">Successfull</div>
+                    </td>
+            </tr>
+            <tr>
+                <td class="prop">Date Time of Booking:</td>
+                <td>
+                     <div *ngIf="activeRide.OrderDT != null">{{activeRide.OrderDT | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+                     <div *ngIf="activeRide.OrderDT == null">No Date Time Booking defined</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="prop">Start Location:</td>
+                <td>
+                    <div *ngIf="activeRide.StartLocation != null">{{activeRide.StartLocation.Address.StreetName || ""}} {{activeRide.StartLocation.Address.Number || ""}} <br/>
+                                                                   {{activeRide.StartLocation.Address.Town || ""}} {{activeRide.StartLocation.Address.AreaCode || ""}}</div>
+                    <div *ngIf="activeRide.StartLocation == null">No Start Location defined</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="prop">Destination Location:</td>
+                <td>
+                    <div *ngIf="activeRide.DestinationLocation != null">{{ride.DestinationLocation.Address.StreetName || ""}} {{ride.DestinationLocation.Address.Number || ""}} <br/>
+                                                                    {{ride.DestinationLocation.Address.Town || ""}} {{ride.DestinationLocation.Address.AreaCode || ""}}</div>
+                    <div *ngIf="activeRide.DestinationLocation == null">No Destination Location defined</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="prop">Dispatcher:</td>
+                <td>
+                    <div *ngIf="activeRide.Dispatcher != null">{{activeRide.Dispatcher.FullName}}</div>
+                    <div *ngIf="activeRide.Dispatcher == null">No Dispatcher defined</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="prop">Driver:</td>
+                <td>
+                    <div *ngIf="activeRide.TaxiDriver != null">{{activeRide.TaxiDriver.FullName}}</div>
+                    <div *ngIf="activeRide.TaxiDriver == null">No Driver defined</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                <div *ngIf="activeRide.Status == 0">
+                    <button>Edit</button>
+                    <button style="margin-left: 50px;">Cancel</button>
+                </div>
+                </td>
+            </tr>
+
+        </table>
+            
+    </div>
+    </div>
+    <div *ngIf="!hasActive">
+        <h3>No active rides!</h3>
+    </div>
+
+    </div>
 
 
 </div>
-
-

@@ -21,6 +21,10 @@ import { UserService } from '../services/userService.service';
 export class UserHomeComponent implements OnInit {
 
   myRides: Ride[] = [];
+  activeRide: Ride = new Ride();
+
+  hasActive: boolean = false;
+
   constructor(private service: UserService) { }
 
   ngOnInit() {
@@ -33,6 +37,21 @@ export class UserHomeComponent implements OnInit {
         debugger
         var user = data;
         this.myRides = user.CustomerRides;
+        if(this.myRides[0] != null){
+          this.activeRide = this.myRides[0];
+          this.hasActive = true;
+        }
+        
+      }
+    )
+  }
+
+
+
+  Cancel(ride: Ride){
+    this.service.CancelUserRide(ride.Id).subscribe(
+      data => {
+        var temp = data;
       }
     )
   }
