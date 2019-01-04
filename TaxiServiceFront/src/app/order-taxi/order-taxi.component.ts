@@ -3,9 +3,11 @@ import { AppUserAuthGuard } from '../guards/appUser.guard';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from '../helper/jwt.interceptor';
 import { AdminAppUserAuthGuard } from '../guards/adminAppUser.guard';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '../services/userService.service';
 import { NumbericValidation } from '../validators/numeric-validator.validation';
+import { Router } from '@angular/router';
+import { User } from '../models/User.model';
 
 @Component({
   selector: 'app-order-taxi',
@@ -27,13 +29,19 @@ export class OrderTaxiComponent implements OnInit {
   errorNumber: boolean = false;
   errorAreaCode: boolean = false;
   result: boolean = false;
+  roleAdmin: boolean = false;
+  hasError: boolean = false;
+  errorString: string = "";
 
   carTypes: string[] = ['Standard','Combi'];
   default: string = 'Standard';
+
+  drivers: User[] = [];
   
   
   constructor(private fb: FormBuilder,
-              private service: UserService) { }
+              private service: UserService,
+              private router: Router) { }
 
   ngOnInit() {
     this.orderForm = this.fb.group({
@@ -41,9 +49,11 @@ export class OrderTaxiComponent implements OnInit {
       number: ['',[Validators.required,NumbericValidation.numberValidator]],
       town: ['',Validators.required],
       areaCode:['',[Validators.required,NumbericValidation.numberValidator]],
-      carType: [null]
+      carType: [null],
+      driver: ['']
     });
     this.orderForm.controls['carType'].setValue(this.default, {onlySelf: true});
+    this.getRole();
   }
 
   ngAfterViewInit()
@@ -56,11 +66,49 @@ export class OrderTaxiComponent implements OnInit {
     )
   }
 
+  getRole(){
+    this.service.getRole().subscribe(
+      data => {
+        var temp = data;
+        if(temp == "2"){
+          this.roleAdmin = true;
+          this.getDrivers();
+        }
+        else
+          this.roleAdmin = false;
+      },
+      error => {
+        this.hasError = true;
+        this.errorString = error.error.Message;
+      }
+    )
+  }
+
+  getDrivers(){
+    this.service.getDrivers().subscribe(
+      data => {
+        debugger
+        var temp = data;
+        this.drivers = temp;
+      },
+      error => {
+        this.hasError = true;
+        this.errorString = error.error.Message;
+      }
+    )
+  }
 
   get f() { return this.orderForm.controls; }
 
   OnSubmit(){
     this.submitted = true;
+    this.hasError = false;
+    this.errorString = "";
+
+    debugger
+    if(this.roleAdmin && this.orderForm.controls['driver'].value == "")
+        this.orderForm.controls['driver'].setErrors({required: true});
+      
    // stop here if form is invalid
    if (this.orderForm.invalid) {
     return;
@@ -68,7 +116,13 @@ export class OrderTaxiComponent implements OnInit {
 
 
   this.service.PostRide(this.orderForm.value).subscribe(
-    data => alert("YES")
+    data => {
+      this.result = true;
+    },
+    error => {
+      this.hasError = true;
+      this.errorString = error.error.Message;
+    }
   )   
 
   }
@@ -80,9 +134,13 @@ export class OrderTaxiComponent implements OnInit {
     this.submitted = false;
     this.errorAreaCode = false;
     this.errorNumber = false;
+    this.hasError = false;
+    this.errorString = "";
+
+    this.orderForm.reset();
+
   }
 
-}
 /*
   Za dodavanje ovoga,
   isprobaj servis da li ce da primi ok putanju,
@@ -94,3 +152,5 @@ export class OrderTaxiComponent implements OnInit {
 
 
 */
+
+}

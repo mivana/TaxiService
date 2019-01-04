@@ -31,6 +31,14 @@ export class UserService {
         return this.http.put(AppSettings.API_ENDPOINT + '/api/User/'+user.Id, user);
     }
 
+    getRole(): Observable<any>{
+        return this.http.get(AppSettings.API_ENDPOINT + '/api/User/GetUserRole');
+    }
+
+    getDrivers(): Observable<any> {
+        return this.http.get(AppSettings.API_ENDPOINT + '/api/User/GetFreeDrivers');
+    }
+
     UpdateUsername(id: string, username: User): Observable<any> {
         return this.http.put(AppSettings.API_ENDPOINT + '/api/User/UpdateUsername/'+id, username);
     }

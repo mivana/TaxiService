@@ -81,6 +81,43 @@ namespace RentApp.Controllers
 
         }
 
+        [HttpGet]
+        [Authorize(Roles = "AppUser,Driver,Admin")]
+        [Route("GetUserRole")]
+        [ResponseType(typeof(AppUser.UserRole))]
+        public IHttpActionResult GetUserRole()
+        {
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+
+            if (user != null)
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                return Ok(user.Role);
+            }
+            return BadRequest();
+
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "AppUser,Driver,Admin")]
+        [Route("GetFreeDrivers")]
+        [ResponseType(typeof(List<AppUser>))]
+        public IHttpActionResult GetFreeDrivers()
+        {
+            List<AppUser> freeDrivers = unitOfWork.AppUsers.Find(u => u.Role == AppUser.UserRole.Driver && u.DriverFree == true).ToList();
+            if(freeDrivers.Count() != 0)
+            {
+                return Ok(freeDrivers);
+            }
+            return BadRequest("No free drivers at this moment");
+
+        }
+
+
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]

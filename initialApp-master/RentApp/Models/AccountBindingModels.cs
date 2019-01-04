@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using RentApp.Models.Entities;
 
 namespace RentApp.Models
 {
@@ -183,6 +184,9 @@ namespace RentApp.Models
         [Required]
         [Display(Name = "CarType")]
         public string CarType { get; set; }
+
+        [Display(Name = "Driver")]
+        public AppUser Driver { get; set; }
     }
 
 

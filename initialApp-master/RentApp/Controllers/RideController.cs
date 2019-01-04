@@ -82,7 +82,7 @@ namespace RentApp.Controllers
             }
             else
             {
-                newRide = new Ride() { CarType = carType.ToString(),Dispatcher = currentUser,DispatcherID = currentUser.Id, OrderDT = DateTime.Now, StartLocation = location, StartLocationID = location.Id, Deleted = false };
+                newRide = new Ride() { CarType = carType.ToString(),Dispatcher = currentUser,DispatcherID = currentUser.Id, TaxiDriver = model.Driver, TaxiDriverID = model.Driver.Id, OrderDT = DateTime.Now, StartLocation = location, StartLocationID = location.Id, Deleted = false };
                 newRide.Status = Status.Formed;
             }
 

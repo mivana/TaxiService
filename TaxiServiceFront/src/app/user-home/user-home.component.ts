@@ -19,7 +19,6 @@ import { UserService } from '../services/userService.service';
   ]
 })
 export class UserHomeComponent implements OnInit {
-  orderShow: boolean =false;
 
   myRides: Ride[] = [];
   constructor(private service: UserService) { }
@@ -36,10 +35,6 @@ export class UserHomeComponent implements OnInit {
         this.myRides = user.CustomerRides;
       }
     )
-  }
-
-  showOrder(){
-      this.orderShow = true;
   }
 
 }

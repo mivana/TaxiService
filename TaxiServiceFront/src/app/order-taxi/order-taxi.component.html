@@ -1,7 +1,7 @@
 <h2>Need a ride?</h2>
 
-
-
+<div *ngIf="result" style="color: green">You have successfully booked a taxi!</div>
+<div *ngIf="hasError" class="errorText">{{errorString}}</div>
 <form [formGroup]="orderForm" (ngSubmit)="OnSubmit()">
     <h3>Current Address:</h3>
     
@@ -41,6 +41,14 @@
         <select id="carType" formControlName="carType">
             <option *ngFor="let c of carTypes" [ngValue]="c">{{ c }}</option>
         </select>
+    </div>
+
+    <div *ngIf="roleAdmin" class="row">
+        <label>Assign Driver</label><br/>
+        <select id="driver" formControlName="driver">
+            <option *ngFor="let d of drivers" [ngValue]="d">{{ d.FullName }}</option>
+        </select>
+        <div *ngIf="orderForm.controls.driver.errors?.required">Driver must be assigned</div>
     </div>
 
     <button [disabled]="submitted">Order</button>

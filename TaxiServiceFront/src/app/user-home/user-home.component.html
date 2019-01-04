@@ -1,5 +1,4 @@
 <div class="profile">
-  <div class="column row">
     <h3>My rides</h3>
 
     <table>
@@ -11,13 +10,6 @@
       </tr>
     </table>
 
-  </div>
-  <div class="column right row">
-      <div *ngIf="!orderShow"><button (click)="showOrder()" >showOrder</button></div>
-      <div *ngIf="orderShow">
-        <app-order-taxi></app-order-taxi>
-      </div>
-  </div>
 
 </div>
 
