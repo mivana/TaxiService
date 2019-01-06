@@ -231,7 +231,9 @@ export class MyProfileComponent implements OnInit {
 
     this.service.UpdateCar(this.driverCar.Id,this.editCarForm.value).subscribe(
       data => {
-
+        this.showCar = true;
+        this.showEditCar = false;
+        this.getUserInfo();
       },
       error=>{
         if(error.error.Message == "TaxiNumber not Unique"){
@@ -302,9 +304,13 @@ export class MyProfileComponent implements OnInit {
   EditCar(){
     this.showEditCar = true;
     this.showCar = false;
+    debugger
+    var temp = this.driverCar.YearMade.split('T');
+    var date= temp[0];
+    
     this.editCarForm.controls['registrationPlate'].setValue(this.driverCar.RegistrationPlate, {onlySelf: true});
     this.editCarForm.controls['taxiNumber'].setValue(this.driverCar.TaxiNumber, {onlySelf: true});
-    this.editCarForm.controls['yearMade'].setValue(this.driverCar.YearMade, {onlySelf: true});
+    this.editCarForm.controls['yearMade'].setValue(date, {onlySelf: true});
     if(this.driverCar.CarType == "0")
       this.editCarForm.controls['carType'].setValue(this.defaultC, {onlySelf: true});
     else

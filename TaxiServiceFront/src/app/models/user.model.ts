@@ -1,3 +1,5 @@
+import { Car } from './Car.model';
+
 export class User {
     Id: string;
     Email: string;
@@ -11,4 +13,5 @@ export class User {
     Role: string;
     Gender: string;
     Blocked: boolean;
+    DriverCars: Car[];
 }

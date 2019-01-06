@@ -31,12 +31,16 @@ export class OrderTaxiComponent implements OnInit {
   result: boolean = false;
   roleAdmin: boolean = false;
   hasError: boolean = false;
+  isStandard: boolean = true;
   errorString: string = "";
 
   carTypes: string[] = ['Standard','Combi'];
   default: string = 'Standard';
 
   drivers: User[] = [];
+  freeDrivers: User[] = [];
+  CTSdrivers: User[] = [];
+  CTCdrivers: User[] = [];
   
   
   constructor(private fb: FormBuilder,
@@ -62,8 +66,18 @@ export class OrderTaxiComponent implements OnInit {
       data =>{
         this.submitted = false;
         this.result = false;
+        debugger
+        if(this.orderForm.controls['carType'].value == "Standard"){
+          this.isStandard = true;
+          this.freeDrivers = this.CTSdrivers;
+        }
+        else{
+          this.isStandard = false;
+          this.freeDrivers = this.CTCdrivers;
+        }
       }
     )
+
   }
 
   getRole(){
@@ -90,6 +104,26 @@ export class OrderTaxiComponent implements OnInit {
         debugger
         var temp = data;
         this.drivers = temp;
+
+        for(var i = 0; i < this.drivers.length;i++)
+        {
+          if(this.drivers[i].DriverCars[0].CarType == "0")
+            this.CTSdrivers.push(this.drivers[i]);
+          else
+            this.CTCdrivers.push(this.drivers[i]);
+        }
+
+        this.freeDrivers = this.CTSdrivers;
+        // this.drivers.forEach(element => {
+        //   if(element.DriverCars[0].CarType == "0")
+        //   {
+        //     this.CTSdrivers.push(element);
+        //   }
+        //   else
+        //   {
+        //     this.CTCdrivers.push(element);
+        //   }
+        // });
       },
       error => {
         this.hasError = true;
@@ -127,7 +161,12 @@ export class OrderTaxiComponent implements OnInit {
 
   }
 
-
+  IsStandard(){
+    if(this.orderForm.controls['carType'].value == "Standard")
+      return true;
+    else
+      return false;
+  }
 
 
   Cancel(){

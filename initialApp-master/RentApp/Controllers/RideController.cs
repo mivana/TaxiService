@@ -28,6 +28,21 @@ namespace RentApp.Controllers
             return unitOfWork.Rides.GetAll().Where(u => u.Deleted == false);
         }
 
+        [HttpGet]
+        [Authorize(Roles ="Driver,Admin")]
+        [Route("GetFreeRides")]
+        [ResponseType(typeof(List<Ride>))]
+        public IHttpActionResult GetFreeRides()
+        {
+            var result = unitOfWork.Rides.Find(r => r.Status == Status.Created && !r.Deleted).ToList();
+            if (result.Count() == 0)
+            {
+                return BadRequest("No free rides");
+            }
+            return Ok(result);
+
+        }
+
         [HttpPut]
         [Authorize(Roles = "Admin,AppUser")]
         [ResponseType(typeof(Ride))]
@@ -158,13 +173,11 @@ namespace RentApp.Controllers
 
             if (currentUser.Role == AppUser.UserRole.AppUser)
             {
-                newRide = new Ride() { CarType = carType.ToString(), Customer = currentUser, AppUserID = currentUser.Id, OrderDT = DateTime.Now, StartLocation = location, StartLocationID = location.Id, Deleted = false };
-                newRide.Status = Status.Created;
+                newRide = new Ride() { CarType = carType.ToString(),Status = Status.Created, Customer = currentUser, AppUserID = currentUser.Id, OrderDT = DateTime.Now, StartLocation = location, StartLocationID = location.Id, Deleted = false };
             }
             else
             {
-                newRide = new Ride() { CarType = carType.ToString(),Dispatcher = currentUser,DispatcherID = currentUser.Id, TaxiDriver = model.Driver, TaxiDriverID = model.Driver.Id, OrderDT = DateTime.Now, StartLocation = location, StartLocationID = location.Id, Deleted = false };
-                newRide.Status = Status.Formed;
+                newRide = new Ride() { CarType = carType.ToString(),Status = Status.Formed,Dispatcher = currentUser,DispatcherID = currentUser.Id, TaxiDriver = model.Driver, TaxiDriverID = model.Driver.Id, OrderDT = DateTime.Now, StartLocation = location, StartLocationID = location.Id, Deleted = false };
             }
 
             if (newRide != null)

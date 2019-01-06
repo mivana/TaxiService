@@ -23,16 +23,33 @@ import { Ride } from '../models/Ride.model';
 export class DriverHomeComponent implements OnInit {
   activeUser: User = new User();
   myRides: Ride[] = [];
+  freeRides: Ride[] = [];
 
 
   hasError: boolean;
   errorString: string = "";
+  showFree: boolean;
+  showHistory: boolean;
+  myCarType: string;
 
   constructor(private fb: FormBuilder,
               private service: UserService) { }
 
   ngOnInit() {
     this.GetUserInfo();
+    this.GetFreeRides();
+  }
+  GetFreeRides(): any {
+    this.service.GetFreeRides().subscribe(
+      data=>{
+        debugger
+        this.freeRides = data;
+      },
+      error => {
+        this.hasError = true;
+        this.errorString = error.error.Message;
+      }
+    )
   }
 
    ///Gets Users Information
@@ -43,6 +60,7 @@ export class DriverHomeComponent implements OnInit {
         var user = data;
         this.activeUser = user;
         this.myRides = user.DriverRides;
+        this.myCarType = this.activeUser.DriverCars[0].CarType;
 
       },
       error => {
@@ -50,6 +68,16 @@ export class DriverHomeComponent implements OnInit {
         this.errorString = error.error.Message;
       }
     )
+  }
+
+  History(){
+    this.showHistory = true;
+    this.showFree = false;
+  }
+
+  Created(){
+    this.showFree = true;
+    this.showHistory = false;
   }
 
 

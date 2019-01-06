@@ -46,7 +46,7 @@
     <div *ngIf="roleAdmin" class="row">
         <label>Assign Driver</label><br/>
         <select id="driver" formControlName="driver">
-            <option *ngFor="let d of drivers" [ngValue]="d">{{ d.FullName }}</option>
+            <option *ngFor="let d of freeDrivers" [ngValue]="d">{{ d.FullName }}</option>
         </select>
         <div *ngIf="orderForm.controls.driver.errors?.required">Driver must be assigned</div>
     </div>

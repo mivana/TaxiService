@@ -43,6 +43,10 @@ export class UserService {
         return this.http.get(AppSettings.API_ENDPOINT + '/api/User/GetFreeDrivers');
     }
 
+    GetFreeRides():Observable<any>{
+        return this.http.get(AppSettings.API_ENDPOINT +'/api/Ride/GetFreeRides')
+    }
+
     UpdateUsername(id: string, username: User): Observable<any> {
         return this.http.put(AppSettings.API_ENDPOINT + '/api/User/UpdateUsername/'+id, username);
     }

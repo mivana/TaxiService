@@ -2,6 +2,12 @@
     margin-top: 5%;
 }
 
+.SCT{
+    color: purple;
+}
+.CCT{
+    background-color: blue;
+}
 
 /* Clear floats after the columns */
 .row:after {

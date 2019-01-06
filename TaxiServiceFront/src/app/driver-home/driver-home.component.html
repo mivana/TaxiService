@@ -1,5 +1,15 @@
 
 <div class="row">
+    <div>
+        <ul>
+            <li>
+                <button (click)="History()">My History</button>
+                <button (click)="Created()">Created Rides</button>
+            </li>
+        </ul>
+    </div>
+
+<div *ngIf="showHistory">
 <h3>My History</h3>
 
         <table class="ridesTable">
@@ -65,4 +75,61 @@
             <!-- <td>{{ride.Price || "No Comment"}}</td> -->
         </tr>
         </table>
+</div>
+
+<div *ngIf="showFree">
+    <h3>Created Rides</h3>
+
+    <table class="ridesTable">
+    <tr class="tRow">
+        <th class="header"><h3>Status</h3></th>
+        <th class="header"><h3>Date Time Booked</h3></th>
+        <th class="header"><h3>Start Location</h3></th>
+        <th class="header"><h3>Car Type</h3></th>
+    </tr>
+    <tr *ngFor="let ride of freeRides" class="tRow">
+        <div *ngIf="ride.CarType == myCarType" class="SCT">
+            <td class="statuses">
+                <div *ngIf="ride.Status == 0" style="color: rgb(0, 163, 141);">Created</div>
+                <div *ngIf="ride.Status == 1" style="color: rgb(128, 0, 96);">Cancelled</div>
+                <div *ngIf="ride.Status == 2" style="color: rgb(90, 44, 0);">Formed</div>
+                <div *ngIf="ride.Status == 3" style="color: rgb(0, 2, 128);">Proccessed</div>
+                <div *ngIf="ride.Status == 4" style="color: rgb(0, 0, 0);">Accepted</div>
+                <div *ngIf="ride.Status == 5" style="color: rgb(139, 0, 0);">Failed</div>
+                <div *ngIf="ride.Status == 6" style="color: green;">Successfull</div>
+            </td>
+                
+            <td>{{ride.OrderDT | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+    
+            <td>{{ride.StartLocation.Address.StreetName || ""}} {{ride.StartLocation.Address.Number || ""}} <br/>
+                {{ride.StartLocation.Address.Town || ""}} {{ride.StartLocation.Address.AreaCode || ""}}</td>
+                
+            <td>{{ride.CarType}}</td>
+    
+        </div>
+        <div *ngIf="ride.CarType != myCarType" class="CCT">
+            <td class="statuses">
+                <div *ngIf="ride.Status == 0" style="color: rgb(0, 163, 141);">Created</div>
+                <div *ngIf="ride.Status == 1" style="color: rgb(128, 0, 96);">Cancelled</div>
+                <div *ngIf="ride.Status == 2" style="color: rgb(90, 44, 0);">Formed</div>
+                <div *ngIf="ride.Status == 3" style="color: rgb(0, 2, 128);">Proccessed</div>
+                <div *ngIf="ride.Status == 4" style="color: rgb(0, 0, 0);">Accepted</div>
+                <div *ngIf="ride.Status == 5" style="color: rgb(139, 0, 0);">Failed</div>
+                <div *ngIf="ride.Status == 6" style="color: green;">Successfull</div>
+            </td>
+                
+            <td>{{ride.OrderDT | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+    
+            <td>{{ride.StartLocation.Address.StreetName || ""}} {{ride.StartLocation.Address.Number || ""}} <br/>
+                {{ride.StartLocation.Address.Town || ""}} {{ride.StartLocation.Address.AreaCode || ""}}</td>
+                
+            <td>{{ride.CarType}}</td>
+    
+        </div>
+           
+    </tr>
+    </table>
+</div>
+
+
 </div>

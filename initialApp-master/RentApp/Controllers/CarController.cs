@@ -40,6 +40,8 @@ namespace RentApp.Controllers
             return unitOfWork.Cars.GetAll().Where(u => u.Deleted == false);
         }
 
+        
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ResponseType(typeof(Car))]
@@ -67,15 +69,20 @@ namespace RentApp.Controllers
             if (ccar == null)
                 return BadRequest("No car found");
 
-            var result = unitOfWork.Cars.Find(c => c.TaxiNumber == car.TaxiNumber && c.Id.ToString() != ccar.Id.ToString());
+            var result = unitOfWork.Cars.Find(c => c.TaxiNumber == car.TaxiNumber && c.Id.ToString() != ccar.Id.ToString()).ToList();
             if (result.Count() != 0)
             {
                 return BadRequest("TaxiNumber not Unique");
             }
 
+            ccar.RegistrationPlate = car.RegistrationPlate;
+            ccar.TaxiNumber = car.TaxiNumber;
+            ccar.YearMade = car.YearMade;
+            ccar.CarType = car.CarType;
+
             try
             {
-                unitOfWork.Cars.Update(car);
+                unitOfWork.Cars.Update(ccar);
                 unitOfWork.Complete();
                 return Ok();
             }
