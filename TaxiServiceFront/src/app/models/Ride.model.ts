@@ -6,14 +6,14 @@ export class Ride {
     Status: string;
     OrderDT: string;
     Price: string;
-    Deleted: string;
+    Deleted: Boolean;
     StartLocation: Location;
     StartLocationID: string;
     DestinationLocation: Location;
     DestinationLocationID: string;
     CarType: string;
     AppUserID: string;
-    // Customer: User;
+    Customer: User;
     DispatcherID: string;
     Dispatcher: User;
     TaxiDriverID: string;

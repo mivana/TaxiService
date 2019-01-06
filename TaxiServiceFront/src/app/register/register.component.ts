@@ -89,17 +89,18 @@ export class RegisterComponent implements OnInit {
             .pipe(first())
               .subscribe(
                   data => {
-                      this.router.navigate(['userHome']);
+                    
+                    this.router.navigate(['login']);
                   },
                   error => {
-                        var errMesage = error.error;
-                        if(errMesage.Message == "Username not unique")
-                          this.showError = true;
-                        if(errMesage.Message == "Email has account")
-                          this.mailError = true;
-                        else
-                          this.resultError = true;  
-                        this.submitted = false;        
+                    var errMesage = error.error;
+                    if(errMesage.Message == "Username not unique")
+                      this.showError = true;
+                    if(errMesage.Message == "Email has account")
+                      this.mailError = true;
+                    else
+                      this.resultError = true;  
+                      this.submitted = false;        
                   });
     
     }

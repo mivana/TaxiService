@@ -189,5 +189,18 @@ namespace RentApp.Models
         public AppUser Driver { get; set; }
     }
 
+    public class CancelRideBindingModel
+    {
+        [Required]
+        [Display(Name = "CancelRide")]
+        public Ride CancelRide { get; set; }
+
+        [Required]
+        [Display]
+        public Comment UserComment { get; set; }
+
+    }
+
+
 
 }

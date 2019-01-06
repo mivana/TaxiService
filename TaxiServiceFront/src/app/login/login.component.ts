@@ -75,6 +75,10 @@ export class LoginComponent implements OnInit {
           {
               this.router.navigate(['/adminDashboard']);
           }
+          else if(SessionService.isDriver())
+          {
+              this.router.navigate(['/driverHome']);
+          }
           else
           {
               this.router.navigate(['/userHome']);

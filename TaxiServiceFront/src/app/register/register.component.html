@@ -1,10 +1,10 @@
 <div class="leftColumn">
-<!-- <p>
-  Already have an account?  <a [routerLink]="['/login']">Login</a> here
-</p> -->
 <p>
-    Don't have an account? Register here
+  Already have an account?  <a [routerLink]="['/login']">Login</a> here
 </p>
+<!-- <p>
+    Don't have an account? Register here
+</p> -->
 <div class="errorText">
     <div *ngIf="resultError" class="errorText">Error while trying to register, please try again</div>
     <div *ngIf="showError" class="errorText">Username is not avaible</div>
@@ -86,6 +86,6 @@
   </div>
 </div>
 
-<div class="rightColumn">
+<!-- <div class="rightColumn">
     <app-login></app-login>
-</div>
+</div> -->

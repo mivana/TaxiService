@@ -1,64 +1,11 @@
 <div class="row">
+    <div *ngIf="hasErrorUser" class="errorText">{{errorString}}</div>
+    
     <div class="leftColumn">
-        <div>
-        <h3>My History</h3>
-
-        <table class="ridesTable">
-        <tr class="tRow">
-            <th class="header"><h3>Status</h3></th>
-            <th class="header"><h3>Date Time Booked</h3></th>
-            <th class="header"><h3>Start Location</h3></th>
-            <th class="header"><h3>Destination Location</h3></th>
-            <th class="header"><h3>Car Type</h3></th>
-            <th class="header"><h3>Dispatcher</h3></th>
-            <th class="header"><h3>Driver</h3></th>
-            <th class="header"><h3>Price</h3></th>
-            <!-- <th>Comment</th> -->
-        </tr>
-        <tr *ngFor="let ride of myRides" class="tRow">
-            
-            <td class="statuses">
-                <div *ngIf="ride.Status == 0" style="color: rgb(0, 163, 141);">Created</div>
-                <div *ngIf="ride.Status == 1" style="color: rgb(128, 0, 96);">Cancelled</div>
-                <div *ngIf="ride.Status == 2" style="color: rgb(90, 44, 0);">Formed</div>
-                <div *ngIf="ride.Status == 3" style="color: rgb(0, 2, 128);">Proccessed</div>
-                <div *ngIf="ride.Status == 4" style="color: rgb(0, 0, 0);">Accepted</div>
-                <div *ngIf="ride.Status == 5" style="color: rgb(139, 0, 0);">Failed</div>
-                <div *ngIf="ride.Status == 6" style="color: green;">Successfull</div>
-            </td>
-            
-            <td>{{ride.OrderDT | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-
-            <td>{{ride.StartLocation.Address.StreetName || ""}} {{ride.StartLocation.Address.Number || ""}} <br/>
-                {{ride.StartLocation.Address.Town || ""}} {{ride.StartLocation.Address.AreaCode || ""}}</td>
-            
-            <td><div *ngIf="ride.DestinationLocation != null">{{ride.DestinationLocation.Address.StreetName || ""}} {{ride.DestinationLocation.Address.Number || ""}} <br/>
-                {{ride.DestinationLocation.Address.Town || ""}} {{ride.DestinationLocation.Address.AreaCode || ""}}</div>
-            <div *ngIf="ride.DestinationLocation == null">No Destination Location defined</div></td>
-                
-            <td>{{ride.CarType}}</td>
-
-            <td><div *ngIf="ride.Dispatcher != null">{{ride.Dispatcher.FullName || "No Dispatcher"}}</div>
-            <div *ngIf="ride.Dispatcher == null">No Dispatcher defined</div></td>
-
-            <td><div *ngIf="ride.TaxiDriver != null">{{ride.TaxiDriver.FullName || "No Driver"}}</div>
-            <div *ngIf="ride.TaxiDriver == null">No TaxiDriver defined</div></td>
-            
-            <td><div *ngIf="ride.Price != null">{{ride.Price || "No Price"}}</div>
-            <div *ngIf="ride.Price == null">No Price defined</div></td>
-            <!-- <td>{{ride.Price || "No Comment"}}</td> -->
-        </tr>
-        </table>
-
-        </div>
-    </div>
-
-    <div class="rigthColumn">
         <h1>Active Ride</h1>
-        
-        <div>
-      
+
         <div *ngIf="hasActive">
+
         <table class="activeTable">
             <tr>
                 <td class="prop">Status:</td>
@@ -113,20 +60,184 @@
             <tr>
                 <td colspan="2">
                 <div *ngIf="activeRide.Status == 0">
-                    <button>Edit</button>
-                    <button style="margin-left: 50px;">Cancel</button>
+                    <button [disabled]="enableEdit" (click)="Edit(activeRide)">Edit</button>
+                    <button [disabled]="enableEdit" (click)="Cancel(activeRide)" style="margin-left: 50px;">Cancel Ride</button>
                 </div>
                 </td>
             </tr>
 
         </table>
+
+    </div>
             
-    </div>
-    </div>
-    <div *ngIf="!hasActive">
-        <h3>No active rides!</h3>
+    <div *ngIf="noActive">
+        <h2>No active rides!</h2>
+    </div>    
+
+    <div *ngIf="showEdit">
+    
+    <div *ngIf="hasError" class="errorText">{{errorString}}</div>
+
+    <form [formGroup]="EditForm" (ngSubmit)="OnSubmit()">
+        <h3>Edit Order</h3>
+        <div class="row">
+            <label>Street Name</label>
+            <input type="text" formControlName="streetName"/>
+            <div *ngIf="submitted && f.streetName.errors"  class="errorText">
+            <div *ngIf="f.streetName.errors.required">Street Name is required</div>
+            </div>
+    
+            <label>Number</label>
+            <input type="text" formControlName="number"/>
+            <div *ngIf="submitted && f.number.errors"  class="errorText">
+            <div *ngIf="f.number.errors.required">Number is required</div>
+            <div class="errorText" *ngIf="EditForm.controls.number.errors?.invalidNumber">Number must be a number</div>
+            </div>
+        </div>
+        <div class="row">
+        <label>Town</label>
+            <input type="text" formControlName="town"/>
+            <div *ngIf="submitted && f.town.errors"  class="errorText">
+            <div *ngIf="f.town.errors.required">Town is required</div>
+            </div>
+        </div>
+    
+        <div class="row">
+        <label>Area Code</label>
+            <input type="text" formControlName="areaCode"/>
+            <div *ngIf="submitted && f.areaCode.errors"  class="errorText">
+            <div *ngIf="f.areaCode.errors.required">Area Code is required</div>
+            <div *ngIf="EditForm.controls.areaCode.errors?.invalidNumber">Area Code must be a number</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <label>Car Type</label><br/>
+            <select id="carType" formControlName="carType">
+                <option *ngFor="let c of carTypes" [ngValue]="c">{{ c }}</option>
+            </select>
+        </div>
+    
+        <button [disabled]="submitted">Change</button>
+        <button (click)="CancelEdit()">Cancel</button>
+    </form>
     </div>
 
+    <div *ngIf="showComment">
+        <h2>You have cancelled your taxi, please fill the form</h2>
+        
+        <div *ngIf="hasError" class="errorText">{{errorString}}</div>
+
+        <form [formGroup]="CommentForm" (ngSubmit)="OnSubmitComment()" style="margin-left: 55px;">
+            <div class="row">
+                <h4 class="row">Opinion</h4>
+                <input type="text" formControlName="content" class="opinion" rows="5"/>
+                <div *ngIf="submitted && c.content.errors"  class="errorText" style="margin-top: 8px;">
+                    <div *ngIf="c.content.errors.required">Please insert your opinion</div>
+                </div>
+            </div>
+                
+            <div class="row">
+                <h4 class="row">Rating</h4>
+                <fieldset class="rating">
+                    <input type="radio" [name]="inputName" value="5" [checked]="rating===5" />
+                    <label title="Rocks!" (click)='onClick(5)'>5 stars</label>
+                          
+                    <input type="radio" [name]="inputName" value="4" [checked]="rating===4" />
+                    <label title="Pretty good" (click)='onClick(4)'>4 stars</label>
+                          
+                    <input type="radio" [name]="inputName" value="3" [checked]="rating===3" />
+                    <label title="Meh" (click)='onClick(3)'>3 stars</label>
+                          
+                    <input type="radio" [name]="inputName" value="2" [checked]="rating===2" />
+                    <label title="Kinda bad" (click)='onClick(2)'>2 stars</label>
+                          
+                    <input type="radio" [name]="inputName" value="1" [checked]="rating===1" />
+                    <label title="Sucks big time" (click)='onClick(1)'>1 star</label>
+                </fieldset>
+            </div>
+                
+            <button [disabled]="submitted" style="margin-top: 20px;">Submit</button>
+            <button (click)="CancelComment()">Cancel</button>
+        </form>
+        
+        
+
+
+    </div>
+
+</div>
+
+
+    <div class="rightColumn">
+        <div>
+        <h3>My History</h3>
+
+        <table class="ridesTable">
+        <tr class="tRow">
+            <th class="header"><h3>Status</h3></th>
+            <th class="header"><h3>Date Time Booked</h3></th>
+            <th class="header"><h3>Start Location</h3></th>
+            <th class="header"><h3>Destination Location</h3></th>
+            <th class="header"><h3>Car Type</h3></th>
+            <th class="header"><h3>Dispatcher</h3></th>
+            <th class="header"><h3>Driver</h3></th>
+            <th class="header"><h3>Comment(Rating)</h3></th>
+            <th class="header"><h3>Price</h3></th>
+            <!-- <th>Comment</th> -->
+        </tr>
+        <tr *ngFor="let ride of myRides" class="tRow">
+            
+            <td class="statuses">
+                <div *ngIf="ride.Status == 0" style="color: rgb(0, 163, 141);">Created</div>
+                <div *ngIf="ride.Status == 1" style="color: rgb(128, 0, 96);">Cancelled</div>
+                <div *ngIf="ride.Status == 2" style="color: rgb(90, 44, 0);">Formed</div>
+                <div *ngIf="ride.Status == 3" style="color: rgb(0, 2, 128);">Proccessed</div>
+                <div *ngIf="ride.Status == 4" style="color: rgb(0, 0, 0);">Accepted</div>
+                <div *ngIf="ride.Status == 5" style="color: rgb(139, 0, 0);">Failed</div>
+                <div *ngIf="ride.Status == 6" style="color: green;">Successfull</div>
+            </td>
+            
+            <td>{{ride.OrderDT | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+
+            <td>{{ride.StartLocation.Address.StreetName || ""}} {{ride.StartLocation.Address.Number || ""}} <br/>
+                {{ride.StartLocation.Address.Town || ""}} {{ride.StartLocation.Address.AreaCode || ""}}</td>
+            
+            <td><div *ngIf="ride.DestinationLocation != null">{{ride.DestinationLocation.Address.StreetName || ""}} {{ride.DestinationLocation.Address.Number || ""}} <br/>
+                {{ride.DestinationLocation.Address.Town || ""}} {{ride.DestinationLocation.Address.AreaCode || ""}}</div>
+            <div *ngIf="ride.DestinationLocation == null">No Destination Location</div></td>
+                
+            <td>{{ride.CarType}}</td>
+
+            <td><div *ngIf="ride.Dispatcher != null">{{ride.Dispatcher.Username || "No Dispatcher"}}</div>
+            <div *ngIf="ride.Dispatcher == null">No Dispatcher</div></td>
+
+            <td><div *ngIf="ride.TaxiDriver != null">{{ride.TaxiDriver.Username || "No Driver"}}</div>
+            <div *ngIf="ride.TaxiDriver == null">No TaxiDriver</div></td>
+            
+            <div *ngIf="ride.UserComment.length == 0">
+                <td>No Comment</td>
+            </div>
+            <div *ngIf="ride.UserComment.length != 0">
+                <td *ngFor="let com of ride.UserComment">
+                    <div *ngIf="com != null">
+                        <div style="font-style: italic; font-weight:500; text-align:left;">{{activeUser.Username}} {{com.DateCreated | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+                        <div style="text-align:right; margin-top: 5px;">{{com.Content || "No Comment"}} ({{com.Rating}})</div>
+                    </div>
+                </td>
+            </div>
+
+            <td><div *ngIf="ride.Price != null">{{ride.Price || "No Price"}}</div>
+                <div *ngIf="ride.Price == null">No Price</div></td>
+
+            
+            
+           
+            <!-- <td>{{ride.Price || "No Comment"}}</td> -->
+        </tr>
+        </table>
+
+        </div>
     </div>
 
 

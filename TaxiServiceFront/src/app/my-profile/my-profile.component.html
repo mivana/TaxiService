@@ -17,6 +17,11 @@
       <li>
         <button (click)="Edit()"><i>Edit Profile</i></button>
       </li>
+      <li>
+        <div *ngIf="IsDriver()" class>
+          <button (click)="EditCar()"><i>Edit Car</i></button>
+        </div>
+      </li>
     </ul>
   </div>
 
@@ -47,6 +52,70 @@
       
       <td>{{activeUser.Role}}</td>
     </tr>
+
+  </div>
+
+  <div *ngIf="IsDriver()" class="secondRow">
+    
+    <div *ngIf="showCar">
+    <table class="carTable">
+      <tr style="text-align:center;">
+        <td colspan="2"><h3>My Car</h3></td>
+      </tr>
+      <tr>
+        <td><h4>Taxi Number</h4></td>
+        <td>{{driverCar.TaxiNumber}}</td>
+      </tr>
+      <tr>
+        <td><h3>Registration Plate</h3></td>
+        <td>{{driverCar.RegistrationPlate}}</td>
+      </tr>
+      <tr>
+        <td><h3>Car Type</h3></td>
+        <td>
+          <div *ngIf="driverCar.CarType == 0">Standard</div>
+          <div *ngIf="driverCar.CarType == 1">Combi</div>
+        </td>
+      </tr>
+      <tr>
+        <td><h3>Year Made</h3></td>
+        <td>{{driverCar.YearMade | date:'yyyy'}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div *ngIf="showEditCar">
+    <h3 class="prop">Change your Car Info</h3>
+    <div *ngIf="errorUniqueTaxi" class="errorText">Taxi Number is not avaible, please choose another</div>
+    <div *ngIf="errorCar" class="errorText">Error while trying to change car info, please try again</div>
+    
+    <form [formGroup]="editCarForm" (ngSubmit)="OnSubmitCar()">
+        <label>Registration Plate:</label>
+        <input type="text" formControlName="registrationPlate"/>
+        <div *ngIf="submitted && c.registrationPlate.errors"  class="errorText">
+          <div *ngIf="c.registrationPlate.errors.required">Registration Plate is required</div>
+        </div>
+        
+        <label>Taxi Number:</label>
+        <input type="text" formControlName="taxiNumber"/>
+        <div *ngIf="submitted && c.taxiNumber.errors"  class="errorText">
+          <div *ngIf="c.taxiNumber.errors.required">Taxi Number is required</div>
+        </div>
+        
+        <label>Year Made</label><br/>
+        <input type="date" formControlName="yearMade" />
+        <div *ngIf="submitted && c.yearMade.errors" class="errorText">
+            <div *ngIf="c.yearMade.errors.required">Year Made is required</div>
+        </div>
+
+        <label>Car Type</label><br/>
+        <select id="carType" formControlName="carType">
+            <option *ngFor="let cc of carTypes" [ngValue]="cc">{{ cc }}</option>
+        </select>
+        <button [disabled]="submitted">Change</button>
+        <button (click)="Cancel()">Cancel</button>
+    </form>
+  </div>
 
   </div>
 </div>

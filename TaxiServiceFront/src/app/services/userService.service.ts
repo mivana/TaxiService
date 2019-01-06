@@ -7,6 +7,10 @@ import { User } from '../models/User.model';
 import { Password } from '../models/Password.model';
 import { RegisterDriver } from '../models/RegisterDriver.model';
 import { NewRide } from '../models/NewRide.model';
+import { Ride } from '../models/Ride.model';
+import { Comment } from '../models/Comment.model';
+import { CancelRide } from '../models/CancelRide.model';
+import { Car } from '../models/Car.model';
  
 @Injectable()
 export class UserService {
@@ -51,7 +55,23 @@ export class UserService {
         return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/PostNewRide',ride);        
     }
 
-    CancelUserRide(id: string): Observable<any> {
-        return this.http.delete(AppSettings.API_ENDPOINT + '/api/Ride/CancelUserRide'+id);
+    PutRide(id: string, ride: Ride): Observable<any> {
+        return this.http.put(AppSettings.API_ENDPOINT + '/api/Ride/'+id,ride);
+    }
+
+    PutEditRide(id: string, ride: Ride): Observable<any> {
+        return this.http.put(AppSettings.API_ENDPOINT + '/api/Ride/'+id,ride);
+    }
+
+    AddComment(comment: Comment): Observable<any> {
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/AddComment',comment);
+    }
+
+    CancelRideComplete(cancelRide: CancelRide): Observable<any> {
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/CancelRideComplete',cancelRide);
+    }
+
+    UpdateCar(id: string, car: Car): Observable<any>{
+        return this.http.put(AppSettings.API_ENDPOINT + '/api/Car/'+id,car);
     }
 }

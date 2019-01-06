@@ -1,3 +1,68 @@
-<p>
-  driver-home works!
-</p>
+
+<div class="row">
+<h3>My History</h3>
+
+        <table class="ridesTable">
+        <tr class="tRow">
+            <th class="header"><h3>Status</h3></th>
+            <th class="header"><h3>Date Time Booked</h3></th>
+            <th class="header"><h3>Start Location</h3></th>
+            <th class="header"><h3>Destination Location</h3></th>
+            <th class="header"><h3>Car Type</h3></th>
+            <th class="header"><h3>Dispatcher</h3></th>
+            <th class="header"><h3>Driver</h3></th>
+            <th class="header"><h3>Comment(Rating)</h3></th>
+            <th class="header"><h3>Price</h3></th>
+            <!-- <th>Comment</th> -->
+        </tr>
+        <tr *ngFor="let ride of myRides" class="tRow">
+            
+            <td class="statuses">
+                <div *ngIf="ride.Status == 0" style="color: rgb(0, 163, 141);">Created</div>
+                <div *ngIf="ride.Status == 1" style="color: rgb(128, 0, 96);">Cancelled</div>
+                <div *ngIf="ride.Status == 2" style="color: rgb(90, 44, 0);">Formed</div>
+                <div *ngIf="ride.Status == 3" style="color: rgb(0, 2, 128);">Proccessed</div>
+                <div *ngIf="ride.Status == 4" style="color: rgb(0, 0, 0);">Accepted</div>
+                <div *ngIf="ride.Status == 5" style="color: rgb(139, 0, 0);">Failed</div>
+                <div *ngIf="ride.Status == 6" style="color: green;">Successfull</div>
+            </td>
+            
+            <td>{{ride.OrderDT | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+
+            <td>{{ride.StartLocation.Address.StreetName || ""}} {{ride.StartLocation.Address.Number || ""}} <br/>
+                {{ride.StartLocation.Address.Town || ""}} {{ride.StartLocation.Address.AreaCode || ""}}</td>
+            
+            <td><div *ngIf="ride.DestinationLocation != null">{{ride.DestinationLocation.Address.StreetName || ""}} {{ride.DestinationLocation.Address.Number || ""}} <br/>
+                {{ride.DestinationLocation.Address.Town || ""}} {{ride.DestinationLocation.Address.AreaCode || ""}}</div>
+            <div *ngIf="ride.DestinationLocation == null">No Destination Location</div></td>
+                
+            <td>{{ride.CarType}}</td>
+
+            <td><div *ngIf="ride.Dispatcher != null">{{ride.Dispatcher.Username || "No Dispatcher"}}</div>
+            <div *ngIf="ride.Dispatcher == null">No Dispatcher</div></td>
+
+            <td><div *ngIf="ride.TaxiDriver != null">{{ride.TaxiDriver.Username || "No Driver"}}</div>
+            <div *ngIf="ride.TaxiDriver == null">No TaxiDriver</div></td>
+            
+            <div *ngIf="ride.UserComment.length == 0">
+                <td>No Comment</td>
+            </div>
+            <div *ngIf="ride.UserComment.length != 0">
+                <td *ngFor="let com of ride.UserComment">
+                    <div *ngIf="com != null">
+                        <div style="font-style: italic; font-weight:500; text-align:left;">{{activeUser.Username}} {{com.DateCreated | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+                        <div style="text-align:right; margin-top: 5px;">{{com.Content || "No Comment"}} ({{com.Rating}})</div>
+                    </div>
+                </td>
+            </div>
+
+            <td><div *ngIf="ride.Price != null">{{ride.Price || "No Price"}}</div>
+                <div *ngIf="ride.Price == null">No Price</div></td>
+
+            
+            
+           
+            <!-- <td>{{ride.Price || "No Comment"}}</td> -->
+        </tr>
+        </table>
+</div>

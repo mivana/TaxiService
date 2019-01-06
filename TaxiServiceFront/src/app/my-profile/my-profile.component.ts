@@ -7,6 +7,8 @@ import { error } from 'util';
 import { AllUsersGuard } from '../guards/allUsers.guard';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from '../helper/jwt.interceptor';
+import { SessionService } from '../services/sessionservice.service';
+import { Car } from '../models/Car.model';
 
 @Component({
   selector: 'app-my-profile',
@@ -25,9 +27,15 @@ export class MyProfileComponent implements OnInit {
   activeUser: User;
   editedUser: User;
   tempUser: User;
+  driverCar: Car = new Car();
+
   showEdit: boolean = false;
   genders: string[] = ['Male','Female'];
   default: string = 'Male';
+
+  carTypes: string[] = ['Standard','Combi'];
+  defaultC: string = 'Standard';
+
   oldUsername: string;
 
   submitted: boolean;
@@ -41,8 +49,12 @@ export class MyProfileComponent implements OnInit {
   editForm: FormGroup;
   editUsernameForm: FormGroup;
   editPasswordForm: FormGroup;
+  editCarForm: FormGroup;
   showError: boolean;
-  
+  showEditCar: boolean = false;
+  showCar: boolean;
+  errorCar: boolean = false;
+  errorUniqueTaxi: boolean = false;;
 
   constructor(private service: UserService,
               private fb: FormBuilder) { 
@@ -86,6 +98,18 @@ export class MyProfileComponent implements OnInit {
       validator: PasswordValidation.MatchPassword
     });
 
+    this.editCarForm = this.fb.group({
+      registrationPlate: ['', Validators.required],
+      taxiNumber: ['', Validators.required],
+      yearMade: ['', Validators.required],
+      carType:[null]
+    });
+
+    this.editCarForm.controls['carType'].setValue(this.defaultC, {onlySelf: true});
+  }
+
+  IsDriver(){
+    return SessionService.isDriver();
   }
 
   ngAfterViewInit()
@@ -99,11 +123,17 @@ export class MyProfileComponent implements OnInit {
       data =>{
         this.submitted = false;
       });
+
+    this.editCarForm.valueChanges.subscribe(
+      data =>{
+        this.submitted = false;
+      });
   }
 
   get f() { return this.editForm.controls; }
   get u() { return this.editUsernameForm.controls; }
   get p() { return this.editPasswordForm.controls; }
+  get c() { return this.editCarForm.controls; }
 
   OnSubmit()
   {
@@ -158,7 +188,7 @@ export class MyProfileComponent implements OnInit {
       },
       error=>{
         var a = this.activeUser;
-        if(error.error.Message = "Username not Unique"){
+        if(error.error.Message == "Username not Unique"){
           this.errorUnique = true;
         }
         else{
@@ -191,6 +221,31 @@ export class MyProfileComponent implements OnInit {
 
   }
 
+  OnSubmitCar(){
+    this.submitted = true;
+    debugger
+    // stop here if form is invalid
+    if (this.editCarForm.invalid) {
+      return;
+    }
+
+    this.service.UpdateCar(this.driverCar.Id,this.editCarForm.value).subscribe(
+      data => {
+
+      },
+      error=>{
+        if(error.error.Message == "TaxiNumber not Unique"){
+          this.errorUniqueTaxi = true;
+        }
+        else{
+          this.errorCar = true;
+        }
+        this.submitted = false;
+    
+     });
+
+  }
+
   getUserInfo(){
     this.service.getUser().subscribe(
       data=>{
@@ -198,12 +253,16 @@ export class MyProfileComponent implements OnInit {
         this.activeUser = res;
         this.loaded = true;
         if(this.activeUser.Role == "0")
-          this.activeUser.Role = "User"
-        else if(this.activeUser.Role == "1")
-          this.activeUser.Role = "Driver"
+          this.activeUser.Role = "User";
+        else if(this.activeUser.Role == "1"){
+          this.activeUser.Role = "Driver";
+          this.driverCar = res.DriverCars[0];
+          this.showCar = true;
+        }
         else if(this.activeUser.Role == "2")
-          this.activeUser.Role = "Admin"
-      }
+          this.activeUser.Role = "Admin";
+      
+        }
       );
   }
 
@@ -240,6 +299,18 @@ export class MyProfileComponent implements OnInit {
   
   }
 
+  EditCar(){
+    this.showEditCar = true;
+    this.showCar = false;
+    this.editCarForm.controls['registrationPlate'].setValue(this.driverCar.RegistrationPlate, {onlySelf: true});
+    this.editCarForm.controls['taxiNumber'].setValue(this.driverCar.TaxiNumber, {onlySelf: true});
+    this.editCarForm.controls['yearMade'].setValue(this.driverCar.YearMade, {onlySelf: true});
+    if(this.driverCar.CarType == "0")
+      this.editCarForm.controls['carType'].setValue(this.defaultC, {onlySelf: true});
+    else
+      this.editCarForm.controls['carType'].setValue("Combi", {onlySelf: true});
+  }
+
   Cancel()
   {
     this.showInfo = true;
@@ -251,6 +322,9 @@ export class MyProfileComponent implements OnInit {
     this.showUser = false;
     this.errorUnique =false;
     this.errorUsername = false;
+    this.showCar = true;
+    this.showEditCar = false;
+    this.editCarForm.reset();
   }
 
 

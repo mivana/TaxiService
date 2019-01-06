@@ -58,6 +58,33 @@ namespace RentApp.Controllers
             return Ok();
         }
 
+        [HttpPut]
+        [Authorize(Roles = "Admin,Driver")]
+        [ResponseType(typeof(Car))]
+        public IHttpActionResult UpdateCar(int id, Car car)
+        {
+            var ccar = unitOfWork.Cars.FirstOrDefault(i => i.Id == id);
+            if (ccar == null)
+                return BadRequest("No car found");
+
+            var result = unitOfWork.Cars.Find(c => c.TaxiNumber == car.TaxiNumber && c.Id.ToString() != ccar.Id.ToString());
+            if (result.Count() != 0)
+            {
+                return BadRequest("TaxiNumber not Unique");
+            }
+
+            try
+            {
+                unitOfWork.Cars.Update(car);
+                unitOfWork.Complete();
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return BadRequest();
+            }    
+            
+        }
 
     }
 }

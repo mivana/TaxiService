@@ -1,11 +1,28 @@
 .profile{
     margin-top: 3%;
     margin-left: 3%;
+    width: 30%;
+    float: left;
+}
+
+.secondRow {
+    width: 30%;
+    float: left;
+    margin-top: 5%;
+}
+
+.carTable tr{
+    margin-top: 15px;
+}
+
+.carTable td{
+    margin-left: 20px;
 }
 
 .buttons{
     float: right;
     margin-right: 3%;
+    margin-top: 3%;
 }
 
 ul {

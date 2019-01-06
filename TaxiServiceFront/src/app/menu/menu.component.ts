@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../services/sessionservice.service';
 import { AuthenticationService } from '../services/authenticationservice.service';
 import { Router } from '@angular/router';
+import { Session } from 'protractor';
 
 @Component({
   selector: 'app-menu',
@@ -19,7 +20,7 @@ export class MenuComponent implements OnInit {
 
   LogOut(){
     this.authService.logout();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/register']);
   }
 
   isntLoggedOn()
@@ -30,5 +31,10 @@ export class MenuComponent implements OnInit {
   isAdmin()
   {
     return SessionService.isAdmin();
+  }
+
+  isDriver()
+  {
+    return SessionService.isDriver();
   }
 }

@@ -101,27 +101,18 @@ export class AddDriverComponent implements OnInit {
     
     this.service.registerDriver(this.driverForm.value, "Driver").subscribe(
       data => {
-        alert("YES");
-      }
-    )
-
-
-          // this.service.register(this.driverForm.value,"Driver")
-          // .pipe(first())
-          //   .subscribe(
-          //       data => {
-          //         this.result = true;
-          //       },
-          //       error => {
-          //             var errMesage = error.error;
-          //             if(errMesage.Message == "Username not unique")
-          //               this.showError = true;
-          //             if(errMesage.Message == "Email has account")
-          //               this.mailError = true;
-          //             else
-          //               this.resultError = true;  
-          //             this.submitted = false;        
-          //       });
+        this.result = true;
+      },
+      error => {
+        var errMesage = error.error;
+        if(errMesage.Message == "Username not unique")
+          this.showError = true;
+        if(errMesage.Message == "Email has account")
+          this.mailError = true;
+        else
+          this.resultError = true;  
+        this.submitted = false;        
+      });
   
   }
 

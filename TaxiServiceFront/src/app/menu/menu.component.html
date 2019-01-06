@@ -38,11 +38,6 @@
           <i>Add a Driver</i>
         </a>
       </li>
-      <li>
-        <a [routerLink]="['/addCar']">
-          <i>Add a Car</i>
-        </a>
-      </li>
       <li class="order">
         <a [routerLink]="['/orderTaxi']">
           <i>Order a Taxi</i>
@@ -64,3 +59,29 @@
       
     </ul>
   </div>
+
+  
+  <div *ngIf = "isDriver()" >
+      <ul>
+        <li>
+          <a [routerLink]="['/driverHome']">
+            <i>Home</i>
+          </a>
+        </li>
+        <li style="float: right">
+          <button (click)="LogOut()" class="buttonMeni"><i>LogOut</i></button>
+        </li>
+        <li style="float: right">
+          <a [routerLink]="['/search']">
+            <i>search</i>
+          </a>
+        </li>
+        <li style="float: right">
+          <a [routerLink]="['/myProfile']">
+            <i>My Information</i>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+  

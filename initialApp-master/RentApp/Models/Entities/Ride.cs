@@ -53,5 +53,10 @@ namespace RentApp.Models.Entities
         [InverseProperty("Ride")]
         public virtual ICollection<Comment> UserComment { get; set; }
 
+        public Ride()
+        {
+            UserComment = new HashSet<Comment>();
+        }
+
     }
 }
