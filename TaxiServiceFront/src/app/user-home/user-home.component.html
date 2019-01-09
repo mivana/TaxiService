@@ -2,7 +2,7 @@
     <div *ngIf="hasErrorUser" class="errorText">{{errorString}}</div>
     
     <div class="leftColumn">
-        <h1>Active Ride</h1>
+        <h1>Active(Last) Ride</h1>
 
         <div *ngIf="hasActive">
 
@@ -37,8 +37,8 @@
             <tr>
                 <td class="prop">Destination Location:</td>
                 <td>
-                    <div *ngIf="activeRide.DestinationLocation != null">{{ride.DestinationLocation.Address.StreetName || ""}} {{ride.DestinationLocation.Address.Number || ""}} <br/>
-                                                                    {{ride.DestinationLocation.Address.Town || ""}} {{ride.DestinationLocation.Address.AreaCode || ""}}</div>
+                    <div *ngIf="activeRide.DestinationLocation != null">{{activeRide.DestinationLocation.Address.StreetName || ""}} {{activeRide.DestinationLocation.Address.Number || ""}} <br/>
+                                                                    {{activeRide.DestinationLocation.Address.Town || ""}} {{activeRide.DestinationLocation.Address.AreaCode || ""}}</div>
                     <div *ngIf="activeRide.DestinationLocation == null">No Destination Location defined</div>
                 </td>
             </tr>
@@ -124,7 +124,12 @@
     </div>
 
     <div *ngIf="showComment">
-        <h2>You have cancelled your taxi, please fill the form</h2>
+        <div *ngIf="activeRide.Status != 6">
+            <h2>You have cancelled your taxi, please fill the form</h2>
+        </div>
+        <div *ngIf="activeRide.Status == 6">
+                <h2>Your ride has ended, you can leave a comment if you like</h2>
+        </div>
         
         <div *ngIf="hasError" class="errorText">{{errorString}}</div>
 

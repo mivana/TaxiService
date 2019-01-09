@@ -15,6 +15,7 @@ namespace RentApp.Models.Entities
         public DateTime? DateCreated { get; set; }
         public int Rating { get; set; }
         public bool Deleted { get; set; }
+        public string Username { get; set; }
 
         [Required]
         [ForeignKey("AppUser")]

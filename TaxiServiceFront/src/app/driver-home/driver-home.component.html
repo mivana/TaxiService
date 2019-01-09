@@ -1,10 +1,14 @@
 
 <div class="row">
     <div>
-        <ul>
-            <li>
-                <button (click)="History()">My History</button>
-                <button (click)="Created()">Created Rides</button>
+        <ul class="buttons">
+            <li> 
+                <div *ngIf="showFree">
+                    <button (click)="History()" class="takeButton">My History</button>
+                </div>
+                <div *ngIf="showHistory">
+                    <button (click)="Created()" class="takeButton">Created Rides</button>
+                </div>
             </li>
         </ul>
     </div>
@@ -21,6 +25,7 @@
             <th class="header"><h3>Start Location</h3></th>
             <th class="header"><h3>Destination Location</h3></th>
             <th class="header"><h3>Car Type</h3></th>
+            <th class="header"><h3>Customer</h3></th>
             <th class="header"><h3>Dispatcher</h3></th>
             <th class="header"><h3>Driver</h3></th>
             <th class="header"><h3>Comment(Rating)</h3></th>
@@ -50,11 +55,14 @@
                 
             <td>{{ride.CarType}}</td>
 
+            <td><div *ngIf="ride.Customer != null">{{ride.Customer.Username || "No Customer"}}</div>
+                <div *ngIf="ride.Customer == null">No Customer</div></td>
+
             <td><div *ngIf="ride.Dispatcher != null">{{ride.Dispatcher.Username || "No Dispatcher"}}</div>
-            <div *ngIf="ride.Dispatcher == null">No Dispatcher</div></td>
+                <div *ngIf="ride.Dispatcher == null">No Dispatcher</div></td>
 
             <td><div *ngIf="ride.TaxiDriver != null">{{ride.TaxiDriver.Username || "No Driver"}}</div>
-            <div *ngIf="ride.TaxiDriver == null">No TaxiDriver</div></td>
+                <div *ngIf="ride.TaxiDriver == null">No TaxiDriver</div></td>
             
             <div *ngIf="ride.UserComment.length == 0">
                 <td>No Comment</td>
@@ -62,7 +70,7 @@
             <div *ngIf="ride.UserComment.length != 0">
                 <td *ngFor="let com of ride.UserComment">
                     <div *ngIf="com != null">
-                        <div style="font-style: italic; font-weight:500; text-align:left;">{{activeUser.Username}} {{com.DateCreated | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+                        <div style="font-style: italic; font-weight:500; text-align:left;">{{com.Username}} {{com.DateCreated | date:'yyyy-MM-dd HH:mm:ss'}}</div>
                         <div style="text-align:right; margin-top: 5px;">{{com.Content || "No Comment"}} ({{com.Rating}})</div>
                     </div>
                 </td>
@@ -123,8 +131,8 @@
         <tr>
             <td class="prop">Destination Location:</td> 
             <td>
-                <div *ngIf="activeRide.DestinationLocation != null">{{ride.DestinationLocation.Address.StreetName || ""}} {{ride.DestinationLocation.Address.Number || ""}} <br/>
-                                                                    {{ride.DestinationLocation.Address.Town || ""}} {{ride.DestinationLocation.Address.AreaCode || ""}}</div>
+                <div *ngIf="activeRide.DestinationLocation != null">{{activeRide.DestinationLocation.Address.StreetName || ""}} {{activeRide.DestinationLocation.Address.Number || ""}} <br/>
+                    {{activeRide.DestinationLocation.Address.Town || ""}} {{activeRide.DestinationLocation.Address.AreaCode || ""}}</div>
                 <div *ngIf="activeRide.DestinationLocation == null">No Destination Location defined</div>
             </td>
         </tr>
@@ -169,6 +177,61 @@
                     <button [disabled]="submitted" style="margin-top: 20px;">Submit</button>
                     <button (click)="CancelFinish()">Cancel Finising</button>
                 </form>
+                </td>
+            </tr>
+        </div>
+
+        <div *ngIf="showSuccessfull">
+            <tr>
+                <td>
+                    <form [formGroup]="FinishForm" (ngSubmit)="OnSubmit()">
+                        <h3>Destination Address:</h3>
+                        
+                        <div class="row">
+                            <label>Street Name</label>
+                            <input type="text" formControlName="dStreetName"/>
+                            <div *ngIf="submitted && f.dStreetName.errors"  class="errorText">
+                            <div *ngIf="f.dStreetName.errors.required">Street Name is required</div>
+                            </div>
+                    
+                            <label>Number</label>
+                            <input type="text" formControlName="dNumber"/>
+                            <div *ngIf="submitted && f.dNumber.errors"  class="errorText">
+                            <div *ngIf="f.dNumber.errors.required">Number is required</div>
+                            <div class="errorText" *ngIf="FinishForm.controls.dNumber.errors?.invalidNumber">Number must be a number</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                        <label>Town</label>
+                            <input type="text" formControlName="dTown"/>
+                            <div *ngIf="submitted && f.dTown.errors"  class="errorText">
+                            <div *ngIf="f.dTown.errors.required">Town is required</div>
+                            </div>
+                        </div>
+                    
+                        <div class="row">
+                        <label>Area Code</label>
+                            <input type="text" formControlName="dAreaCode"/>
+                            <div *ngIf="submitted && f.dAreaCode.errors"  class="errorText">
+                            <div *ngIf="f.dAreaCode.errors.required">Area Code is required</div>
+                            <div *ngIf="FinishForm.controls.dAreaCode.errors?.invalidNumber">Area Code must be a number</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label>Price</label>
+                            <input type="text" formControlName="price"/>
+                            <div *ngIf="submitted && f.price.errors"  class="errorText">
+                            <div *ngIf="f.price.errors.required">Area Code is required</div>
+                            <div *ngIf="FinishForm.controls.price.errors?.invalidNumber">Area Code must be a number</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <button [disabled]="submitted" style="margin-top: 20px;">Submit</button>
+                            <button (click)="CancelFinish()">Cancel Finising</button>
+                        </div>
+                    </form>                    
                 </td>
             </tr>
         </div>

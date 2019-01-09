@@ -1,4 +1,5 @@
 import { Car } from './Car.model';
+import { Comment } from './Comment.model';
 
 export class User {
     Id: string;

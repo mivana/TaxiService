@@ -9,11 +9,11 @@ import { RegisterDriver } from '../models/RegisterDriver.model';
 import { NewRide } from '../models/NewRide.model';
 import { Ride } from '../models/Ride.model';
 import { Comment } from '../models/Comment.model';
-import { CancelRide } from '../models/CancelRide.model';
 import { Car } from '../models/Car.model';
 import { TakeRide } from '../models/TakeRide.model';
 import { TouchSequence } from 'selenium-webdriver';
 import { FinishRide } from '../models/FinishRide.model';
+import { CommentRide } from '../models/CommentRide.model';
  
 @Injectable()
 export class UserService {
@@ -50,6 +50,10 @@ export class UserService {
         return this.http.get(AppSettings.API_ENDPOINT +'/api/Ride/GetFreeRides')
     }
 
+    GetRides():Observable<any>{
+        return this.http.get(AppSettings.API_ENDPOINT + '/api/Ride');
+    }
+
     UpdateUsername(id: string, username: User): Observable<any> {
         return this.http.put(AppSettings.API_ENDPOINT + '/api/User/UpdateUsername/'+id, username);
     }
@@ -74,7 +78,7 @@ export class UserService {
         return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/AddComment',comment);
     }
 
-    CancelRideComplete(cancelRide: CancelRide): Observable<any> {
+    CancelRideComplete(cancelRide: CommentRide): Observable<any> {
         return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/CancelRideComplete',cancelRide);
     }
 
@@ -89,5 +93,10 @@ export class UserService {
     FinishRide(finishRide: FinishRide): Observable<any> {
         return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/FinishRide',finishRide);
     }
+
+    CommentRideComplete(commentRide: CommentRide): Observable<any> {
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/CommentRideComplete',commentRide);
+    }
+
 
 }

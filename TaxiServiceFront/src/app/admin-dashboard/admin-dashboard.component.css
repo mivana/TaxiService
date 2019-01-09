@@ -1,4 +1,98 @@
 .front{
-    margin-top: 3%;
+    margin-top: 4%;
     margin-left: 3%;
+}
+
+.row{
+    margin-top: 5%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.leftColumn{
+    float: left;
+    width: 50%;
+    margin-left: 2%;
+}
+
+.rightColumn{
+    float: left;
+    width: 50%;
+}
+
+.statuses{
+    font-weight: bold;
+    
+}
+
+.header{
+    text-align: center;
+    font-weight: bolder;
+    background-color: rgba(223, 189, 0, 0.726);
+    border-radius: 10px;
+}
+
+.tRow{
+    text-align: left;
+    border-radius: 10px;
+    background-color: white;
+    border-color: gold;
+}
+
+.ridesTable{
+    width: 98%;
+}
+
+.freeTable{
+    margin-left: 10%;
+    width: 60%;
+}
+
+.takeButton{
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 18px 18px 18px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    border-radius: 50%;
+  }
+
+.takeButton:hover{
+ color: goldenrod;
+}
+
+.takeButton:active{
+    color: black;
+    background-color: gold;
+}
+
+.takeButton:disabled{
+    background-color:rgb(71, 71, 71);
+    color: white;
+}
+
+.profile{
+    margin-left: 4%;
+}
+
+.errorText{
+    color: red;
+}
+
+.buttons{
+    float:right;
+    list-style-type: none;
+}
+
+li{
+    float:right;
 }

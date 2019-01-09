@@ -8,6 +8,7 @@ import { User } from '../models/User.model';
 import { Ride } from '../models/Ride.model';
 import { TakeRide } from '../models/TakeRide.model';
 import { FinishRide } from '../models/FinishRide.model';
+import { NumbericValidation } from '../validators/numeric-validator.validation';
 
 @Component({
   selector: 'app-driver-home',
@@ -26,6 +27,7 @@ export class DriverHomeComponent implements OnInit {
   activeUser: User = new User();
   myRides: Ride[] = [];
   freeRides: Ride[] = [];
+  tempRides: Ride[] = [];
   activeRide: Ride = new Ride();
   takeRide: TakeRide = new TakeRide();
   fRide: FinishRide = new FinishRide();
@@ -37,9 +39,12 @@ export class DriverHomeComponent implements OnInit {
   myCarType: string;
   showFinish: boolean = false;
   showComment: boolean = false;
-  hasActive: boolean = false;;
+  hasActive: boolean = false;
+  showSuccessfull: boolean = false;
+;
   
   CommentForm: FormGroup;
+  FinishForm: FormGroup;
   submitted: boolean;
   result: boolean;
 
@@ -51,8 +56,16 @@ export class DriverHomeComponent implements OnInit {
       content: ['',Validators.required]
     });
 
-    this.GetUserInfo();
-    this.GetFreeRides();
+    this.FinishForm = this.fb.group({
+      dStreetName:['',Validators.required],
+      dNumber: ['',[Validators.required,NumbericValidation.numberValidator]],
+      dTown: ['',Validators.required],
+      dAreaCode: ['',[Validators.required,NumbericValidation.numberValidator]],
+      price:['',[Validators.required,NumbericValidation.numberValidator]]
+    })
+
+    this.PrepareInfo();
+    this.showHistory = true;
   }
 
   ///When input changes, buttons are not disabled anymore
@@ -64,9 +77,19 @@ export class DriverHomeComponent implements OnInit {
         this.result = false;
       }
     )
-    
+
+    this.FinishForm.valueChanges.subscribe(
+      data =>{
+        this.submitted = false;
+        this.result = false;
+      }
+    )
   }
 
+  PrepareInfo(){
+    this.GetUserInfo();
+    this.GetFreeRides();
+  }
 
   GetFreeRides(): any {
     this.service.GetFreeRides().subscribe(
@@ -89,10 +112,12 @@ export class DriverHomeComponent implements OnInit {
         debugger
         var user = data;
         this.activeUser = user;
-        this.myRides = user.DriverRides;
+        this.tempRides = user.DriverRides;
+        this.myRides = this.tempRides.reverse();
         this.myCarType = this.activeUser.DriverCars[0].CarType;
-        this.activeRide = user.DriverRides[0];
-        if(this.activeRide != null)
+
+        this.activeRide = this.myRides[0];
+        if(this.activeRide != null && (this.activeRide.Status == "2" || this.activeRide.Status == "3" || this.activeRide.Status == "4")) 
           this.hasActive = true;
         else
           this.hasActive = false;
@@ -110,6 +135,7 @@ export class DriverHomeComponent implements OnInit {
       data => {
         debugger
         this.activeRide = data;
+        this.PrepareInfo();
       },
       error => {
         this.hasError = true;
@@ -119,6 +145,7 @@ export class DriverHomeComponent implements OnInit {
   }
 
   get c() { return this.CommentForm.controls; }
+  get f() { return this.FinishForm.controls; }
 
   OnSubmitComment(){
     this.submitted = true;
@@ -135,11 +162,12 @@ export class DriverHomeComponent implements OnInit {
    this.fRide.Content = this.CommentForm.controls['content'].value;
    this.fRide.IsGood = false;
 
-   ///OVDE JE PROBLEM, NEKE ENTITETE DUPLIRA ILI TROPLIRA? :D POGLEDAJ OVO KASNIJE DETALJNIJE!
-
    this.service.FinishRide(this.fRide).subscribe(
      data=>{
-       
+       this.showComment = false;
+       this.hasActive = false;
+       this.showFinish = false;
+      this.PrepareInfo();
      },
      error => {
        this.hasError = true;
@@ -148,14 +176,49 @@ export class DriverHomeComponent implements OnInit {
    )
   }
 
+  OnSubmit(){
+    this.submitted = true;
+    this.hasError = false;
+    this.errorString = "";
+
+      
+   // stop here if form is invalid
+   if (this.FinishForm.invalid) {
+    return;
+   }
+
+   this.fRide.FinishRide = this.activeRide;
+   this.fRide.DStreetName = this.FinishForm.controls['dStreetName'].value;
+   this.fRide.DNumber = this.FinishForm.controls['dNumber'].value;
+   this.fRide.DTown = this.FinishForm.controls['dTown'].value;
+   this.fRide.DAreaCode = this.FinishForm.controls['dAreaCode'].value;
+   this.fRide.Price = this.FinishForm.controls['price'].value;
+   this.fRide.IsGood = true;
+
+   this.service.FinishRide(this.fRide).subscribe(
+    data=>{
+      this.showSuccessfull = false;
+      this.hasActive = false;
+      this.showFinish = false;
+     this.PrepareInfo();
+    },
+    error => {
+      this.hasError = true;
+      this.errorString = error.error.Message;
+    }
+  )
+  }
+
   History(){
     this.showHistory = true;
     this.showFree = false;
+    this.GetUserInfo();
   }
 
   Created(){
     this.showFree = true;
     this.showHistory = false;
+    this.GetFreeRides();
   }
 
   Finish(){
@@ -163,7 +226,7 @@ export class DriverHomeComponent implements OnInit {
   }
 
   SuccessfullFinish(ride: Ride){
-
+    this.showSuccessfull = true;
   }
 
   FailedFinish(ride: Ride){

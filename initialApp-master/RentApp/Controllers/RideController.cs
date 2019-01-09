@@ -22,7 +22,7 @@ namespace RentApp.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        // GET: api/Vehicle
+        // GET: api/Ride
         public IEnumerable<Ride> GetRides()
         {
             return unitOfWork.Rides.GetAll().Where(u => u.Deleted == false);
@@ -219,11 +219,33 @@ namespace RentApp.Controllers
 
             if (currentUser.Role == AppUser.UserRole.AppUser)
             {
-                newRide = new Ride() { CarType = carType.ToString(),Status = Status.Created, Customer = currentUser, AppUserID = currentUser.Id, OrderDT = DateTime.Now, StartLocation = location, StartLocationID = location.Id, Deleted = false };
+                newRide = new Ride()
+                {
+                    CarType = carType.ToString(),
+                    Status = Status.Created,
+                    Customer = currentUser,
+                    AppUserID = currentUser.Id,
+                    OrderDT = DateTime.Now,
+                    StartLocation = location,
+                    StartLocationID = location.Id,
+                    Deleted = false
+                };
             }
             else
             {
-                newRide = new Ride() { CarType = carType.ToString(),Status = Status.Formed,Dispatcher = currentUser,DispatcherID = currentUser.Id, TaxiDriver = model.Driver, TaxiDriverID = model.Driver.Id, OrderDT = DateTime.Now, StartLocation = location, StartLocationID = location.Id, Deleted = false };
+                newRide = new Ride()
+                {
+                    CarType = carType.ToString(),
+                    Status = Status.Formed,
+                    Dispatcher = currentUser,
+                    DispatcherID = currentUser.Id,
+                    //TaxiDriver = model.Driver,
+                    TaxiDriverID = model.Driver.Id,
+                    OrderDT = DateTime.Now,
+                    StartLocation = location,
+                    StartLocationID = location.Id,
+                    Deleted = false
+                };
             }
 
             if (newRide != null)
@@ -256,6 +278,7 @@ namespace RentApp.Controllers
             }
 
             comment.AppUser = user;
+            comment.Username = user.Username;
             comment.AppUserID = user.Id;
             comment.RideID = comment.Ride.Id;
             comment.DateCreated = DateTime.Now;
@@ -276,7 +299,7 @@ namespace RentApp.Controllers
         [HttpPost]
         [Authorize(Roles = "AppUser")]
         [Route("CancelRideComplete")]
-        public IHttpActionResult CancelRideComplete(CancelRideBindingModel model)
+        public IHttpActionResult CancelRideComplete(CommentRideBindingModel model)
         {
             if (model == null)
             {
@@ -288,18 +311,18 @@ namespace RentApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if(model.CancelRide.Dispatcher != null)
+            if(model.Ride.Dispatcher != null)
             {
                 return BadRequest("You can not cancel a drive made by dispatcher");
             }
 
             var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
-            model.CancelRide.Status = Status.Cancelled;
-            model.CancelRide.Deleted = true;
+            model.Ride.Status = Status.Cancelled;
+            model.Ride.Deleted = true;
 
             try
             {
-                unitOfWork.Rides.Update(model.CancelRide);
+                unitOfWork.Rides.Update(model.Ride);
             }
             catch(Exception e)
             {
@@ -307,9 +330,10 @@ namespace RentApp.Controllers
             }
 
             model.UserComment.AppUser = user;
+            model.UserComment.Username = user.Username;
             model.UserComment.AppUserID = user.Id;
-            model.UserComment.Ride = model.CancelRide;
-            model.UserComment.RideID = model.CancelRide.Id;
+            model.UserComment.Ride = model.Ride;
+            model.UserComment.RideID = model.Ride.Id;
             model.UserComment.DateCreated = DateTime.Now;
             model.UserComment.Deleted = false;
 
@@ -329,7 +353,7 @@ namespace RentApp.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles ="Driver,Admin")]
+        [Authorize(Roles = "Driver,Admin")]
         [Route("FinishRide")]
         public IHttpActionResult FinishRide(FinishRideBindingModel model)
         {
@@ -346,12 +370,84 @@ namespace RentApp.Controllers
             var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
             if (user == null)
                 return BadRequest();
-            if(user.Id == model.FinishRide.AppUserID)
+            if (user.Id == model.FinishRide.AppUserID)
                 return BadRequest();
 
+            Ride ride = unitOfWork.Rides.FirstOrDefault(r => r.Id == model.FinishRide.Id);
+            if (ride == null)
+                return BadRequest("No ride found");
+
             //If ride was successfull
-            if(model.IsGood)
+            if (model.IsGood)
             {
+                if (model.DStreetName == "" || model.DNumber.ToString() == "" || model.DTown == "" || model.DAreaCode.ToString() == "" || model.Price.ToString() == "")
+                {
+                    return BadRequest();
+                }
+
+                Address destination = new Address()
+                {
+                    StreetName = model.DStreetName,
+                    Number = model.DNumber,
+                    Town = model.DTown,
+                    AreaCode = model.DAreaCode,
+                    Deleted = false
+                };
+
+                try
+                {
+                    unitOfWork.Addresses.Add(destination);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+                Location desLocation = new Location()
+                {
+                    XPos = 0,
+                    YPos = 0,
+                    Address = destination,
+                    AddressID = destination.Id,
+                    Deleted = false
+                };
+
+                try
+                {
+                    unitOfWork.Locations.Add(desLocation);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+                ride.DestinationLocation = desLocation;
+                ride.DestinationLocationID = desLocation.Id;
+                ride.Status = Status.Successfull;
+
+                try
+                {
+                    unitOfWork.Rides.Update(ride);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+                user.DriverFree = true;
+                user.DriverLocation = desLocation;
+                user.DriverLocationId = desLocation.Id;
+
+                try
+                {
+                    unitOfWork.AppUsers.Update(user);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+                unitOfWork.Complete();
 
             }
             else //if ride failed
@@ -359,26 +455,111 @@ namespace RentApp.Controllers
                 if (model.Content == "")
                     return BadRequest();
 
-                Comment driverComment = new Comment() { Content = model.Content, AppUser = user, AppUserID = user.Id, Ride = model.FinishRide, RideID = model.FinishRide.Id, DateCreated = DateTime.Now, Rating = 0, Deleted = false };
-                model.FinishRide.Status = Status.Failed;
-                user.DriverFree = true;
+                ride.Status = Status.Failed;
 
-                ///OVde negde duplira podatke u bazi, u ovom trenutku, u to sam sigurna, RESI TO!
                 try
                 {
-                    unitOfWork.AppUsers.Add(user);
-                    unitOfWork.Rides.Add(model.FinishRide);
+                    unitOfWork.Rides.Update(ride);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+                user.DriverFree = true;
+
+                try
+                {
+                    unitOfWork.AppUsers.Update(user);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+                Comment driverComment = new Comment()
+                {
+                    Content = model.Content,
+                    Username = user.Username,
+                    AppUser = user,
+                    AppUserID = user.Id,
+                    Ride = ride,
+                    RideID = ride.Id,
+                    DateCreated = DateTime.Now,
+                    Rating = 0,
+                    Deleted = false
+                };
+
+                try
+                {
                     unitOfWork.Comments.Add(driverComment);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     return BadRequest();
                 }
 
                 unitOfWork.Complete();
+
+                ///OVde negde duplira podatke u bazi, u ovom trenutku, u to sam sigurna, RESI TO!
+
+                //unitOfWork.Complete();
             }
 
             return Ok();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "AppUser")]
+        [Route("CommentRideComplete")]
+        public IHttpActionResult CommentRideComplete(CommentRideBindingModel model)
+        {
+            //testiraj ovo da li radi, nesto mi duplira podatke!!! VAZNOOOOOOOOOOOOOOOOOOOOOOOOO
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+            if (user == null)
+                return BadRequest();
+
+            Ride ride = unitOfWork.Rides.FirstOrDefault(r => r.Id == model.Ride.Id);
+            if (ride == null)
+                return BadRequest("No ride found");
+
+            Comment comment = new Comment()
+            {
+                Content = model.UserComment.Content,
+                Username = user.Username,
+                Rating = model.UserComment.Rating,
+                AppUser = user,
+                AppUserID = user.Id,
+                Ride = ride,
+                RideID = ride.Id,
+                DateCreated = DateTime.Now,
+                Deleted = false
+            };
+
+            try
+            {
+                unitOfWork.Comments.Add(comment);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Error while trying to add Comment");
+            }
+
+            unitOfWork.Complete();
+
+            return Ok();
+
+
         }
 
         private bool RideExists(int id)

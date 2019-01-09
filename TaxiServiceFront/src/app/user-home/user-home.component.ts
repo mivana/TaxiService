@@ -7,8 +7,8 @@ import { UserService } from '../services/userService.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NumbericValidation } from '../validators/numeric-validator.validation';
 import { Comment } from '../models/Comment.model';
-import { CancelRide } from '../models/CancelRide.model';
 import { User } from '../models/User.model';
+import { CommentRide } from '../models/CommentRide.model';
 
 @Component({
   selector: 'app-user-home',
@@ -31,7 +31,7 @@ export class UserHomeComponent implements OnInit {
   activeRide: Ride = new Ride();
   cancelledRide: Ride = new Ride();
   userComment: Comment = new Comment();
-  cancelRide: CancelRide = new CancelRide();
+  cancelRide: CommentRide = new CommentRide();
   activeUser: User = new User();
 
   carTypes: string[] = ['Standard','Combi'];
@@ -105,6 +105,8 @@ export class UserHomeComponent implements OnInit {
           this.activeRide = this.myRides[i-1];
           this.hasActive = true;
           this.noActive = false;
+          if(this.activeRide.Status == "6" && this.activeRide.UserComment[0] == null)
+            this.showComment = true;
         }
         else
         {
@@ -195,6 +197,7 @@ export class UserHomeComponent implements OnInit {
 
   ///Submits Comment Form, Cancels user's ride, and post user's comment
   OnSubmitComment(){
+    debugger
       this.submitted = true;
       this.hasError = false;
       this.errorString = "";
@@ -209,27 +212,40 @@ export class UserHomeComponent implements OnInit {
      this.userComment.RideID = this.cancelledRide.Id;
      this.userComment.Deleted = false;
 
-     var r = this.activeRide;
-     r.Status = "1";
-     r.Deleted = true;
-
-     //Smesti sve ovo u jednu funckiju na back-u! **I jeste sve na back-u (?)
-
-     this.cancelRide.CancelRide = this.activeRide;
+     this.cancelRide.Ride = this.activeRide;
      this.cancelRide.UserComment = this.userComment;
      this.cancelRide.UserComment.AppUserID = "-1";
      this.cancelRide.UserComment.RideID = "-1";
-     this.service.CancelRideComplete(this.cancelRide).subscribe(
-       data => {
-        this.showComment = false;
-        this.noActive = true;
-        this.GetUserInfo();
-      },
-      error => {
-        this.hasError = true;
-        this.errorString = error.error.Message;
-      }
-     )
+     if(this.activeRide.Status == "0")
+     {
+      this.service.CancelRideComplete(this.cancelRide).subscribe(
+        data => {
+          this.showComment = false;
+          this.noActive = true;
+          this.GetUserInfo();
+        },
+        error => {
+          this.hasError = true;
+          this.errorString = error.error.Message;
+        }
+      )
+    }
+
+    if(this.activeRide.Status == "6")
+    {
+      this.service.CommentRideComplete(this.cancelRide).subscribe(
+        data => {
+          this.showComment = false;
+          this.noActive = true;
+          this.hasActive = false;
+          this.GetUserInfo();
+        },
+        error => {
+          this.hasError = true;
+          this.errorString = error.error.Message;
+        }
+      )
+    }
   }
 
   ///Shows Form for Edit active ride, and sets form value to active ride values
@@ -252,10 +268,16 @@ export class UserHomeComponent implements OnInit {
 
   ///Cancels Canceling and Commenting active ride, and hides the form
   CancelComment(){
+    if(this.activeRide.Status != "6") {
+      this.hasError = true;
+      this.errorString = "You MUST leave a comment if you cancel your ride";
+    }
+    else {
     this.showComment = false;
     this.noActive = false;
     this.hasActive = true;
     this.CommentForm.reset();
+    }
   }
 
 

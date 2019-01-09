@@ -81,3 +81,8 @@
 .errorText{
     color: red;
 }
+
+.buttons{
+    float:right;
+    list-style-type: none;
+}

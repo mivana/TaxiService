@@ -18,4 +18,5 @@ export class Ride {
     Dispatcher: User;
     TaxiDriverID: string;
     TaxiDriver: User;
+    UserComment:Comment[];
 }
