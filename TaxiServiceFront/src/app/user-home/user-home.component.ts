@@ -213,7 +213,7 @@ export class UserHomeComponent implements OnInit {
      r.Status = "1";
      r.Deleted = true;
 
-     //Smesti sve ovo u jednu funckiju na backu!
+     //Smesti sve ovo u jednu funckiju na back-u! **I jeste sve na back-u (?)
 
      this.cancelRide.CancelRide = this.activeRide;
      this.cancelRide.UserComment = this.userComment;

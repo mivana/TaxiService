@@ -201,6 +201,37 @@ namespace RentApp.Models
 
     }
 
+    public class FinishRideBindingModel
+    {
+        [Required]
+        [Display(Name = "IsGood")]
+        public bool IsGood { get; set; }
+
+        [Required]
+        [Display(Name = "FinishRide")]
+        public Ride FinishRide { get; set; }
+        
+        [Display(Name = "Content")]
+        public string Content { get; set; }
+
+        [Display(Name = "DStreetName")]
+        public string DStreetName { get; set; }
+
+        [Display(Name = "DNumber")]
+        public int DNumber { get; set; }
+
+        [Display(Name = "DTown")]
+        public string DTown { get; set; }
+
+        [Display(Name = "DAreaCode")]
+        [DataType(DataType.PostalCode)]
+        public int DAreaCode { get; set; }
+
+        [Display(Name = "Price")]
+        public double Price { get; set; }
+
+    }
+
 
 
 }

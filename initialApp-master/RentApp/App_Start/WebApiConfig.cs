@@ -21,6 +21,8 @@ namespace RentApp
             var cors = new EnableCorsAttribute("*", "*", "*");//Ovo na kraju treba zabraniti. Trenutno je ovako kako bi se dozvolilo angular aplikaciji.
             config.EnableCors(cors);
 
+                  
+
             // Web API routes
             config.MapHttpAttributeRoutes();
 

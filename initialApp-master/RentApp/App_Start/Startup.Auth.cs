@@ -33,6 +33,7 @@ namespace RentApp
             ConfigureOAuthTokenConsumption(app);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
             DataProtectionProvider = app.GetDataProtectionProvider();
+            //app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
         }
 
         private void ConfigureOAuthTokenGeneration(IAppBuilder app)

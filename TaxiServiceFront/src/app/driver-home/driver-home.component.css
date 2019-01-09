@@ -2,18 +2,22 @@
     margin-top: 5%;
 }
 
-.SCT{
-    color: purple;
-}
-.CCT{
-    background-color: blue;
-}
-
 /* Clear floats after the columns */
 .row:after {
     content: "";
     display: table;
     clear: both;
+}
+
+.leftColumn{
+    float: left;
+    width: 50%;
+    margin-left: 2%;
+}
+
+.rightColumn{
+    float: left;
+    width: 50%;
 }
 
 .statuses{
@@ -37,4 +41,43 @@
 
 .ridesTable{
     width: 98%;
+}
+
+.freeTable{
+    width: 35%;
+}
+
+.takeButton{
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 18px 18px 18px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    border-radius: 50%;
+  }
+
+.takeButton:hover{
+ color: goldenrod;
+}
+
+.takeButton:active{
+    color: black;
+    background-color: gold;
+}
+
+.takeButton:disabled{
+    background-color:rgb(71, 71, 71);
+    color: white;
+}
+
+.profile{
+    margin-left: 4%;
+}
+
+.errorText{
+    color: red;
 }

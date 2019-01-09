@@ -11,6 +11,9 @@ import { Ride } from '../models/Ride.model';
 import { Comment } from '../models/Comment.model';
 import { CancelRide } from '../models/CancelRide.model';
 import { Car } from '../models/Car.model';
+import { TakeRide } from '../models/TakeRide.model';
+import { TouchSequence } from 'selenium-webdriver';
+import { FinishRide } from '../models/FinishRide.model';
  
 @Injectable()
 export class UserService {
@@ -78,4 +81,13 @@ export class UserService {
     UpdateCar(id: string, car: Car): Observable<any>{
         return this.http.put(AppSettings.API_ENDPOINT + '/api/Car/'+id,car);
     }
+
+    TakeRide(idRide: string, takeRide: Ride): Observable<any> {
+        return this.http.put(AppSettings.API_ENDPOINT + '/api/Ride/TakeRide/'+idRide,takeRide);
+    }
+
+    FinishRide(finishRide: FinishRide): Observable<any> {
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/FinishRide',finishRide);
+    }
+
 }

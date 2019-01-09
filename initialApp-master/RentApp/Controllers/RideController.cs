@@ -37,14 +37,58 @@ namespace RentApp.Controllers
             var result = unitOfWork.Rides.Find(r => r.Status == Status.Created && !r.Deleted).ToList();
             if (result.Count() == 0)
             {
-                return BadRequest("No free rides");
+                return Ok();
+                //return BadRequest("No free rides");
             }
             return Ok(result);
 
         }
 
         [HttpPut]
+        [Authorize(Roles = "Admin,Driver")]
+        [Route("TakeRide/{idRide}")]
+        [ResponseType(typeof(Ride))]
+        public IHttpActionResult TakeRide(int idRide,Ride takeRide)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            Ride ride = unitOfWork.Rides.FirstOrDefault(a => a.Id == idRide && a.Deleted == false);
+            if (ride == null)
+                return BadRequest();
+
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+            if (user == null)
+                return BadRequest();
+            if (!user.DriverFree)
+                return BadRequest("Driver not free");
+            try
+            {
+                user.DriverFree = false;
+
+                unitOfWork.AppUsers.Update(user);
+
+                ride.TaxiDriver = user;
+                ride.TaxiDriverID = user.Id;
+                ride.Status = Status.Accepted;
+
+                unitOfWork.Rides.Update(ride);
+
+                unitOfWork.Complete();
+
+                return Ok(ride);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut]
         [Authorize(Roles = "Admin,AppUser")]
+        [Route("{id}")]
         [ResponseType(typeof(Ride))]
         public IHttpActionResult PutRide(int id, Ride ride)
         {
@@ -120,6 +164,8 @@ namespace RentApp.Controllers
         //    }
         //    return Ok(ride);
         //}
+
+        
 
 
         [HttpPost]
@@ -280,6 +326,59 @@ namespace RentApp.Controllers
 
             return Ok();
 
+        }
+
+        [HttpPost]
+        [Authorize(Roles ="Driver,Admin")]
+        [Route("FinishRide")]
+        public IHttpActionResult FinishRide(FinishRideBindingModel model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+            if (user == null)
+                return BadRequest();
+            if(user.Id == model.FinishRide.AppUserID)
+                return BadRequest();
+
+            //If ride was successfull
+            if(model.IsGood)
+            {
+
+            }
+            else //if ride failed
+            {
+                if (model.Content == "")
+                    return BadRequest();
+
+                Comment driverComment = new Comment() { Content = model.Content, AppUser = user, AppUserID = user.Id, Ride = model.FinishRide, RideID = model.FinishRide.Id, DateCreated = DateTime.Now, Rating = 0, Deleted = false };
+                model.FinishRide.Status = Status.Failed;
+                user.DriverFree = true;
+
+                ///OVde negde duplira podatke u bazi, u ovom trenutku, u to sam sigurna, RESI TO!
+                try
+                {
+                    unitOfWork.AppUsers.Add(user);
+                    unitOfWork.Rides.Add(model.FinishRide);
+                    unitOfWork.Comments.Add(driverComment);
+                }
+                catch(Exception e)
+                {
+                    return BadRequest();
+                }
+
+                unitOfWork.Complete();
+            }
+
+            return Ok();
         }
 
         private bool RideExists(int id)
