@@ -9,6 +9,7 @@ import { Ride } from '../models/Ride.model';
 import { TakeRide } from '../models/TakeRide.model';
 import { FinishRide } from '../models/FinishRide.model';
 import { NumbericValidation } from '../validators/numeric-validator.validation';
+import { Address } from '../models/Address.model';
 
 @Component({
   selector: 'app-driver-home',
@@ -31,6 +32,7 @@ export class DriverHomeComponent implements OnInit {
   activeRide: Ride = new Ride();
   takeRide: TakeRide = new TakeRide();
   fRide: FinishRide = new FinishRide();
+  cAddress: Address = null;
 
   hasError: boolean;
   errorString: string = "";
@@ -41,10 +43,12 @@ export class DriverHomeComponent implements OnInit {
   showComment: boolean = false;
   hasActive: boolean = false;
   showSuccessfull: boolean = false;
+  showLocation: boolean = false;
 ;
   
   CommentForm: FormGroup;
   FinishForm: FormGroup;
+  ChangeForm: FormGroup;
   submitted: boolean;
   result: boolean;
 
@@ -62,7 +66,14 @@ export class DriverHomeComponent implements OnInit {
       dTown: ['',Validators.required],
       dAreaCode: ['',[Validators.required,NumbericValidation.numberValidator]],
       price:['',[Validators.required,NumbericValidation.numberValidator]]
-    })
+    });
+
+    this.ChangeForm = this.fb.group({
+      streetName:['',Validators.required],
+      number: ['',[Validators.required,NumbericValidation.numberValidator]],
+      town: ['',Validators.required],
+      areaCode: ['',[Validators.required,NumbericValidation.numberValidator]],
+    });
 
     this.PrepareInfo();
     this.showHistory = true;
@@ -79,6 +90,13 @@ export class DriverHomeComponent implements OnInit {
     )
 
     this.FinishForm.valueChanges.subscribe(
+      data =>{
+        this.submitted = false;
+        this.result = false;
+      }
+    )
+
+    this.ChangeForm.valueChanges.subscribe(
       data =>{
         this.submitted = false;
         this.result = false;
@@ -122,6 +140,25 @@ export class DriverHomeComponent implements OnInit {
         else
           this.hasActive = false;
 
+          if(this.activeUser.DriverLocation != null || this.activeUser.DriverLocationId != null)
+          {
+            if(this.activeUser.DriverLocation == null && this.activeUser.DriverLocationId != null)
+            {
+              this.service.GetAddress(this.activeUser.DriverLocationId).subscribe(
+                data=>{
+                  this.cAddress = data;
+                },
+                error => {
+                  this.hasError = true;
+                  this.errorString = error.error.Message;
+                  this.hasActive = false;
+                }
+              )
+            }
+            else{
+              this.cAddress = this.activeUser.DriverLocation.Address;
+            }
+          }
       },
       error => {
         this.hasError = true;
@@ -146,6 +183,7 @@ export class DriverHomeComponent implements OnInit {
 
   get c() { return this.CommentForm.controls; }
   get f() { return this.FinishForm.controls; }
+  get l() { return this.ChangeForm.controls; }
 
   OnSubmitComment(){
     this.submitted = true;
@@ -209,16 +247,42 @@ export class DriverHomeComponent implements OnInit {
   )
   }
 
+  OnSubmitChange(){
+    this.submitted = true;
+    this.hasError = false;
+    this.errorString = "";
+
+      
+   // stop here if form is invalid
+    if (this.ChangeForm.invalid) {
+      return;
+    }
+
+     this.service.ChangeDriverLocation(this.ChangeForm.value).subscribe(
+       data=>{
+         this.showLocation = false;
+         this.GetUserInfo();
+       },
+       error => {
+       this.hasError = true;
+       this.errorString = error.error.Message;
+     }
+     )
+  
+  }
+
   History(){
     this.showHistory = true;
     this.showFree = false;
     this.GetUserInfo();
+    this.hasError = false;
   }
 
   Created(){
     this.showFree = true;
     this.showHistory = false;
     this.GetFreeRides();
+    this.hasError = false;
   }
 
   Finish(){
@@ -238,5 +302,20 @@ export class DriverHomeComponent implements OnInit {
     this.showComment = false;
   }
 
+  ChangeLocation(){
+    debugger
+    this.showLocation = true;
+    if(this.cAddress != null){
+      this.ChangeForm.controls['streetName'].setValue(this.cAddress.StreetName, {onlySelf: true});
+      this.ChangeForm.controls['number'].setValue(this.cAddress.Number, {onlySelf: true});
+      this.ChangeForm.controls['town'].setValue(this.cAddress.Town, {onlySelf: true});
+      this.ChangeForm.controls['areaCode'].setValue(this.cAddress.AreaCode, {onlySelf: true});
+    }
+  }
+
+  Cancel(){
+    this.showLocation = false;
+    this.ChangeForm.reset();
+  }
 
 }

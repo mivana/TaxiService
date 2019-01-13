@@ -90,19 +90,87 @@ button:disabled{
 .prop{
     font-style: italic;
 }
+
+.activeTable{
+    background-color: #fdcc61d7;
+    border-radius: 25px;
+    width: 380px;
+    height: 510px;
+    margin-left: 11%;
+}
   
 .activeTable td{
     padding:5px 35px 5px 35px;
 }
 
-.opinion{
-    width: 40%;
-    height: 59px;  
+.activeButtons{
+    margin-left: 30%;
 }
 
+.editF{
+    background-color: #fdcc61d7;
+    border-radius: 25px;
+    width: 380px;
+    height: 420px;
+    margin-left: 11%;
+}
+
+.rowE label{
+    margin-left: 25px;
+    margin-top: 10px;
+}
+
+.rowE input{
+    margin-left: 30px;
+    margin-top: 10px;
+}
+
+.rowE select{
+    margin-left: 30px;
+    margin-top: 10px;
+}
+
+.rowE h3{
+    margin-left: 25px;
+    margin-top: 10px;
+}
+
+.buttons{
+    margin-top: 30px;
+    margin-left:40%;
+}
+
+.commentF{
+    background-color: #fdcc61d7;
+    border-radius: 25px;
+    width: 500px;
+    height: 395px;
+    margin-left: 4%;
+}
+
+.commentF h2{
+    margin-top: 7px;
+}
+
+.opinion{
+    width: 70%;
+}
+
+.rowC{
+    margin-top: 30px;
+    margin-left: 10px;
+}
 
 .rating {
     float:left;
+    background: white;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+.cButtons{
+    margin-top: 40px;
+    margin-left:40%;
 }
 
 .rating:not(:checked) > input {

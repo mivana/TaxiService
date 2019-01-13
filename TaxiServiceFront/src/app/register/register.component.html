@@ -1,7 +1,8 @@
 <div class="leftColumn">
-<p>
+<div class="inside">
+<h4>
   Already have an account?  <a [routerLink]="['/login']">Login</a> here
-</p>
+</h4>
 <!-- <p>
     Don't have an account? Register here
 </p> -->
@@ -9,17 +10,19 @@
     <div *ngIf="resultError" class="errorText">Error while trying to register, please try again</div>
     <div *ngIf="showError" class="errorText">Username is not avaible</div>
     <div *ngIf="mailError" class="errorText">This mail already has an account</div>
+    <div *ngIf="showResult">The mail or password is incorrect!</div>
+    <div *ngIf="showErrorL">Error while trying to log in, please try again</div>
 </div>
 <div>
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="registerDiv">
-    <div>
+    <div class="prop">
         <label>Full Name</label><br/>
-        <input type="text" formControlName="fullName" />
+        <input type="text" formControlName="fullName"  />
         <div *ngIf="submitted && f.fullName.errors" class="errorText">
             <div *ngIf="f.fullName.errors.required" >First Name is required</div>
         </div>
     </div>
-    <div>
+    <div class="prop">
         <label>Gender</label><br/>
         <select id="gender" formControlName="gender">
             <option *ngFor="let g of genders" [ngValue]="g">{{ g }}</option>
@@ -28,21 +31,21 @@
             <div *ngIf="f.gender.errors.required">Gender is required</div>
         </div>  -->
     </div>
-    <div>
+    <div class="prop">
         <label>JMBG</label><br/>
         <input type="text" formControlName="jmbg"  />
         <div *ngIf="submitted && f.jmbg.errors" class="errorText">
             <div *ngIf="f.jmbg.errors.required">JMBG is required</div>
         </div>
     </div>
-    <div>
+    <div class="prop">
         <label>Contact Number</label><br/>
         <input type="text" formControlName="contactNumber" />
         <div *ngIf="submitted && f.contactNumber.errors" class="errorText">
             <div *ngIf="f.contactNumber.errors.required">Contact Number is required</div>
         </div>
     </div>
-    <div>
+    <div class="prop">
         <label>Email</label><br/>
         <input type="text" formControlName="email" />
         <div *ngIf="submitted && f.email.errors" class="errorText">
@@ -50,7 +53,7 @@
             <div *ngIf="f.email.errors.email">Email format is incorrect</div>
         </div>
     </div>
-    <div>
+    <div class="prop">
         <label>User Name</label><br/>
         <input type="text" formControlName="username" />
         <div *ngIf="submitted && f.username.errors" class="errorText">
@@ -58,7 +61,7 @@
             
         </div>
     </div>
-    <div>
+    <div class="prop">
         <label>Password</label><br/>
         <input type="password" formControlName="password" />
         <div *ngIf="submitted && f.password.errors" class="errorText">
@@ -70,20 +73,21 @@
             <div *ngIf="registerForm.controls['password'].hasError('minlength')">Must be at least 6 character long</div>
         </div>
     </div>
-    <div>
+    <div class="prop">
         <label>Confirm Password</label><br/>
         <input type="password" formControlName="confirmPassword" />
         <div *ngIf="submitted && f.confirmPassword.errors" class="errorText">
             <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
         </div>
     </div>
-    <div class="errorText" *ngIf="registerForm.controls.confirmPassword.errors?.MatchPassword">Password not match</div>
+    <div class="errorText" *ngIf="registerForm.controls.confirmPassword.errors?.MatchPassword" style="margin-left: 45px;">Password not match</div>
    
-    <div>
-        <button [disabled]="submitted">Register</button>
+    <div class="prop">
+        <button [disabled]="submitted" class="takeButton">Register</button>
     </div>
   </form>
   </div>
+</div>
 </div>
 
 <!-- <div class="rightColumn">

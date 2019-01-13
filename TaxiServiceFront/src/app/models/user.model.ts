@@ -1,5 +1,6 @@
 import { Car } from './Car.model';
 import { Comment } from './Comment.model';
+import { Location } from './Location.model';
 
 export class User {
     Id: string;
@@ -10,6 +11,7 @@ export class User {
     ContactNumber: string;
     DriverFree: boolean;
     Deleted: boolean;
+    DriverLocation: Location;
     DriverLocationId: string;
     Role: string;
     Gender: string;

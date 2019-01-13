@@ -5,6 +5,8 @@ import { PasswordValidation } from '../Validators/password-validation.validation
 import { first } from 'rxjs/operators';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Router } from '@angular/router';
+import { SessionService } from '../services/sessionservice.service';
+import { AuthenticationService } from '../services/authenticationservice.service';
 
 @Component({
   selector: 'app-register',
@@ -20,10 +22,13 @@ export class RegisterComponent implements OnInit {
     showError: boolean = false;
   resultError: boolean = false;
   mailError: boolean;
+  showResult: boolean = false;
+  showErrorL: boolean = false;
   
     constructor(private fb: FormBuilder,
                 private router: Router,
-                private service: UserService) { }
+                private service: UserService,
+                private authService: AuthenticationService) { }
   
     ngOnInit() {
   
@@ -83,28 +88,54 @@ export class RegisterComponent implements OnInit {
           return;
       }
   
-      //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value));
+      this.service.register(this.registerForm.value,"AppUser")
+      .pipe(first())
+      .subscribe(
+        data => {
+          this.authService.login(this.f.email.value,this.f.password.value).subscribe(
+            res => {
+                console.log(res.access_token);
       
-            this.service.register(this.registerForm.value,"AppUser")
-            .pipe(first())
-              .subscribe(
-                  data => {
-                    
-                    this.router.navigate(['login']);
-                  },
-                  error => {
-                    var errMesage = error.error;
-                    if(errMesage.Message == "Username not unique")
-                      this.showError = true;
-                    if(errMesage.Message == "Email has account")
-                      this.mailError = true;
-                    else
-                      this.resultError = true;  
-                      this.submitted = false;        
-                  });
+                let jwt = res.access_token;
+      
+                let jwtData = jwt.split('.')[1]
+                let decodedJwtJsonData = window.atob(jwtData)
+                let decodedJwtData = JSON.parse(decodedJwtJsonData)
+      
+                let role = decodedJwtData.role
+      
+                console.log('jwtData: ' + jwtData)
+                console.log('decodedJwtJsonData: ' + decodedJwtJsonData)
+                console.log('decodedJwtData: ' + decodedJwtData)
+                console.log('Role ' + role)
+      
+                localStorage.setItem('jwt', jwt)
+                localStorage.setItem('role', role);
+      
+                    this.router.navigate(['/userHome']);
+      
+            },
+            error => {
+                  console.log("Error occured");
+                  if(error.error.error_description == "The user name or password is incorrect.!!!!")
+                      this.showResult = true;
+                  else   
+                      this.showErrorL = true;
+                  this.submitted = false;
+              });
+        },
+        error => {
+          var errMesage = error.error;
+          if(errMesage.Message == "Username not unique")
+            this.showError = true;
+          if(errMesage.Message == "Email has account")
+            this.mailError = true;
+          else
+            this.resultError = true;  
+          this.submitted = false;        
+        });
     
     }
   
   
   }
-  

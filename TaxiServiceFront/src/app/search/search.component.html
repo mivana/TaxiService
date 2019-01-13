@@ -1,0 +1,44 @@
+<div class="front">
+  <h1>Search Rides</h1>
+  <form [formGroup]="SearchForm" (ngSubmit)="OnSubmit()">
+
+    <table class="searchTable">
+      <tr>
+        <td>
+          <h3>Order Date</h3>
+          <input type="date" formControlName="dateFrom" style="margin-right: 10px;"/>
+          -
+          <input type="date" formControlName="dateTo" style="margin-left: 10px;"/>
+        </td>
+        <td>
+          <h3>Rating</h3>
+          <input type="text" formControlName="ratingFrom" style="margin-right: 10px;"/>
+          -
+          <input type="text" formControlName="ratingTo" style="margin-left: 10px;"/>
+        </td>
+        <td>
+          <h3>Price</h3>
+          <input type="text" formControlName="priceFrom" style="margin-right: 10px;"/>
+          -
+          <input type="text" formControlName="priceTo" style="margin-left: 10px;"/>
+        </td>
+        <td>
+        <h3>Status</h3>
+          <input type="checkbox" formControlName="created" value="Created" style="margin-right: 10px;"> Created<br>
+          <input type="checkbox" formControlName="cancelled" value="Cancelled" style="margin-right: 10px;"> Cancelled<br>
+          <input type="checkbox" formControlName="formed" value="Formed" style="margin-right: 10px;"> Formed<br>
+          <input type="checkbox" formControlName="proccessed" value="Proccessed" style="margin-right: 10px;"> Proccessed<br>
+          <input type="checkbox" formControlName="accepted" value="Accepted" style="margin-right: 10px;"> Accepted<br>
+          <input type="checkbox" formControlName="failed" value="Failed" style="margin-right: 10px;"> Failed<br>
+          <input type="checkbox" formControlName="successfull" value="Successfull" style="margin-right: 10px;"> Successfull<br>
+        </td>
+        <td><button  class="takeButton">SEARCH</button></td>
+      </tr>
+    </table>
+
+  </form>
+
+
+
+
+</div>

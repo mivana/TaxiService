@@ -23,6 +23,7 @@ export class AdminDashboardComponent implements OnInit {
   showMy: boolean = false;
   showFree: boolean = false;
   hasError: boolean;
+  showAssign: boolean = false;
 
   errorString: string = "";
   
@@ -32,6 +33,8 @@ export class AdminDashboardComponent implements OnInit {
   myRides: Ride[] =[];
   freeRides: Ride[] =[];
   allRides: Ride[] =[];
+  assignRide: Ride = new Ride();
+
 
   constructor(private service: UserService) { }
 
@@ -40,8 +43,8 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   /*
-    Onemoguci ako je driver zauzet da se prikazuje pri porucivanja novog vozila kod admina
-    Dispacher ime se nesto ne vidi na myhistory
+    Onemoguci ako je driver zauzet da se prikazuje pri porucivanja novog vozila kod admina  == URADJENO!
+    Dispacher ime se nesto ne vidi na myhistory == URADJENO
     Promena lokacije vozaca, kada krene voznju, da mu je to trenutna lokacija, i da moze samostano da menja svoju lokaciju
     i onda je ostalo ono PFS. Good luck! <3
   */
@@ -109,6 +112,11 @@ export class AdminDashboardComponent implements OnInit {
     this.showFree = true;
     this.GetFree();
 
+  }
+
+  Assign(ride:Ride){
+    this.showAssign = true;
+    this.assignRide = ride;
   }
 
 

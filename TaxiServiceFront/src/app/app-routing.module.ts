@@ -14,6 +14,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { AddDriverComponent } from './add-driver/add-driver.component';
 import { AdminAppUserAuthGuard } from './guards/adminAppUser.guard';
 import { DriverHomeComponent } from './driver-home/driver-home.component';
+import { SearchComponent } from './search/search.component';
 
 export const routes: Routes = [
   {
@@ -62,6 +63,11 @@ export const routes: Routes = [
     path: "driverHome",
     component: DriverHomeComponent,
     canActivate: [DriverAuthGuard]
+  },
+  {
+    path: "search",
+    component: SearchComponent,
+    canActivate: [AllUsersGuard]
   }
   
 ];

@@ -8,6 +8,7 @@ import { UserService } from '../services/userService.service';
 import { NumbericValidation } from '../validators/numeric-validator.validation';
 import { Router } from '@angular/router';
 import { User } from '../models/User.model';
+import { Ride } from '../models/Ride.model';
 
 @Component({
   selector: 'app-order-taxi',
@@ -33,6 +34,7 @@ export class OrderTaxiComponent implements OnInit {
   hasError: boolean = false;
   isStandard: boolean = true;
   errorString: string = "";
+  hasActive: boolean = false;
 
   carTypes: string[] = ['Standard','Combi'];
   default: string = 'Standard';
@@ -41,6 +43,8 @@ export class OrderTaxiComponent implements OnInit {
   freeDrivers: User[] = [];
   CTSdrivers: User[] = [];
   CTCdrivers: User[] = [];
+  activeUser: User = new User();
+  myRides: Ride[] = [];
   
   
   constructor(private fb: FormBuilder,
@@ -58,6 +62,7 @@ export class OrderTaxiComponent implements OnInit {
     });
     this.orderForm.controls['carType'].setValue(this.default, {onlySelf: true});
     this.getRole();
+    this.GetUserInfo();
   }
 
   ngAfterViewInit()
@@ -78,6 +83,26 @@ export class OrderTaxiComponent implements OnInit {
       }
     )
 
+  }
+
+  GetUserInfo(){
+    this.service.getUser().subscribe(
+      data => {
+        var user = data;
+        this.activeUser = user;
+        if(this.activeUser.Role == "0"){
+          this.myRides = user.CustomerRides;
+          var i = this.myRides.length;
+          if(this.myRides[i-1] != null && this.myRides[i-1].Status != "1"){
+            this.hasActive = true;
+          }
+        }   
+      },
+      error => {
+        this.hasError = true;
+        this.errorString = error.error.Message;
+      }
+      )
   }
 
   getRole(){
@@ -152,6 +177,8 @@ export class OrderTaxiComponent implements OnInit {
   this.service.PostRide(this.orderForm.value).subscribe(
     data => {
       this.result = true;
+      this.getRole();
+      this.GetUserInfo();
     },
     error => {
       this.hasError = true;

@@ -154,6 +154,7 @@ export class UserHomeComponent implements OnInit {
      data =>{
       this.showEdit = false;
       this.hasActive = true;
+      this.submitted = false;
       },
       error => {
         this.hasError = true;
@@ -223,6 +224,7 @@ export class UserHomeComponent implements OnInit {
           this.showComment = false;
           this.noActive = true;
           this.GetUserInfo();
+          this.submitted = false;
         },
         error => {
           this.hasError = true;
@@ -273,10 +275,10 @@ export class UserHomeComponent implements OnInit {
       this.errorString = "You MUST leave a comment if you cancel your ride";
     }
     else {
-    this.showComment = false;
-    this.noActive = false;
-    this.hasActive = true;
-    this.CommentForm.reset();
+      this.showComment = false;
+      this.noActive = false;
+      this.hasActive = true;
+      this.CommentForm.reset();
     }
   }
 

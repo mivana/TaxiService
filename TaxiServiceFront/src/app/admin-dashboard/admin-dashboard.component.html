@@ -111,10 +111,13 @@
               {{ride.StartLocation.Address.Town || ""}} {{ride.StartLocation.Address.AreaCode || ""}}</td>
                   
           <td>{{ride.CarType}}</td>
-          <td><button (click)="Take(ride)" class="takeButton">Take Ride</button></td>
+          <td>
+            //OVDE NAPRAVI ZA ASSIGN CEO TAJ PROCESS
+            <button (click)="Assign(ride)" class="takeButton">Assign Driver</button>
+        </td>
       </tr>
       </table>
-    
+
   </div>
 
   <div *ngIf="showMy">
@@ -158,8 +161,8 @@
           <td><div *ngIf="ride.Customer != null">{{ride.Customer.Username || "No Customer"}}</div>
               <div *ngIf="ride.Customer == null">No Customer</div></td>
 
-          <td><div *ngIf="ride.Dispatcher != null">{{ride.Dispatcher.Username || "No Dispatcher"}}</div>
-              <div *ngIf="ride.Dispatcher == null">No Dispatcher</div></td>
+              <td><div *ngIf="activeUser != null">{{activeUser.Username || "No Dispatcher"}}</div>
+                <div *ngIf="activeUser == null">No Dispatcher</div></td>
 
           <td><div *ngIf="ride.TaxiDriver != null">{{ride.TaxiDriver.Username || "No Driver"}}</div>
               <div *ngIf="ride.TaxiDriver == null">No TaxiDriver</div></td>

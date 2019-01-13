@@ -44,6 +44,155 @@ namespace RentApp.Controllers
 
         }
 
+        [HttpPost]
+        [Authorize(Roles ="Driver,Admin,AppUser")]
+        [Route("Search")]
+        [ResponseType(typeof(List<Ride>))]
+        public IHttpActionResult Search(SearchBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+            if (user == null)
+                return BadRequest();
+
+            List<Ride> results = new List<Ride>();
+            List<Ride> temp = new List<Ride>();
+            List<Ride> tempPrice = new List<Ride>();
+
+            //results = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) < 0 || model.DateFrom == null)
+            //                            .Where(r1 => r1.OrderDT.CompareTo(model.DateTo) > 0 || model.DateTo == null)
+            //                            .Where(r2 => r2.Price >= Double.Parse(model.PriceFrom) || model.PriceFrom == "")
+            //                            .Where(r3 => r3.Price <= Double.Parse(model.PriceTo) || model.PriceTo == "")
+            //                            .Where(r4 => r4.UserComment.First().Rating >= Int32.Parse(model.RatingFrom) || model.RatingFrom == "")
+            //                            .Where(r5 => r5.UserComment.First().Rating <= Int32.Parse(model.RatingTo) || model.RatingTo == "").ToList();
+
+            user.CustomerRides.Where(r => model.DateFrom != null && r.OrderDT.CompareTo(model.DateFrom) < 0)
+                              .Where(r => model.DateTo != null && r.OrderDT.CompareTo(model.DateTo) > 0)
+                              .Where(r => model.PriceFrom != "" && r.Price >= double.Parse(model.PriceFrom))
+                              .Where(r => model.PriceTo != "" && r.Price <= double.Parse(model.PriceTo))
+                              .Where(r => model.RatingFrom != "" && r.Price >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo != "" && r.Price <= Int32.Parse(model.RatingTo)).ToList();
+
+
+            #region kom
+            //IDEJA: Prvo se radi search po Date, pa po RAting, pa po Price i onda status
+            //switch (user.Role)
+            //{
+            //    case AppUser.UserRole.AppUser:
+            //        //Ako DateFrom i/ili DateTo nisu null
+            //        if (model.RatingFrom == null && model.RatingTo == null && model.PriceFrom == null && model.PriceTo == null)
+            //        {
+            //            if(model.DateFrom != null && model.DateTo != null)
+            //            {
+            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0 && r.OrderDT.CompareTo(model.DateTo) < 0).ToList(); //Ako je = 0, znaci da je to taj dan, < 0 bio, > 0 tek ce biti
+            //            }
+            //            if (model.DateFrom != null && model.DateTo == null)
+            //            {
+            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0).ToList(); //Ako je = 0, znaci da je to taj dan, < 0 bio, > 0 tek ce biti
+            //            }
+            //            if (model.DateFrom == null && model.DateTo != null)
+            //            {
+            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) < 0).ToList(); //Ako je = 0, znaci da je to taj dan, < 0 bio, > 0 tek ce biti
+            //            }
+            //        }
+            //        //Ako PriceFrom i/ili PriceTo nisu null
+            //        if (model.DateFrom == null && model.DateTo == null && model.RatingFrom == null && model.RatingTo == null)
+            //        {
+            //            if(model.PriceFrom != null && model.PriceTo != null)
+            //            {
+            //                double priceFrom = Double.Parse(model.PriceFrom);
+            //                double priceTo = Double.Parse(model.PriceTo);
+            //                temp = user.CustomerRides.Where(r => r.Price >= priceFrom && r.Price <= priceTo).ToList();
+            //            }
+            //            if (model.PriceFrom != null && model.PriceTo == null)
+            //            {
+            //                double priceFrom = Double.Parse(model.PriceFrom);
+            //                temp = user.CustomerRides.Where(r => r.Price >= priceFrom).ToList();
+            //            }
+            //            if (model.PriceFrom == null && model.PriceTo != null)
+            //            {
+            //                double priceTo = Double.Parse(model.PriceTo);
+            //                temp = user.CustomerRides.Where(r => r.Price >= priceTo).ToList();
+            //            }
+            //        }
+            //        //Ako RatingFrom i/ili RatingTo nisu null
+            //        if (model.DateFrom == null && model.DateTo == null && model.PriceFrom == null && model.PriceTo == null)
+            //        {
+            //            if (model.RatingFrom != null && model.RatingFrom != null)
+            //            {
+            //                int ratingFrom = Int32.Parse(model.RatingFrom);
+            //                int ratingTo = Int32.Parse(model.RatingTo);
+            //                temp = user.CustomerRides.Where(r => r.UserComment.First().Rating >= ratingFrom && r.UserComment.First().Rating <= ratingTo).ToList();
+            //            }
+            //            if (model.RatingFrom != null && model.RatingFrom == null)
+            //            {
+            //                int ratingFrom = Int32.Parse(model.RatingFrom);
+            //                temp = user.CustomerRides.Where(r => r.UserComment.First().Rating >= ratingFrom).ToList();
+            //            }
+            //            if (model.RatingFrom == null && model.RatingFrom != null)
+            //            {
+            //                int ratingTo = Int32.Parse(model.RatingTo);
+            //                temp = user.CustomerRides.Where(r => r.UserComment.First().Rating <= ratingTo).ToList();
+            //            }
+            //        }
+            //        //Ako DateFrom i/ili DateTo nisu null i RatingFrom i/ili nisu null
+            //        if (model.PriceFrom == null && model.PriceTo == null)
+            //        {
+            //            if(model.DateFrom != null && model.DateTo != null && model.RatingFrom != null && model.RatingTo != null)
+            //            {
+            //                int ratingFrom = Int32.Parse(model.RatingFrom);
+            //                int ratingTo = Int32.Parse(model.RatingTo);
+
+            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0 && r.OrderDT.CompareTo(model.DateTo) < 0 &&
+            //                                                     r.UserComment.First().Rating >= ratingFrom && r.UserComment.First().Rating <= ratingTo).ToList();
+            //            }
+            //            if (model.DateFrom == null && model.DateTo != null && model.RatingFrom != null && model.RatingTo != null)
+            //            {
+            //                int ratingFrom = Int32.Parse(model.RatingFrom);
+            //                int ratingTo = Int32.Parse(model.RatingTo);
+
+            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0 && r.OrderDT.CompareTo(model.DateTo) < 0 &&
+            //                                                     r.UserComment.First().Rating >= ratingFrom && r.UserComment.First().Rating <= ratingTo).ToList();
+            //            }
+
+            //            if (model.DateFrom != null && model.DateTo != null && model.RatingFrom != null && model.RatingTo != null)
+            //            {
+            //                int ratingFrom = Int32.Parse(model.RatingFrom);
+            //                int ratingTo = Int32.Parse(model.RatingTo);
+
+            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0 && r.OrderDT.CompareTo(model.DateTo) < 0 &&
+            //                                                     r.UserComment.First().Rating >= ratingFrom && r.UserComment.First().Rating <= ratingTo).ToList();
+            //            }
+
+            //            if (model.DateFrom != null && model.DateTo != null && model.RatingFrom != null && model.RatingTo != null)
+            //            {
+            //                int ratingFrom = Int32.Parse(model.RatingFrom);
+            //                int ratingTo = Int32.Parse(model.RatingTo);
+
+            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0 && r.OrderDT.CompareTo(model.DateTo) < 0 &&
+            //                                                     r.UserComment.First().Rating >= ratingFrom && r.UserComment.First().Rating <= ratingTo).ToList();
+            //            }
+
+
+
+
+
+            //        }
+
+
+            //        break;
+
+            //}
+            #endregion
+
+            return Ok(results);
+
+        }
+
         [HttpPut]
         [Authorize(Roles = "Admin,Driver")]
         [Route("TakeRide/{idRide}")]
@@ -192,6 +341,21 @@ namespace RentApp.Controllers
 
             var currentUser = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
 
+            AppUser driver = new AppUser();
+            if (currentUser.Role == AppUser.UserRole.Admin)
+            {
+                driver = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == model.Driver.Email && u.Deleted == false);
+                driver.DriverFree = false;
+
+                try
+                {
+                    unitOfWork.AppUsers.Update(driver);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest("Error while trying to add ride to database");
+                }
+            }
             Address address = new Address() { StreetName = model.StreetName, Number = model.Number, Town = model.Town, AreaCode = model.AreaCode, Deleted = false };
 
             try
@@ -240,12 +404,13 @@ namespace RentApp.Controllers
                     Dispatcher = currentUser,
                     DispatcherID = currentUser.Id,
                     //TaxiDriver = model.Driver,
-                    TaxiDriverID = model.Driver.Id,
+                    TaxiDriverID = driver.Id,
                     OrderDT = DateTime.Now,
                     StartLocation = location,
                     StartLocationID = location.Id,
                     Deleted = false
                 };
+
             }
 
             if (newRide != null)
@@ -258,6 +423,23 @@ namespace RentApp.Controllers
                 {
                     return BadRequest("Error while trying to add ride to database");
                 }
+            }
+
+            //OVO SAM DODALA POSLEDNJE< AKO PUCA TO JE ZBOG OVOGA! DA ZNAS
+            if (currentUser.Role == AppUser.UserRole.Admin)
+            {
+                driver.DriverLocation = location;
+                driver.DriverLocationId = location.AddressID;
+
+                try
+                {
+                    unitOfWork.AppUsers.Update(driver);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest("Error while trying to add ride to database");
+                }
+
             }
 
             unitOfWork.Complete();
@@ -561,6 +743,8 @@ namespace RentApp.Controllers
 
 
         }
+
+
 
         private bool RideExists(int id)
         {

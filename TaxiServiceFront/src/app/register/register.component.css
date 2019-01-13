@@ -4,13 +4,56 @@
 
 .leftColumn{
     float:left;
-    width: 50%;
-    margin-top: 10%;
-    margin-left: 30%;
+    margin-top: 7%;
+    margin-left: 37%;
 }
 
-.rightColumn{
-    float: right;
-    width: 50%;
-    margin-top: -15%;
+.inside{
+    background-color: #fdcc61d7;
+    border-radius: 25px;
+    width: 380px;
+    height: 630px;
+    padding-left: 25%;
+    padding-top: 7%;
+}
+
+label{
+    margin-top: 5px;
+}
+
+
+.prop{
+    margin-top: 12px;
+    margin-left: 45px;
+}
+
+.prop button{
+    margin-left: 175px;
+}
+
+.takeButton{
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 18px 18px 18px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    border-radius: 50%;
+  }
+
+.takeButton:hover{
+ color: goldenrod;
+}
+
+.takeButton:active{
+    color: black;
+    background-color: gold;
+}
+
+.takeButton:disabled{
+    background-color:rgb(71, 71, 71);
+    color: white;
 }

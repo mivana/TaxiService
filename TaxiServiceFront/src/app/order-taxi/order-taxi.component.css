@@ -6,9 +6,72 @@
   }
   
 .column {
-    flex: 50%;
+    margin-left: 25%;
+    margin-top: 10%;
+    background-color: #fdcc61d7;
+    border-radius: 25px;
+    width: 48%;
+    height: 50%;
+    padding-left: 3%;
+    padding-top: 2%;
 }
+
+h1{
+    margin-left: 40%;
+}
+
+form{
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+label{
+    margin-left: 38px;
+    margin-top: 10px;
+}
+
+input{
+    margin-left: 30px;
+    margin-top: 10px;
+}
+
+select{
+    margin-left: 30px;
+    margin-top: 10px;
+}
+
+.buttons{
+    margin-left:  80%;
+}
+
 
 .errorText{
     color: red;
+}
+
+button{
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 18px 18px 18px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    border-radius: 50%;
+  }
+
+button:hover{
+ color: goldenrod;
+}
+
+button:active{
+    color: black;
+    background-color: gold;
+}
+
+button:disabled{
+    background-color:rgb(71, 71, 71);
+    color: white;
 }

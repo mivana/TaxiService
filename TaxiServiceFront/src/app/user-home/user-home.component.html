@@ -2,9 +2,9 @@
     <div *ngIf="hasErrorUser" class="errorText">{{errorString}}</div>
     
     <div class="leftColumn">
-        <h1>Active(Last) Ride</h1>
+    <h1>Active(Last) Ride</h1>
 
-        <div *ngIf="hasActive">
+    <div *ngIf="hasActive">
 
         <table class="activeTable">
             <tr>
@@ -59,9 +59,9 @@
 
             <tr>
                 <td colspan="2">
-                <div *ngIf="activeRide.Status == 0">
+                <div *ngIf="activeRide.Status == 0" class="activeButtons">
                     <button [disabled]="enableEdit" (click)="Edit(activeRide)">Edit</button>
-                    <button [disabled]="enableEdit" (click)="Cancel(activeRide)" style="margin-left: 50px;">Cancel Ride</button>
+                    <button [disabled]="enableEdit" (click)="Cancel(activeRide)" style="margin-left: 30px;">Cancel Ride</button>
                 </div>
                 </td>
             </tr>
@@ -74,19 +74,20 @@
         <h2>No active rides!</h2>
     </div>    
 
-    <div *ngIf="showEdit">
+    <div *ngIf="showEdit" class="editF">
     
     <div *ngIf="hasError" class="errorText">{{errorString}}</div>
 
     <form [formGroup]="EditForm" (ngSubmit)="OnSubmit()">
-        <h3>Edit Order</h3>
-        <div class="row">
+        <h3 class="rowE">Edit Order</h3>
+        <div class="rowE">
             <label>Street Name</label>
             <input type="text" formControlName="streetName"/>
             <div *ngIf="submitted && f.streetName.errors"  class="errorText">
             <div *ngIf="f.streetName.errors.required">Street Name is required</div>
             </div>
-    
+        </div>
+        <div class="rowE">
             <label>Number</label>
             <input type="text" formControlName="number"/>
             <div *ngIf="submitted && f.number.errors"  class="errorText">
@@ -94,7 +95,7 @@
             <div class="errorText" *ngIf="EditForm.controls.number.errors?.invalidNumber">Number must be a number</div>
             </div>
         </div>
-        <div class="row">
+        <div class="rowE">
         <label>Town</label>
             <input type="text" formControlName="town"/>
             <div *ngIf="submitted && f.town.errors"  class="errorText">
@@ -102,7 +103,7 @@
             </div>
         </div>
     
-        <div class="row">
+        <div class="rowE">
         <label>Area Code</label>
             <input type="text" formControlName="areaCode"/>
             <div *ngIf="submitted && f.areaCode.errors"  class="errorText">
@@ -111,59 +112,64 @@
             </div>
         </div>
         
-        <div class="row">
-            <label>Car Type</label><br/>
+        <div class="rowE">
+            <label>Car Type</label>
             <select id="carType" formControlName="carType">
                 <option *ngFor="let c of carTypes" [ngValue]="c">{{ c }}</option>
             </select>
         </div>
     
-        <button [disabled]="submitted">Change</button>
-        <button (click)="CancelEdit()">Cancel</button>
+        <div class="buttons">
+            <button [disabled]="submitted" class="takeButtons" style="margin-right:30px">Change</button>
+            <button (click)="CancelEdit()" class="takeButtons">Cancel</button>
+        </div>
+        
     </form>
     </div>
 
-    <div *ngIf="showComment">
-        <div *ngIf="activeRide.Status != 6">
-            <h2>You have cancelled your taxi, please fill the form</h2>
+    <div *ngIf="showComment" class="commentF">
+        <div class="rowC">
+            <div *ngIf="activeRide.Status != 6">
+                <h2>You have cancelled your taxi, please fill the form</h2>
+            </div>
+            <div *ngIf="activeRide.Status == 6">
+                    <h2>Your ride has ended, you can leave a comment if you like</h2>
+            </div>
+            <div *ngIf="hasError" class="errorText">{{errorString}}</div>
         </div>
-        <div *ngIf="activeRide.Status == 6">
-                <h2>Your ride has ended, you can leave a comment if you like</h2>
-        </div>
-        
-        <div *ngIf="hasError" class="errorText">{{errorString}}</div>
 
         <form [formGroup]="CommentForm" (ngSubmit)="OnSubmitComment()" style="margin-left: 55px;">
-            <div class="row">
-                <h4 class="row">Opinion</h4>
+            <div class="rowE">
+                <h4 class="rowE">Opinion</h4>
                 <input type="text" formControlName="content" class="opinion" rows="5"/>
                 <div *ngIf="submitted && c.content.errors"  class="errorText" style="margin-top: 8px;">
                     <div *ngIf="c.content.errors.required">Please insert your opinion</div>
                 </div>
             </div>
                 
-            <div class="row">
-                <h4 class="row">Rating</h4>
-                <fieldset class="rating">
-                    <input type="radio" [name]="inputName" value="5" [checked]="rating===5" />
-                    <label title="Rocks!" (click)='onClick(5)'>5 stars</label>
+            <h4 class="rowC">Rating</h4>
+            <fieldset class="rating">
+                <input type="radio" [name]="inputName" value="5" [checked]="rating===5" />
+                <label title="Rocks!" (click)='onClick(5)'>5 stars</label>
                           
-                    <input type="radio" [name]="inputName" value="4" [checked]="rating===4" />
-                    <label title="Pretty good" (click)='onClick(4)'>4 stars</label>
+                <input type="radio" [name]="inputName" value="4" [checked]="rating===4" />
+                <label title="Pretty good" (click)='onClick(4)'>4 stars</label>
                           
-                    <input type="radio" [name]="inputName" value="3" [checked]="rating===3" />
-                    <label title="Meh" (click)='onClick(3)'>3 stars</label>
+                <input type="radio" [name]="inputName" value="3" [checked]="rating===3" />
+                <label title="Meh" (click)='onClick(3)'>3 stars</label>
                           
-                    <input type="radio" [name]="inputName" value="2" [checked]="rating===2" />
-                    <label title="Kinda bad" (click)='onClick(2)'>2 stars</label>
+                <input type="radio" [name]="inputName" value="2" [checked]="rating===2" />
+                <label title="Kinda bad" (click)='onClick(2)'>2 stars</label>
                           
-                    <input type="radio" [name]="inputName" value="1" [checked]="rating===1" />
-                    <label title="Sucks big time" (click)='onClick(1)'>1 star</label>
-                </fieldset>
-            </div>
+                <input type="radio" [name]="inputName" value="1" [checked]="rating===1" />
+                <label title="Sucks big time" (click)='onClick(1)'>1 star</label>
+            </fieldset>
                 
-            <button [disabled]="submitted" style="margin-top: 20px;">Submit</button>
-            <button (click)="CancelComment()">Cancel</button>
+            <div class="cButtons">
+                <button [disabled]="submitted" style="margin-right:7px; margin-left:7px;">Submit</button>
+                <button (click)="CancelComment()">Cancel</button>
+            </div>
+            
         </form>
         
         

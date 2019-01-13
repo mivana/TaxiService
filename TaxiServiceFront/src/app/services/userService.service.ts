@@ -14,6 +14,9 @@ import { TakeRide } from '../models/TakeRide.model';
 import { TouchSequence } from 'selenium-webdriver';
 import { FinishRide } from '../models/FinishRide.model';
 import { CommentRide } from '../models/CommentRide.model';
+import { AppUserAuthGuard } from '../guards/appUser.guard';
+import { Address } from '../models/Address.model';
+import { Search } from '../models/Search.Model';
  
 @Injectable()
 export class UserService {
@@ -98,5 +101,15 @@ export class UserService {
         return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/CommentRideComplete',commentRide);
     }
 
+    ChangeDriverLocation(address: Address): Observable<any>{
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/User/ChangeDriverLocation',address);
+    }
 
+    GetAddress(idAddress: string):Observable<any>{
+        return this.http.get(AppSettings.API_ENDPOINT + '/api/User/GetAddress/'+idAddress);
+    }
+
+    Search(search: Search):Observable<any>{
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/Search',search);
+    }
 }

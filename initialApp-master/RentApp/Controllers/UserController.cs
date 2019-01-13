@@ -59,6 +59,28 @@ namespace RentApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Driver")]
+        [Route("GetAddress/{idAddress}")]
+        [ResponseType(typeof(Address))]
+        public IHttpActionResult GetAddress(int idAddress)
+        {
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+            if (user == null)
+                return BadRequest();
+
+            Location result = unitOfWork.Locations.FirstOrDefault(a => a.Id == idAddress && a.Deleted == false && a.Id == user.DriverLocationId);
+            if (result == null)
+                return BadRequest("No location found");
+            if(result.Address == null && result.AddressID.ToString() == null)
+                return BadRequest("No address found");
+            if (result.Address == null && result.AddressID.ToString() != null)
+            {
+               var a = unitOfWork.Addresses.FirstOrDefault(aa => aa.Id == result.AddressID && aa.Deleted == false);
+            }
+            return Ok(result.Address);
+        }
+
+        [HttpGet]
         [Authorize(Roles = "AppUser")]
         [Route("GetUserRides")]
         [ResponseType(typeof(IEnumerable<Ride>))]
@@ -363,6 +385,134 @@ namespace RentApp.Controllers
 
             unitOfWork.Cars.Add(newCar);
             unitOfWork.Complete();
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Driver")]
+        [Route("ChangeDriverLocation")]
+        public IHttpActionResult ChangeDriverLocation(Address newAddress)
+        {
+            if (newAddress == null)
+                return BadRequest();
+
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+            if (user == null)
+                return BadRequest();
+
+            if(user.DriverLocation == null && user.DriverLocationId == null)
+            {
+                Address address = new Address()
+                {
+                    StreetName = newAddress.StreetName,
+                    Number = newAddress.Number,
+                    Town = newAddress.Town,
+                    AreaCode = newAddress.AreaCode,
+                    Deleted = false
+                };
+
+                try
+                {
+                    unitOfWork.Addresses.Add(address);
+                }
+                catch(Exception e)
+                {
+                    return BadRequest();
+                }
+
+                Location location = new Location()
+                {
+                    XPos = 0,
+                    YPos = 0,
+                    Address = address,
+                    AddressID = address.Id,
+                    Deleted = false
+                };
+
+                try
+                {
+                    unitOfWork.Locations.Add(location);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+                user.DriverLocation = location;
+
+                try
+                {
+                    unitOfWork.AppUsers.Update(user);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+                try
+                {
+                    unitOfWork.Complete();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+            }
+            else
+            {
+                Location location = unitOfWork.Locations.FirstOrDefault(l => l.Id == user.DriverLocationId);
+                Address address = unitOfWork.Addresses.FirstOrDefault(a => a.Id == location.AddressID);
+
+                address.StreetName = newAddress.StreetName;
+                address.Number = newAddress.Number;
+                address.Town = newAddress.Town;
+                address.AreaCode = newAddress.AreaCode;
+
+                try
+                {
+                    unitOfWork.Addresses.Update(address);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+                location.Address = address;
+                location.AddressID = address.Id;
+
+                try
+                {
+                    unitOfWork.Locations.Update(location);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+                user.DriverLocation = location;
+
+                try
+                {
+                    unitOfWork.AppUsers.Update(user);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+
+                try
+                {
+                    unitOfWork.Complete();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest();
+                }
+
+            }
 
             return Ok();
         }

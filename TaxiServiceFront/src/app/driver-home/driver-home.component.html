@@ -1,3 +1,55 @@
+<div class="row">
+    <div *ngIf="!showLocation">
+        <h3>My Current Address:</h3>
+        <div *ngIf="cAddress != null">
+            {{cAddress.StreetName}} {{cAddress.Number}}, {{cAddress.Town}} {{cAddress.AreaCode}}   
+        </div>
+        <div *ngIf="cAddress == null">
+            Driver location not defined
+        </div>
+        <button (click)="ChangeLocation()" class="takeButton">Change my location</button>
+    </div>
+
+    <div *ngIf="showLocation">
+    <form [formGroup]="ChangeForm" (ngSubmit)="OnSubmitChange()">
+        <h3>Change Address:</h3>
+                
+        <div class="row">
+            <label style="margin-right:20px; margin-left: 10px;">Street Name</label>
+            <input type="text" formControlName="streetName"/>
+            <div *ngIf="submitted && l.streetName.errors"  class="errorText">
+                <div *ngIf="l.streetName.errors.required">Street Name is required</div>
+            </div>
+            
+            <label style="margin-right:20px; margin-left: 10px;">Number</label>
+            <input type="text" formControlName="number"/>
+            <div *ngIf="submitted && l.number.errors"  class="errorText">
+                <div *ngIf="l.number.errors.required">Number is required</div>
+                <div class="errorText" *ngIf="ChangeForm.controls.number.errors?.invalidNumber">Number must be a number</div>
+            </div>
+                
+            <label style="margin-right:20px; margin-left: 10px;">Town</label>
+            <input type="text" formControlName="town"/>
+            <div *ngIf="submitted && l.town.errors"  class="errorText">
+                <div *ngIf="l.town.errors.required">Town is required</div>
+            </div>
+            
+
+            <label style="margin-right:20px; margin-left: 10px;">Area Code</label>
+            <input type="text" formControlName="areaCode"/>
+            <div *ngIf="submitted && l.areaCode.errors"  class="errorText">
+                <div *ngIf="l.areaCode.errors.required">Area Code is required</div>
+                <div *ngIf="ChangeForm.controls.areaCode.errors?.invalidNumber">Area Code must be a number</div>
+            </div>
+                
+            <button [disabled]="submitted" class="takeButton" style="margin-left:20px;">Change</button>
+            <button (click)="Cancel()" class="takeButton" style="margin-left:20px;">Cancel</button>
+            </div>
+        </form>
+</div>
+
+</div>
+<!--OVDE STAVI DA IDE TRENUTNA LOKACIJA, ALI NESTO NECE DA PROCITA VREDNOST ADDRESS, MOZDA TREBA DA SE INICIRA PRVO, PA STAVI ONAKO if == null No ADdress-->
 
 <div class="row">
     <div>
@@ -14,6 +66,8 @@
     </div>
 
 <div *ngIf="hasError" class="errorText">{{errorString}}</div>
+
+
 
 <div *ngIf="showHistory">
 <h3>My History</h3>

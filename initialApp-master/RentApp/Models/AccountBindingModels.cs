@@ -164,8 +164,8 @@ namespace RentApp.Models
     public class RideBindingModel
     {
         [Required]
-        [Display(Name ="StreetName")]
-        
+        [Display(Name = "StreetName")]
+
         public string StreetName { get; set; }
 
         [Required]
@@ -210,7 +210,7 @@ namespace RentApp.Models
         [Required]
         [Display(Name = "FinishRide")]
         public Ride FinishRide { get; set; }
-        
+
         [Display(Name = "Content")]
         public string Content { get; set; }
 
@@ -232,6 +232,47 @@ namespace RentApp.Models
 
     }
 
+    public class SearchBindingModel
+    {
+        [Display(Name = "DateFrom")]
+        public DateTime DateFrom { get; set; }
 
+        [Display(Name = "DateTo")]
+        public DateTime DateTo { get; set; }
+
+        [Display(Name = "RatingFrom")]
+        public string RatingFrom { get; set; }
+
+        [Display(Name = "RatingTo")]
+        public string RatingTo { get; set; }
+
+        [Display(Name = "PriceFrom")]
+        public string PriceFrom { get; set; }
+
+        [Display(Name = "PriceTo")]
+        public string PriceTo { get; set; }
+
+        //[Display(Name = "Created")]
+        //public bool Created { get; set; }
+
+        //[Display(Name = "Cancelled")]
+        //public bool Cancelled { get; set; }
+
+        //[Display(Name = "Formed")]
+        //public bool Formed { get; set; }
+
+        //[Display(Name = "Proccessed")]
+        //public bool Proccessed { get; set; }
+
+        //[Display(Name = "Accepted")]
+        //public bool Accepted { get; set; }
+
+        //[Display(Name = "Failed")]
+        //public bool Failed { get; set; }
+
+        //[Display(Name = "Successfull")]
+        //public bool Successfull { get; set; }
+
+    }
 
 }

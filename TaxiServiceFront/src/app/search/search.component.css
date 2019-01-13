@@ -1,0 +1,11 @@
+.front{
+    margin-top: 4%;
+    margin-left: 5%;
+}
+
+.searchTable {
+    border-spacing: 50px;
+  }
+.searchTable  td {
+    padding: 10px;
+  }
