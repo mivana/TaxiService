@@ -151,6 +151,8 @@ export class MyProfileComponent implements OnInit {
     this.editedUser.Gender = this.editForm.controls['gender'].value;
     this.editedUser.JMBG = this.editForm.controls['jmbg'].value;
     this.editedUser.ContactNumber = this.editForm.controls['contactNumber'].value;
+    this.editedUser.Id = this.activeUser.Id;
+    this.editedUser.Role = this.activeUser.Role;
 
     this.service.UpdateUser(this.editedUser).subscribe(
       data=>{

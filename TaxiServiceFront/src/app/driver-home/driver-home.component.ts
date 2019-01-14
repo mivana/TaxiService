@@ -43,8 +43,9 @@ export class DriverHomeComponent implements OnInit {
   showComment: boolean = false;
   hasActive: boolean = false;
   showSuccessfull: boolean = false;
-  showLocation: boolean = false;
-;
+  showLocation: boolean = false;  
+  showNothing: boolean = true;
+
   
   CommentForm: FormGroup;
   FinishForm: FormGroup;
@@ -286,24 +287,39 @@ export class DriverHomeComponent implements OnInit {
   }
 
   Finish(){
+    debugger
+    this.submitted = false;
     this.showFinish = true;
   }
 
   SuccessfullFinish(ride: Ride){
+    debugger
+    this.submitted = false;
+    this.showFinish = false;
     this.showSuccessfull = true;
+    this.showNothing = false;
   }
 
   FailedFinish(ride: Ride){
+    debugger
+    this.submitted = false;
+    this.showFinish = false;
     this.showComment = true;
+    this.showNothing = false;
   }
 
   CancelFinish(){
+    debugger
+    this.submitted = false;
     this.showFinish = false;
+    this.showSuccessfull = false;
     this.showComment = false;
+    this.showNothing = false;
   }
 
   ChangeLocation(){
     debugger
+    this.submitted = false;
     this.showLocation = true;
     if(this.cAddress != null){
       this.ChangeForm.controls['streetName'].setValue(this.cAddress.StreetName, {onlySelf: true});
@@ -314,6 +330,7 @@ export class DriverHomeComponent implements OnInit {
   }
 
   Cancel(){
+    this.submitted = false;
     this.showLocation = false;
     this.ChangeForm.reset();
   }

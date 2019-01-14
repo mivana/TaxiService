@@ -47,6 +47,7 @@ export class UserHomeComponent implements OnInit {
   result: boolean;
   enableEdit: boolean = false;
   showComment: boolean = false;
+  loading: boolean = true;
 
   @Input() rating: number = 0;
   @Input() itemId: number;

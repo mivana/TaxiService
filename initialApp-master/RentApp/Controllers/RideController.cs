@@ -70,12 +70,12 @@ namespace RentApp.Controllers
             //                            .Where(r4 => r4.UserComment.First().Rating >= Int32.Parse(model.RatingFrom) || model.RatingFrom == "")
             //                            .Where(r5 => r5.UserComment.First().Rating <= Int32.Parse(model.RatingTo) || model.RatingTo == "").ToList();
 
-            user.CustomerRides.Where(r => model.DateFrom != null && r.OrderDT.CompareTo(model.DateFrom) < 0)
-                              .Where(r => model.DateTo != null && r.OrderDT.CompareTo(model.DateTo) > 0)
-                              .Where(r => model.PriceFrom != "" && r.Price >= double.Parse(model.PriceFrom))
-                              .Where(r => model.PriceTo != "" && r.Price <= double.Parse(model.PriceTo))
-                              .Where(r => model.RatingFrom != "" && r.Price >= Int32.Parse(model.RatingFrom))
-                              .Where(r => model.RatingTo != "" && r.Price <= Int32.Parse(model.RatingTo)).ToList();
+            user.CustomerRides.Where(r => model.DateFrom == null || r.OrderDT.CompareTo(model.DateFrom) < 0)
+                              .Where(r => model.DateTo == null || r.OrderDT.CompareTo(model.DateTo) > 0)
+                              .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
+                              .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
+                              .Where(r => model.RatingFrom == "" || r.Price >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.Price <= Int32.Parse(model.RatingTo)).ToList();
 
 
             #region kom
@@ -696,7 +696,6 @@ namespace RentApp.Controllers
         [Route("CommentRideComplete")]
         public IHttpActionResult CommentRideComplete(CommentRideBindingModel model)
         {
-            //testiraj ovo da li radi, nesto mi duplira podatke!!! VAZNOOOOOOOOOOOOOOOOOOOOOOOOO
             if (model == null)
             {
                 throw new ArgumentNullException(nameof(model));
@@ -744,7 +743,69 @@ namespace RentApp.Controllers
 
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [Route("AssignDriver")]
+        public IHttpActionResult AssignDriver(AssignDriverBindingModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+            if (user == null)
+                return BadRequest();
+
+            var userDriver = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == model.Driver.Email && u.Deleted == false);
+            if (userDriver == null)
+                return BadRequest();
+
+            Ride ride = unitOfWork.Rides.FirstOrDefault(r => r.Id == model.Ride.Id);
+            if (ride == null)
+                return BadRequest("No ride found");
+
+
+            userDriver.DriverFree = false;
+            userDriver.DriverLocation = ride.StartLocation;
+
+            try
+            {
+                unitOfWork.AppUsers.Update(userDriver);
+            }
+            catch(Exception e)
+            {
+                return BadRequest();
+            }
+
+            ride.Status = Status.Proccessed;
+            ride.Dispatcher = user;
+            ride.DispatcherID = user.Id;
+            ride.TaxiDriver = userDriver;
+            ride.TaxiDriverID = userDriver.Id;
+
+            try
+            {
+                unitOfWork.Rides.Update(ride);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                unitOfWork.Complete();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+
+
+        }
 
         private bool RideExists(int id)
         {

@@ -17,6 +17,7 @@ import { CommentRide } from '../models/CommentRide.model';
 import { AppUserAuthGuard } from '../guards/appUser.guard';
 import { Address } from '../models/Address.model';
 import { Search } from '../models/Search.Model';
+import { AssignDriver } from '../models/AssignDriver.model';
  
 @Injectable()
 export class UserService {
@@ -111,5 +112,10 @@ export class UserService {
 
     Search(search: Search):Observable<any>{
         return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/Search',search);
+    }
+
+    AssignDriver(assignDriver: AssignDriver, ride: Ride){
+        assignDriver.Ride = ride;
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/AssignDriver',assignDriver);
     }
 }

@@ -1,4 +1,4 @@
-<div *ngIf="!loaded" class="profile">
+<div *ngIf="!loaded" class="loading">
   Page is loading
 </div>
 
@@ -25,7 +25,37 @@
     </ul>
   </div>
 
-  <div class="profile">
+  <div *ngIf="!IsDriver()" class="profile">
+  
+    <tr style=" text-align: center;">
+      <td ><h2 style="font-weight: bold;">{{activeUser.Username}}</h2></td>
+      <td style=" text-align: center;">{{activeUser.FullName}}</td>
+    </tr>
+    <tr>
+      <td><h3>Email:</h3></td>
+      <td>{{activeUser.Email}}</td>
+    </tr>
+    <tr>
+      <td><h3>Gender:</h3></td>
+      <td>{{activeUser.Gender}}</td>
+    </tr>
+    <tr>
+      <td><h3>JMBG:</h3></td>
+      <td>{{activeUser.JMBG || "Not entered"}}</td>
+    </tr>
+    <tr>
+      <td><h3>Contact Number:</h3></td>
+      <td>{{activeUser.ContactNumber || "Not entered"}}</td>
+    </tr>
+    <tr>
+      <td><h3>Role:</h3></td>
+      
+      <td>{{activeUser.Role}}</td>
+    </tr>
+
+  </div>
+
+  <div *ngIf="IsDriver()" class="profileDriver">
   
     <tr style=" text-align: center;">
       <td ><h2 style="font-weight: bold;">{{activeUser.Username}}</h2></td>
@@ -90,30 +120,34 @@
     <div *ngIf="errorCar" class="errorText">Error while trying to change car info, please try again</div>
     
     <form [formGroup]="editCarForm" (ngSubmit)="OnSubmitCar()">
-        <label>Registration Plate:</label>
+        <label>Registration Plate:</label><br/>
         <input type="text" formControlName="registrationPlate"/>
         <div *ngIf="submitted && c.registrationPlate.errors"  class="errorText">
           <div *ngIf="c.registrationPlate.errors.required">Registration Plate is required</div>
         </div>
-        
-        <label>Taxi Number:</label>
+        <br/>
+        <label>Taxi Number:</label><br/>
         <input type="text" formControlName="taxiNumber"/>
         <div *ngIf="submitted && c.taxiNumber.errors"  class="errorText">
           <div *ngIf="c.taxiNumber.errors.required">Taxi Number is required</div>
         </div>
-        
+        <br/>
         <label>Year Made</label><br/>
         <input type="date" formControlName="yearMade" />
         <div *ngIf="submitted && c.yearMade.errors" class="errorText">
             <div *ngIf="c.yearMade.errors.required">Year Made is required</div>
         </div>
-
+        <br/>
         <label>Car Type</label><br/>
         <select id="carType" formControlName="carType">
             <option *ngFor="let cc of carTypes" [ngValue]="cc">{{ cc }}</option>
         </select>
-        <button [disabled]="submitted">Change</button>
-        <button (click)="Cancel()">Cancel</button>
+        <br/>
+        <div class="passButtons">
+            <button [disabled]="submitted">Change</button>
+            <button (click)="Cancel()">Cancel</button>
+        </div>
+        
     </form>
   </div>
 
@@ -130,8 +164,10 @@
       <div *ngIf="submitted && u.username.errors"  class="errorText">
         <div *ngIf="u.username.errors.required">Username is required</div>
       </div>
-      <button [disabled]="submitted">Change</button>
-      <button (click)="Cancel()">Cancel</button>
+      <div class="passButtons">
+        <button [disabled]="submitted">Change</button>
+        <button (click)="Cancel()">Cancel</button>
+      </div>
   </form>
 </div>
 
@@ -140,39 +176,41 @@
     <h3 class="prop">Change your password</h3>
   <form [formGroup]="editPasswordForm" (ngSubmit)="OnSubmitPassword()">
       <label>Old Password</label><br/>
-    <input type="password" formControlName="oldPassword"/>
-    <div *ngIf="submitted && p.oldPassword.errors"  class="errorText">
-      <div *ngIf="p.oldPassword.errors.required">Old Password is required</div>
-    </div>
-    <div>
-    <label>Password</label><br/>
-    <input type="password" formControlName="password" />
-    <div *ngIf="submitted && p.password.errors" class="errorText">
-        <div *ngIf="p.password.errors.required">New Password is required</div>
-        <div *ngIf="editPasswordForm.controls['password'].hasError('hasNumber')">Must have at least one number</div>
-        <div *ngIf="editPasswordForm.controls['password'].hasError('hasCapitalCase')">Must have at least one upper case letter</div>
-        <div *ngIf="editPasswordForm.controls['password'].hasError('hasSmallCase')">Must have at least one lower case letter</div>
-        <div *ngIf="editPasswordForm.controls['password'].hasError('hasSpecialCharacters')">Must have at least one special character</div>
-        <div *ngIf="editPasswordForm.controls['password'].hasError('minlength')">Must be at least 6 character long</div>
+      <input type="password" formControlName="oldPassword"/>
+      <div *ngIf="submitted && p.oldPassword.errors"  class="errorText">
+        <div *ngIf="p.oldPassword.errors.required">Old Password is required</div>
       </div>
-    </div>
-
-    <div>
-        <label>Confirm Password</label><br/>
-        <input type="password" formControlName="confirmPassword" />
-        <div *ngIf="submitted && p.confirmPassword.errors" class="errorText">
-            <div *ngIf="p.confirmPassword.errors.required">Confirm Password is required</div>
+      <div>
+      <label>Password</label><br/>
+      <input type="password" formControlName="password" />
+      <div *ngIf="submitted && p.password.errors" class="errorText">
+          <div *ngIf="p.password.errors.required">New Password is required</div>
+          <div *ngIf="editPasswordForm.controls['password'].hasError('hasNumber')">Must have at least one number</div>
+          <div *ngIf="editPasswordForm.controls['password'].hasError('hasCapitalCase')">Must have at least one upper case letter</div>
+          <div *ngIf="editPasswordForm.controls['password'].hasError('hasSmallCase')">Must have at least one lower case letter</div>
+          <div *ngIf="editPasswordForm.controls['password'].hasError('hasSpecialCharacters')">Must have at least one special character</div>
+          <div *ngIf="editPasswordForm.controls['password'].hasError('minlength')">Must be at least 6 character long</div>
         </div>
-    </div>
-    <div class="errorText" *ngIf="editPasswordForm.controls.confirmPassword.errors?.MatchPassword">Password not match</div>
-  
-    <button [disabled]="submitted">Change</button>
-    <button (click)="Cancel()">Cancel</button>
+      </div>
+
+      <div>
+          <label>Confirm Password</label><br/>
+          <input type="password" formControlName="confirmPassword" />
+          <div *ngIf="submitted && p.confirmPassword.errors" class="errorText">
+              <div *ngIf="p.confirmPassword.errors.required">Confirm Password is required</div>
+          </div>
+      </div>
+      <div class="errorText" *ngIf="editPasswordForm.controls.confirmPassword.errors?.MatchPassword">Password not match</div>
+    
+      <div class="passButtons">
+        <button [disabled]="submitted">Change</button>
+        <button (click)="Cancel()">Cancel</button>
+      </div>
   </form>
 </div>
 
 <div *ngIf="showEdit">
-    <div class="profile">
+    <div class="profileEdit">
       <form [formGroup]="editForm" (ngSubmit)="OnSubmit()">
         <!-- <tr>
             <td><h3 class="prop">Username:</h3></td>
@@ -228,8 +266,11 @@
         </tr>
 
         <tr>
-          <button [disabled]="submitted">Edit</button>
-          <button (click)="Cancel()">Cancel</button>
+          
+          <div class="editButtons">
+            <td><button [disabled]="submitted">Edit</button></td>
+            <td><button (click)="Cancel()">Cancel</button></td>
+          </div>
         </tr>
 
       </form>

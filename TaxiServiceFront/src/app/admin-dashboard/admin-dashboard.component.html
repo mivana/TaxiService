@@ -11,7 +11,8 @@
             <button (click)="Free()" class="takeButton">Created Rides</button>
         </li>
     </ul>
-
+    
+    <div *ngIf="hasError" class="errorText errorT">{{errorString}}</div>
 
   <div *ngIf="showAll">
     <h2>All Rides</h2>
@@ -80,13 +81,16 @@
          
           <!-- <td>{{ride.Price || "No Comment"}}</td> -->
       </tr>
+      <tr *ngIf="allRides == null">
+            <td colspan="10" class="NoRides">No Created Rides</td>
+          </tr>
       </table>
 
   </div>
 
   <div *ngIf="showFree">
     <h2>Created Rides</h2>
-    <table class="freeTable rightColumn">
+    <table class="freeTable leftColumn">
       <tr class="tRow">
           <th class="header"><h3>Status</h3></th>
           <th class="header"><h3>Date Time Booked</h3></th>
@@ -112,11 +116,60 @@
                   
           <td>{{ride.CarType}}</td>
           <td>
-            //OVDE NAPRAVI ZA ASSIGN CEO TAJ PROCESS
             <button (click)="Assign(ride)" class="takeButton">Assign Driver</button>
         </td>
       </tr>
+      <tr *ngIf="freeRides == null">
+        <td colspan="5" class="NoRides">No Created Rides</td>
+      </tr>
       </table>
+
+    <div class="rightColumn assignTable" *ngIf="showAssign">
+        <table>
+            <tr>
+                <td class="prop">Status:</td>
+                <td class="statuses">
+                    <div *ngIf="assignRide.Status == 0" style="color: rgb(0, 163, 141);">Created</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="prop">Date Time of Booking:</td>
+                <td>
+                     <div *ngIf="assignRide.OrderDT != null">{{assignRide.OrderDT | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+                     <div *ngIf="assignRide.OrderDT == null">No Date Time Booking defined</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="prop">Start Location:</td>
+                <td>
+                    <div *ngIf="assignRide.StartLocation != null">{{assignRide.StartLocation.Address.StreetName || ""}} {{assignRide.StartLocation.Address.Number || ""}} <br/>
+                                                                   {{assignRide.StartLocation.Address.Town || ""}} {{assignRide.StartLocation.Address.AreaCode || ""}}</div>
+                    <div *ngIf="assignRide.StartLocation == null">No Start Location defined</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="prop">Car Type:</td>
+                <td>
+                    <div *ngIf="assignRide.CarType != null">{{assignRide.CarType}}</div>
+                    <div *ngIf="assignRide.CarType == null">No Car Type defined</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="prop">Assign Driver:</td>
+                <td>
+                <form [formGroup]="assignForm" (ngSubmit)="OnSubmit()">
+
+                    <select id="driver" formControlName="driver" style="margin-top:5px;"> 
+                        <option *ngFor="let d of freeDrivers" [ngValue]="d">{{ d.FullName }}</option>
+                    </select>
+                    <div *ngIf="assignForm.controls.driver.errors?.required" class="errorText">Driver must be assigned</div>
+                        <button [disabled]="submitted" class="takeButton" style="margin-left:30px; margin-right: 10px;">Assign Driver</button>
+                        <button (click)="Cancel()" class="takeButton">Cancel</button>
+                </form>
+                </td>
+            </tr>                
+        </table>
+    </div>
 
   </div>
 
@@ -187,6 +240,9 @@
          
           <!-- <td>{{ride.Price || "No Comment"}}</td> -->
       </tr>
+      <tr *ngIf="myRides == null">
+            <td colspan="10" class="NoRides">No Rides</td>
+          </tr>
       </table>
 
   </div>

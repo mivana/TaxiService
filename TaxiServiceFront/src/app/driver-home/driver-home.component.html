@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row curAddress">
     <div *ngIf="!showLocation">
         <h3>My Current Address:</h3>
         <div *ngIf="cAddress != null">
@@ -14,7 +14,7 @@
     <form [formGroup]="ChangeForm" (ngSubmit)="OnSubmitChange()">
         <h3>Change Address:</h3>
                 
-        <div class="row">
+        <div>
             <label style="margin-right:20px; margin-left: 10px;">Street Name</label>
             <input type="text" formControlName="streetName"/>
             <div *ngIf="submitted && l.streetName.errors"  class="errorText">
@@ -49,7 +49,6 @@
 </div>
 
 </div>
-<!--OVDE STAVI DA IDE TRENUTNA LOKACIJA, ALI NESTO NECE DA PROCITA VREDNOST ADDRESS, MOZDA TREBA DA SE INICIRA PRVO, PA STAVI ONAKO if == null No ADdress-->
 
 <div class="row">
     <div>
@@ -65,12 +64,12 @@
         </ul>
     </div>
 
-<div *ngIf="hasError" class="errorText">{{errorString}}</div>
+<div *ngIf="hasError" class="errorText errorT">{{errorString}}</div>
 
 
 
 <div *ngIf="showHistory">
-<h3>My History</h3>
+<h3 class="title">My History</h3>
 
         <table class="ridesTable">
         <tr class="tRow">
@@ -203,19 +202,21 @@
                 {{activeUser.FullName}}
             </td>
         </tr>
-        <div *ngIf="!showFinish">
-            <tr>
-                <td><button (click)="Finish()" class="takeButton">Finish Ride</button></td>
-            </tr>
-        </div>
-        <div *ngIf="showFinish">
-            <tr>
-                <h3>How did the ride finish?</h3>
-                <td><button (click)="SuccessfullFinish(activeRide)" class="takeButton">Successfull</button></td>
-                <td><button (click)="FailedFinish(activeRide)" class="takeButton">Failed</button></td>
-                <td><button (click)="CancelFinish()" class="takeButton">Cancel Finising</button></td>
-            </tr>
-        </div>
+        <div class="!showNothing">
+            <div *ngIf="!showFinish && showNothing">
+                <tr>
+                    <td><button (click)="Finish()" class="takeButton">Finish Ride</button></td>
+                </tr>
+            </div>
+            <div *ngIf="showFinish && showNothing">
+                <tr>
+                    <h3>How did the ride finish?</h3>
+                    <td><button (click)="SuccessfullFinish(activeRide)" class="takeButton">Successfull</button></td>
+                    <td><button (click)="FailedFinish(activeRide)" class="takeButton">Failed</button></td>
+                    <td><button (click)="CancelFinish()" class="takeButton">Cancel Finising</button></td>
+                </tr>
+            </div>
+        </div>  
 
         <div *ngIf="showComment">
             <tr>

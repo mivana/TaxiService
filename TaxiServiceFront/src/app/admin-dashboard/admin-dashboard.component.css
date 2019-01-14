@@ -49,8 +49,18 @@
 }
 
 .freeTable{
-    margin-left: 10%;
-    width: 60%;
+    margin-left: 7%;
+    width: 40%;
+}
+
+.assignTable{
+    margin-left: 2%;
+    background-color: #fdcc61d7;
+    border-radius: 25px;
+    width: 30%;
+    height: 55%;
+    padding-left: 3%;
+    padding-top: 2%;
 }
 
 .takeButton{
@@ -88,6 +98,13 @@
     color: red;
 }
 
+.errorT{
+    margin-left: 10%;
+    font-weight: 600;
+    font-size: 32px;
+    margin-bottom: 3%;
+}
+
 .buttons{
     float:right;
     list-style-type: none;
@@ -95,4 +112,8 @@
 
 li{
     float:right;
+}
+.NoRides{
+    font-weight: 600;
+    font-size: 32px;
 }

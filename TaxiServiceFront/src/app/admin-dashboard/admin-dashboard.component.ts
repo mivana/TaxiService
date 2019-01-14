@@ -4,6 +4,7 @@ import { JwtInterceptor } from '../helper/jwt.interceptor';
 import { UserService } from '../services/userService.service';
 import { User } from '../models/User.model';
 import { Ride } from '../models/Ride.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -34,20 +35,34 @@ export class AdminDashboardComponent implements OnInit {
   freeRides: Ride[] =[];
   allRides: Ride[] =[];
   assignRide: Ride = new Ride();
+  freeDrivers: User[] = [];
+  CTSdrivers: User[] = [];
+  CTCdrivers: User[] = [];
+  drivers: User[] = [];
+
+  assignForm: FormGroup;
+  submitted: boolean;
 
 
-  constructor(private service: UserService) { }
+  constructor(private service: UserService,
+              private fb: FormBuilder) { }
 
   ngOnInit() {
+    this.assignForm = this.fb.group({
+      driver: ['']
+    })
     this.GetAll();
   }
 
-  /*
-    Onemoguci ako je driver zauzet da se prikazuje pri porucivanja novog vozila kod admina  == URADJENO!
-    Dispacher ime se nesto ne vidi na myhistory == URADJENO
-    Promena lokacije vozaca, kada krene voznju, da mu je to trenutna lokacija, i da moze samostano da menja svoju lokaciju
-    i onda je ostalo ono PFS. Good luck! <3
-  */
+  ngAfterViewInit()
+  {
+    this.assignForm.valueChanges.subscribe(
+      data =>{
+        this.submitted = false;
+      }
+    )
+
+  }
 
   GetInfo(){
     this.service.getUser().subscribe(
@@ -92,10 +107,73 @@ export class AdminDashboardComponent implements OnInit {
     )
   }
 
+  getDrivers(){
+    this.drivers = [];
+    this.CTSdrivers = [];
+    this.CTCdrivers = [];
+    this.service.getDrivers().subscribe(
+      data => {
+        debugger
+        var temp = data;
+        this.drivers = temp;
+
+        for(var i = 0; i < this.drivers.length;i++)
+        {
+          if(this.drivers[i].DriverCars[0].CarType == "0")
+            this.CTSdrivers.push(this.drivers[i]);
+          else
+            this.CTCdrivers.push(this.drivers[i]);
+        }
+
+        this.freeDrivers = this.CTSdrivers;
+      },
+      error => {
+        this.hasError = true;
+        this.errorString = error.error.Message;
+        this.showAssign = false;
+      }
+    )
+  }
+
+  get f() { return this.assignForm.controls; }
+
+  OnSubmit(){
+    this.submitted = true;
+    this.hasError = false;
+    this.errorString = "";
+
+    debugger
+    if(this.assignForm.controls['driver'].value == "")
+        this.assignForm.controls['driver'].setErrors({required: true});
+      
+    // stop here if form is invalid
+    if (this.assignForm.invalid) {
+      return;
+    }
+
+    this.service.AssignDriver(this.assignForm.value, this.assignRide).subscribe(
+      data => {
+        this.showAssign = false;
+        this.GetFree();
+      },
+      error => {
+        this.hasError = true;
+        this.errorString = error.error.Message;
+        this.showAssign = false;
+      }
+    )
+
+  }
+
+
+
+
   All(){
     this.showAll = true;
     this.showMy = false;
     this.showFree = false;
+    this.hasError = false;
+    this.errorString = "";
     this.GetAll();
   }
 
@@ -103,6 +181,8 @@ export class AdminDashboardComponent implements OnInit {
     this.showAll = false;
     this.showMy = true;
     this.showFree = false;
+    this.hasError = false;
+    this.errorString = "";
     this.GetInfo();
   }
 
@@ -110,14 +190,28 @@ export class AdminDashboardComponent implements OnInit {
     this.showAll = false;
     this.showMy = false;
     this.showFree = true;
+    this.hasError = false;
+    this.errorString = "";
     this.GetFree();
-
   }
 
   Assign(ride:Ride){
     this.showAssign = true;
     this.assignRide = ride;
+    this.getDrivers();
+    if(this.assignRide.CarType == "0")
+      this.drivers = this.CTSdrivers
+    else
+      this.drivers = this.CTCdrivers;
   }
 
+  Cancel(){
+    this.assignRide = null;
+    this.showAssign = false;
+    this.hasError = false;
+    this.errorString = "";
+    
+
+  }
 
 }

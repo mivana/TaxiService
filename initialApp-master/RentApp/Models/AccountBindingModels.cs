@@ -275,4 +275,14 @@ namespace RentApp.Models
 
     }
 
+    public class AssignDriverBindingModel
+    {
+        [Display(Name = "Ride")]
+        public Ride Ride { get; set; }
+
+        [Display(Name = "Driver")]
+        public AppUser Driver { get; set; }
+
+    }
+
 }

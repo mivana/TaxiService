@@ -13,11 +13,18 @@
     float: left;
     width: 50%;
     margin-left: 2%;
+    background-color: #fdcc61d7;
+    border-radius: 25px;
+    width: 35%;
+    height: 70%;
+    padding-left: 3%;
+    padding-top: 2%;
 }
 
 .rightColumn{
     float: left;
     width: 50%;
+    margin-right: 10%;
 }
 
 .statuses{
@@ -41,10 +48,12 @@
 
 .ridesTable{
     width: 98%;
+    margin-left: 10px;
 }
 
 .freeTable{
     width: 35%;
+    margin-left: 220px;
 }
 
 .takeButton{
@@ -78,6 +87,10 @@
     margin-left: 4%;
 }
 
+.prop{
+    margin-right: 30px;
+}
+
 .errorText{
     color: red;
 }
@@ -85,4 +98,26 @@
 .buttons{
     float:right;
     list-style-type: none;
+    margin-right: 20px;
+}
+
+.curAddress{
+    margin-left: 5%;
+    background-color: #fdcc61d7;
+    border-radius: 25px;
+    width: 80%;
+    height: 20%;
+    padding-left: 3%;
+    padding-top: 2%;
+}
+
+.title{
+    margin-left: 20px;
+}
+
+.errorT{
+    margin-left: 10%;
+    font-weight: 600;
+    font-size: 32px;
+    margin-bottom: 3%;
 }

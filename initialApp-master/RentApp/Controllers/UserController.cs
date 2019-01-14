@@ -223,10 +223,11 @@ namespace RentApp.Controllers
         [ResponseType(typeof(AppUser))]
         public IHttpActionResult PutUser(int id, AppUser user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //OVO SE ZAJEBALO NESTO IDK ZASTO... fuck
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
             if (id != user.Id)
             {
