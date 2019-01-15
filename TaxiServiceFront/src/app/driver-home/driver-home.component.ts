@@ -174,6 +174,7 @@ export class DriverHomeComponent implements OnInit {
         debugger
         this.activeRide = data;
         this.PrepareInfo();
+        this.showFinish = true;
       },
       error => {
         this.hasError = true;

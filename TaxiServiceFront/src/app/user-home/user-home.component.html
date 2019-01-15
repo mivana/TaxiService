@@ -233,7 +233,7 @@
             <div *ngIf="ride.UserComment.length != 0">
                 <td *ngFor="let com of ride.UserComment">
                     <div *ngIf="com != null">
-                        <div style="font-style: italic; font-weight:500; text-align:left;">{{activeUser.Username}} {{com.DateCreated | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+                        <div style="font-style: italic; font-weight:500; text-align:left;">{{com.Username}} {{com.DateCreated | date:'yyyy-MM-dd HH:mm:ss'}}</div>
                         <div style="text-align:right; margin-top: 5px;">{{com.Content || "No Comment"}} ({{com.Rating}})</div>
                     </div>
                 </td>
@@ -247,6 +247,9 @@
            
             <!-- <td>{{ride.Price || "No Comment"}}</td> -->
         </tr>
+        <tr *ngIf="myRides.length == 0">
+            <td colspan="10" class="NoRides">No Rides</td>
+          </tr>
         </table>
 
         </div>

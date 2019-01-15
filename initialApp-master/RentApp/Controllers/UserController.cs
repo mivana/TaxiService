@@ -219,7 +219,7 @@ namespace RentApp.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles ="Admin,AppUser")]
+        [Authorize(Roles ="Admin,AppUser,Driver")]
         [ResponseType(typeof(AppUser))]
         public IHttpActionResult PutUser(int id, AppUser user)
         {
@@ -240,8 +240,19 @@ namespace RentApp.Controllers
                 if (result.Count() != 0)
                         return BadRequest("Username not Unique");
 
-                unitOfWork.AppUsers.Update(user);
-                unitOfWork.Complete();
+                var CurUser = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+                if (CurUser == null)
+                {
+                    return BadRequest();
+                }
+                CurUser.FullName = user.FullName;
+                CurUser.JMBG = user.JMBG;
+                CurUser.Gender = user.Gender;
+                CurUser.ContactNumber = user.ContactNumber;
+
+                    unitOfWork.AppUsers.Update(CurUser);
+                    unitOfWork.Complete();
+                
             }
             catch (DbUpdateConcurrencyException)
             {

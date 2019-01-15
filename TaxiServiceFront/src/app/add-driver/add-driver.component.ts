@@ -101,8 +101,8 @@ export class AddDriverComponent implements OnInit {
     
     this.service.registerDriver(this.driverForm.value, "Driver").subscribe(
       data => {
-        this.result = true;
         this.driverForm.reset();
+        this.result = true;
       },
       error => {
         var errMesage = error.error;

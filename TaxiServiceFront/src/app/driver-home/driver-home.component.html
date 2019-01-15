@@ -229,8 +229,8 @@
                             <div *ngIf="c.content.errors.required">Please insert your opinion</div>
                         </div>
                     </div>
-                    <button [disabled]="submitted" style="margin-top: 20px;">Submit</button>
-                    <button (click)="CancelFinish()">Cancel Finising</button>
+                    <button [disabled]="submitted" style="margin-top: 20px;" class="takeButton">Submit</button>
+                    <button (click)="CancelFinish()" class="takeButton">Cancel Finising</button>
                 </form>
                 </td>
             </tr>
@@ -248,7 +248,7 @@
                             <div *ngIf="submitted && f.dStreetName.errors"  class="errorText">
                             <div *ngIf="f.dStreetName.errors.required">Street Name is required</div>
                             </div>
-                    
+                            <br/>
                             <label>Number</label>
                             <input type="text" formControlName="dNumber"/>
                             <div *ngIf="submitted && f.dNumber.errors"  class="errorText">
@@ -283,8 +283,8 @@
                         </div>
 
                         <div class="row">
-                            <button [disabled]="submitted" style="margin-top: 20px;">Submit</button>
-                            <button (click)="CancelFinish()">Cancel Finising</button>
+                            <button [disabled]="submitted" style="margin-top: 20px;" class="takeButton">Submit</button>
+                            <button (click)="CancelFinish()" class="takeButton">Cancel Finising</button>
                         </div>
                     </form>                    
                 </td>

@@ -1,17 +1,43 @@
 .margins{
-    margin-top: 3%;
-    margin-left: 3%;
+    margin-top: 5%;
+    margin-left: 32%;
+    background-color: #fdcc61d7;
+    border-radius: 25px;
+    width: 35%;
+    height: 60%;
+    padding-left: 3%;
+    padding-top: 2%;
 }
 h3 {
     font-style: italic;
 }
 
+.margins label{
+    margin-left: 40px;
+}
+
+
+.margins input{
+    margin-left: 40px;
+}
+
+
+.margins select{
+    margin-left: 40px;
+}
+
 .errorText {
     color: red;
+    margin-left: 40px;
 }
 
 .resultText {
     color: green;
+}
+
+.buttonMargin{
+    margin-left: 70%;
+    margin-top: 20px;
 }
 
 .row {
@@ -19,9 +45,41 @@ h3 {
     margin-top: 10px;
     margin-left: 10px;
     margin-right: 10px;
-  }
+}
   
-  .column {
-    flex: 50%;
+.column {
+    float:left;
+    width: 50%;
+}
+ 
+.rightcolumn {
+    float:left;
+    width: 50%;
+}
+
+button{
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 18px 18px 18px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    border-radius: 50%;
   }
-  
+
+button:hover{
+ color: goldenrod;
+}
+
+button:active{
+    color: black;
+    background-color: gold;
+}
+
+button:disabled{
+    background-color:rgb(71, 71, 71);
+    color: white;
+}

@@ -93,8 +93,12 @@ export class OrderTaxiComponent implements OnInit {
         if(this.activeUser.Role == "0"){
           this.myRides = user.CustomerRides;
           var i = this.myRides.length;
-          if(this.myRides[i-1] != null && this.myRides[i-1].Status != "1"){
-            this.hasActive = true;
+          if(this.myRides[i-1] != null && this.myRides[i-1].Status != "4"){
+            if(this.myRides[i-1].Status != "5"){
+              if(this.myRides[i-1].Status != "6"){
+                this.hasActive = true;
+              }
+            }
           }
         }   
       },

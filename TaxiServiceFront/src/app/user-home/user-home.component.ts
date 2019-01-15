@@ -9,6 +9,7 @@ import { NumbericValidation } from '../validators/numeric-validator.validation';
 import { Comment } from '../models/Comment.model';
 import { User } from '../models/User.model';
 import { CommentRide } from '../models/CommentRide.model';
+import { unwatchFile } from 'fs';
 
 @Component({
   selector: 'app-user-home',
@@ -115,8 +116,10 @@ export class UserHomeComponent implements OnInit {
           this.hasActive = false;
         }
 
-        if(this.myRides[i-1].Status != "0")
-          this.enableEdit = true;
+        if(!this.noActive){
+          if(this.myRides[i-1].Status != "0")
+            this.enableEdit = true;
+        }
         
 
         this.myRides.reverse();

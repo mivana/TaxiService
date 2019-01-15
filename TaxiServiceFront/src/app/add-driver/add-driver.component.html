@@ -1,6 +1,7 @@
 <div class="margins">
   <h3>Add a new Driver</h3>
 
+  <div *ngIf="result" class="resultText">Driver added successfully!</div>
   <div class="errorText">
     <div *ngIf="result" class="resultText">Driver added successfully!</div>
     <div *ngIf="resultError" class="errorText">Error while trying to register, please try again</div>
@@ -78,33 +79,33 @@
     
 </div>
     
-<div class="column">
+<div class="rightColumn">
         <h4>Car</h4>
         <label>Registration Plate</label><br/>
         <input type="text" formControlName="registrationPlate" />
         <div *ngIf="submitted && f.registrationPlate.errors" class="errorText">
             <div *ngIf="f.registrationPlate.errors.required" >Registration Plate is required</div>
         </div>
-
+        <br/>
         <label>Taxi Number</label><br/>
         <input type="text" formControlName="taxiNumber" />
         <div *ngIf="submitted && f.taxiNumber.errors" class="errorText">
             <div *ngIf="f.taxiNumber.errors.required" >Taxi Number is required</div>
         </div>
-
+        <br/>
         <label>Year Made</label><br/>
         <input type="date" formControlName="yearMade" />
         <div *ngIf="submitted && f.yearMade.errors" class="errorText">
             <div *ngIf="f.yearMade.errors.required">Year Made is required</div>
         </div>
-
+        <br/>
         <label>Car Type</label><br/>
         <select id="carType" formControlName="carType">
             <option *ngFor="let c of carTypes" [ngValue]="c">{{ c }}</option>
         </select>
 </div>
 
-    <div>
+    <div class="buttonMargin">
         <button [disabled]="submitted">Register</button>
     </div>
 

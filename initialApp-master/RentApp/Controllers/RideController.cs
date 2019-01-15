@@ -69,8 +69,8 @@ namespace RentApp.Controllers
                               .Where(r => model.DateTo == null || r.OrderDT.Date.CompareTo((DateTime)model.DateTo.Value.Date) <= 0)
                               .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
                               .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
-                              .Where(r => model.RatingFrom == "" || r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
-                              .Where(r => model.RatingTo == "" || r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
+                              .Where(r => model.RatingFrom == "" || r.UserComment.Count() != 0 && r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.UserComment.Count() != 0 && r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
 
                     break;
 
@@ -82,8 +82,8 @@ namespace RentApp.Controllers
                               .Where(r => model.DateTo == null || r.OrderDT.Date.CompareTo((DateTime)model.DateTo.Value.Date) <= 0)
                               .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
                               .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
-                              .Where(r => model.RatingFrom == "" || r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
-                              .Where(r => model.RatingTo == "" || r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
+                              .Where(r => model.RatingFrom == "" || r.UserComment.Count() != 0 && r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.UserComment.Count() != 0 && r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
                     }
 
                     if (model.SearchMineD == true)
@@ -92,8 +92,8 @@ namespace RentApp.Controllers
                               .Where(r => model.DateTo == null || r.OrderDT.Date.CompareTo((DateTime)model.DateTo.Value.Date) <= 0)
                               .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
                               .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
-                              .Where(r => model.RatingFrom == "" || r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
-                              .Where(r => model.RatingTo == "" || r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
+                              .Where(r => model.RatingFrom == "" || r.UserComment.Count() != 0 && r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.UserComment.Count() != 0 && r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
                     }
                     break;
 
@@ -105,8 +105,8 @@ namespace RentApp.Controllers
                               .Where(r => model.DateTo == null || r.OrderDT.Date.CompareTo((DateTime)model.DateTo.Value.Date) <= 0)
                               .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
                               .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
-                              .Where(r => model.RatingFrom == "" || r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
-                              .Where(r => model.RatingTo == "" || r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
+                              .Where(r => model.RatingFrom == "" || r.UserComment.Count() != 0 && r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.UserComment.Count() != 0 && r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
                     }
 
                     if (model.SearchMine == true)
@@ -115,8 +115,8 @@ namespace RentApp.Controllers
                               .Where(r => model.DateTo == null || r.OrderDT.Date.CompareTo((DateTime)model.DateTo.Value.Date) <= 0)
                               .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
                               .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
-                              .Where(r => model.RatingFrom == "" || r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
-                              .Where(r => model.RatingTo == "" || r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
+                              .Where(r => model.RatingFrom == "" || r.UserComment.Count() != 0 && r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.UserComment.Count() != 0 && r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
                     }
                     break;
 
@@ -623,6 +623,7 @@ namespace RentApp.Controllers
                 ride.DestinationLocation = desLocation;
                 ride.DestinationLocationID = desLocation.Id;
                 ride.Status = Status.Successfull;
+                ride.Price = model.Price;
 
                 try
                 {
