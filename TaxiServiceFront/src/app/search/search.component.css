@@ -1,6 +1,6 @@
 .front{
     margin-top: 4%;
-    margin-left: 5%;
+    margin-left: 1%;
 }
 
 .searchTable {
@@ -9,3 +9,124 @@
 .searchTable  td {
     padding: 10px;
   }
+
+.searchBar{
+    background-color: #fdcc61f8;
+    border-radius: 25px;
+    width: 99%;
+    height: 39%;
+    padding-left: 10px;
+    padding-top: 20px;
+}
+
+.adminSearch{
+    background-color: #fdcc61f8;
+    border-radius: 25px;
+    width: 99%;
+    height: 39%;
+    padding-left: 10px;
+    padding-top: 20px;
+}
+.adminSearch h2{
+    margin-left: 20px;
+}
+
+.NoRides{
+    font-weight: 600;
+    font-size: 32px;
+}
+
+.tRow{
+    text-align: left;
+    border-radius: 10px;
+    background-color: white;
+    border-color: gold;
+}
+
+.result{
+    margin-top: 2%;
+    margin-left: 6%
+}
+
+
+.statuses{
+    font-weight: bold;
+    
+}
+
+.header{
+    text-align: center;
+    font-weight: bolder;
+    background-color: rgba(223, 189, 0, 0.726);
+    border-radius: 10px;
+}
+
+.ridesTable{
+    width: 95%;
+}
+
+.statuses{
+    color: white;
+}
+
+.sBorder{
+    background-color: #000000d7;
+    border-radius: 25px;
+    width: 20%;
+    height: 220px;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.errorText{
+    color:red;
+    margin-left: 20%;
+    font-weight: 400;
+}
+
+.sBorder h3{
+    margin-left: 30%;
+}
+
+.sBorder input{
+    margin-left: 20%;
+}
+
+button{
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 18px 18px 18px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    border-radius: 50%;
+  }
+
+button:hover{
+ color: goldenrod;
+}
+
+button:active{
+    color: black;
+    background-color: gold;
+}
+
+button:disabled{
+    background-color:rgb(71, 71, 71);
+    color: white;
+}
+
+.littleButton{
+    padding: 5px 5px 5px 5px;
+    float: right;
+    margin-right: 2px;
+    margin-bottom: 4px;
+}
+.errorTextSearch{
+    color: red;
+    font-size: 30px;
+    margin-top: 5px;
+}

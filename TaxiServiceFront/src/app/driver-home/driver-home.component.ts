@@ -314,7 +314,7 @@ export class DriverHomeComponent implements OnInit {
     this.showFinish = false;
     this.showSuccessfull = false;
     this.showComment = false;
-    this.showNothing = false;
+    this.showNothing = true;
   }
 
   ChangeLocation(){

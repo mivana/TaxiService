@@ -29,7 +29,7 @@ namespace RentApp.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles ="Driver,Admin")]
+        [Authorize(Roles = "Driver,Admin")]
         [Route("GetFreeRides")]
         [ResponseType(typeof(List<Ride>))]
         public IHttpActionResult GetFreeRides()
@@ -45,7 +45,7 @@ namespace RentApp.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles ="Driver,Admin,AppUser")]
+        [Authorize(Roles = "Driver,Admin,AppUser")]
         [Route("Search")]
         [ResponseType(typeof(List<Ride>))]
         public IHttpActionResult Search(SearchBindingModel model)
@@ -60,134 +60,151 @@ namespace RentApp.Controllers
                 return BadRequest();
 
             List<Ride> results = new List<Ride>();
-            List<Ride> temp = new List<Ride>();
-            List<Ride> tempPrice = new List<Ride>();
 
-            //results = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) < 0 || model.DateFrom == null)
-            //                            .Where(r1 => r1.OrderDT.CompareTo(model.DateTo) > 0 || model.DateTo == null)
-            //                            .Where(r2 => r2.Price >= Double.Parse(model.PriceFrom) || model.PriceFrom == "")
-            //                            .Where(r3 => r3.Price <= Double.Parse(model.PriceTo) || model.PriceTo == "")
-            //                            .Where(r4 => r4.UserComment.First().Rating >= Int32.Parse(model.RatingFrom) || model.RatingFrom == "")
-            //                            .Where(r5 => r5.UserComment.First().Rating <= Int32.Parse(model.RatingTo) || model.RatingTo == "").ToList();
+            switch (user.Role)
+            {
+                case AppUser.UserRole.AppUser:
 
-            user.CustomerRides.Where(r => model.DateFrom == null || r.OrderDT.CompareTo(model.DateFrom) < 0)
-                              .Where(r => model.DateTo == null || r.OrderDT.CompareTo(model.DateTo) > 0)
+                    results = user.CustomerRides.Where(r => model.DateFrom == null || r.OrderDT.Date.CompareTo((DateTime)model.DateFrom.Value.Date) >= 0)
+                              .Where(r => model.DateTo == null || r.OrderDT.Date.CompareTo((DateTime)model.DateTo.Value.Date) <= 0)
                               .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
                               .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
-                              .Where(r => model.RatingFrom == "" || r.Price >= Int32.Parse(model.RatingFrom))
-                              .Where(r => model.RatingTo == "" || r.Price <= Int32.Parse(model.RatingTo)).ToList();
+                              .Where(r => model.RatingFrom == "" || r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
+
+                    break;
+
+                case AppUser.UserRole.Driver:
+                    if (model.SearchFree == true)
+                    {
+                        List<Ride> rides = unitOfWork.Rides.Find(r => r.Status == Status.Created).ToList();
+                        results = rides.Where(r => model.DateFrom == null || r.OrderDT.Date.CompareTo((DateTime)model.DateFrom.Value.Date) >= 0)
+                              .Where(r => model.DateTo == null || r.OrderDT.Date.CompareTo((DateTime)model.DateTo.Value.Date) <= 0)
+                              .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
+                              .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
+                              .Where(r => model.RatingFrom == "" || r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
+                    }
+
+                    if (model.SearchMineD == true)
+                    {
+                        results = user.DriverRides.Where(r => model.DateFrom == null || r.OrderDT.Date.CompareTo((DateTime)model.DateFrom.Value.Date) >= 0)
+                              .Where(r => model.DateTo == null || r.OrderDT.Date.CompareTo((DateTime)model.DateTo.Value.Date) <= 0)
+                              .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
+                              .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
+                              .Where(r => model.RatingFrom == "" || r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
+                    }
+                    break;
+
+                case AppUser.UserRole.Admin:
+                    if (model.SearchAll == true)
+                    {
+                        List<Ride> rides = unitOfWork.Rides.GetAll().ToList();
+                        results = rides.Where(r => model.DateFrom == null || r.OrderDT.Date.CompareTo((DateTime)model.DateFrom.Value.Date) >= 0)
+                              .Where(r => model.DateTo == null || r.OrderDT.Date.CompareTo((DateTime)model.DateTo.Value.Date) <= 0)
+                              .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
+                              .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
+                              .Where(r => model.RatingFrom == "" || r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
+                    }
+
+                    if (model.SearchMine == true)
+                    {
+                        results = user.DispatcherRides.Where(r => model.DateFrom == null || r.OrderDT.Date.CompareTo((DateTime)model.DateFrom.Value.Date) >= 0)
+                              .Where(r => model.DateTo == null || r.OrderDT.Date.CompareTo((DateTime)model.DateTo.Value.Date) <= 0)
+                              .Where(r => model.PriceFrom == "" || r.Price >= double.Parse(model.PriceFrom))
+                              .Where(r => model.PriceTo == "" || r.Price <= double.Parse(model.PriceTo))
+                              .Where(r => model.RatingFrom == "" || r.UserComment.First().Rating >= Int32.Parse(model.RatingFrom))
+                              .Where(r => model.RatingTo == "" || r.UserComment.First().Rating <= Int32.Parse(model.RatingTo)).ToList();
+                    }
+                    break;
+
+            }
+
+            return Ok(results);
+
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [Route("SearchAdmin")]
+        [ResponseType(typeof(List<Ride>))]
+        public IHttpActionResult SearchAdmin(SearchAdminBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
 
-            #region kom
-            //IDEJA: Prvo se radi search po Date, pa po RAting, pa po Price i onda status
-            //switch (user.Role)
-            //{
-            //    case AppUser.UserRole.AppUser:
-            //        //Ako DateFrom i/ili DateTo nisu null
-            //        if (model.RatingFrom == null && model.RatingTo == null && model.PriceFrom == null && model.PriceTo == null)
-            //        {
-            //            if(model.DateFrom != null && model.DateTo != null)
-            //            {
-            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0 && r.OrderDT.CompareTo(model.DateTo) < 0).ToList(); //Ako je = 0, znaci da je to taj dan, < 0 bio, > 0 tek ce biti
-            //            }
-            //            if (model.DateFrom != null && model.DateTo == null)
-            //            {
-            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0).ToList(); //Ako je = 0, znaci da je to taj dan, < 0 bio, > 0 tek ce biti
-            //            }
-            //            if (model.DateFrom == null && model.DateTo != null)
-            //            {
-            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) < 0).ToList(); //Ako je = 0, znaci da je to taj dan, < 0 bio, > 0 tek ce biti
-            //            }
-            //        }
-            //        //Ako PriceFrom i/ili PriceTo nisu null
-            //        if (model.DateFrom == null && model.DateTo == null && model.RatingFrom == null && model.RatingTo == null)
-            //        {
-            //            if(model.PriceFrom != null && model.PriceTo != null)
-            //            {
-            //                double priceFrom = Double.Parse(model.PriceFrom);
-            //                double priceTo = Double.Parse(model.PriceTo);
-            //                temp = user.CustomerRides.Where(r => r.Price >= priceFrom && r.Price <= priceTo).ToList();
-            //            }
-            //            if (model.PriceFrom != null && model.PriceTo == null)
-            //            {
-            //                double priceFrom = Double.Parse(model.PriceFrom);
-            //                temp = user.CustomerRides.Where(r => r.Price >= priceFrom).ToList();
-            //            }
-            //            if (model.PriceFrom == null && model.PriceTo != null)
-            //            {
-            //                double priceTo = Double.Parse(model.PriceTo);
-            //                temp = user.CustomerRides.Where(r => r.Price >= priceTo).ToList();
-            //            }
-            //        }
-            //        //Ako RatingFrom i/ili RatingTo nisu null
-            //        if (model.DateFrom == null && model.DateTo == null && model.PriceFrom == null && model.PriceTo == null)
-            //        {
-            //            if (model.RatingFrom != null && model.RatingFrom != null)
-            //            {
-            //                int ratingFrom = Int32.Parse(model.RatingFrom);
-            //                int ratingTo = Int32.Parse(model.RatingTo);
-            //                temp = user.CustomerRides.Where(r => r.UserComment.First().Rating >= ratingFrom && r.UserComment.First().Rating <= ratingTo).ToList();
-            //            }
-            //            if (model.RatingFrom != null && model.RatingFrom == null)
-            //            {
-            //                int ratingFrom = Int32.Parse(model.RatingFrom);
-            //                temp = user.CustomerRides.Where(r => r.UserComment.First().Rating >= ratingFrom).ToList();
-            //            }
-            //            if (model.RatingFrom == null && model.RatingFrom != null)
-            //            {
-            //                int ratingTo = Int32.Parse(model.RatingTo);
-            //                temp = user.CustomerRides.Where(r => r.UserComment.First().Rating <= ratingTo).ToList();
-            //            }
-            //        }
-            //        //Ako DateFrom i/ili DateTo nisu null i RatingFrom i/ili nisu null
-            //        if (model.PriceFrom == null && model.PriceTo == null)
-            //        {
-            //            if(model.DateFrom != null && model.DateTo != null && model.RatingFrom != null && model.RatingTo != null)
-            //            {
-            //                int ratingFrom = Int32.Parse(model.RatingFrom);
-            //                int ratingTo = Int32.Parse(model.RatingTo);
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+            if (user == null)
+                return BadRequest();
 
-            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0 && r.OrderDT.CompareTo(model.DateTo) < 0 &&
-            //                                                     r.UserComment.First().Rating >= ratingFrom && r.UserComment.First().Rating <= ratingTo).ToList();
-            //            }
-            //            if (model.DateFrom == null && model.DateTo != null && model.RatingFrom != null && model.RatingTo != null)
-            //            {
-            //                int ratingFrom = Int32.Parse(model.RatingFrom);
-            //                int ratingTo = Int32.Parse(model.RatingTo);
+            List<Ride> results = new List<Ride>();
 
-            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0 && r.OrderDT.CompareTo(model.DateTo) < 0 &&
-            //                                                     r.UserComment.First().Rating >= ratingFrom && r.UserComment.First().Rating <= ratingTo).ToList();
-            //            }
-
-            //            if (model.DateFrom != null && model.DateTo != null && model.RatingFrom != null && model.RatingTo != null)
-            //            {
-            //                int ratingFrom = Int32.Parse(model.RatingFrom);
-            //                int ratingTo = Int32.Parse(model.RatingTo);
-
-            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0 && r.OrderDT.CompareTo(model.DateTo) < 0 &&
-            //                                                     r.UserComment.First().Rating >= ratingFrom && r.UserComment.First().Rating <= ratingTo).ToList();
-            //            }
-
-            //            if (model.DateFrom != null && model.DateTo != null && model.RatingFrom != null && model.RatingTo != null)
-            //            {
-            //                int ratingFrom = Int32.Parse(model.RatingFrom);
-            //                int ratingTo = Int32.Parse(model.RatingTo);
-
-            //                temp = user.CustomerRides.Where(r => r.OrderDT.CompareTo(model.DateFrom) > 0 && r.OrderDT.CompareTo(model.DateTo) < 0 &&
-            //                                                     r.UserComment.First().Rating >= ratingFrom && r.UserComment.First().Rating <= ratingTo).ToList();
-            //            }
+            List<Ride> rides = unitOfWork.Rides.GetAll().ToList();
+            results = rides.Where(r => model.DName == "" || r.TaxiDriver != null && r.TaxiDriver.FullName.Contains(model.DName))
+                            .Where(r => model.DSurname == "" || r.TaxiDriver != null && r.TaxiDriver.FullName.Contains(model.DSurname))
+                            .Where(r => model.CName == "" || r.Customer != null && r.Customer.FullName.Contains(model.CName))
+                            .Where(r => model.CSurname == "" || r.Customer != null && r.Customer.FullName.Contains(model.CSurname)).ToList();
 
 
+            return Ok(results);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Driver,Admin,AppUser")]
+        [Route("Sort")]
+        [ResponseType(typeof(List<Ride>))]
+        public IHttpActionResult Sort(SortBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var user = unitOfWork.AppUsers.FirstOrDefault(u => u.Email == User.Identity.Name && u.Deleted == false);
+            if (user == null)
+                return BadRequest();
+
+            List<Ride> results = new List<Ride>();
+            List<Ride> temp = new List<Ride>();
+
+            if (model.SortBy == "Date")
+            {
+                results = model.ResultList.OrderBy(r => r.OrderDT).ToList();
+            }
+            if(model.SortBy == "Rating")
+            {
+                List<Ride> noRatingRides = new List<Ride>();
+                List<Ride> yesRatingRides = new List<Ride>();
+                foreach (Ride r in model.ResultList)
+                {
+                    if(r.UserComment.Count() == 0)
+                    {
+                        noRatingRides.Add(r);
+                    }
+                    else
+                    {
+                        yesRatingRides.Add(r);
+                    }
+                }
+                
+                temp = yesRatingRides.OrderBy(r => r.UserComment.First().Rating).ToList();
+                if (noRatingRides.Count() != 0)
+                {
+                    results = noRatingRides;
+                    results.AddRange(temp);
+                }
+                else
+                {
+                    results = temp;
+                }
 
 
-
-            //        }
-
-
-            //        break;
-
-            //}
-            #endregion
+            }
 
             return Ok(results);
 

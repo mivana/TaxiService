@@ -1,44 +1,160 @@
 <div class="front">
   <h1>Search Rides</h1>
+  <div class="searchBar">
   <form [formGroup]="SearchForm" (ngSubmit)="OnSubmit()">
 
     <table class="searchTable">
       <tr>
         <td>
           <h3>Order Date</h3>
-          <input type="date" formControlName="dateFrom" style="margin-right: 10px;"/>
+          <input type="date" formControlName="dateFrom" style="margin-right: 5px;"/>
           -
-          <input type="date" formControlName="dateTo" style="margin-left: 10px;"/>
+          <input type="date" formControlName="dateTo" style="margin-left: 5px;"/>
         </td>
         <td>
           <h3>Rating</h3>
-          <input type="text" formControlName="ratingFrom" style="margin-right: 10px;"/>
+          <input type="text" formControlName="ratingFrom" style="margin-right: 5px;"/>
           -
-          <input type="text" formControlName="ratingTo" style="margin-left: 10px;"/>
+          <input type="text" formControlName="ratingTo" style="margin-left: 5px;"/>
         </td>
         <td>
           <h3>Price</h3>
-          <input type="text" formControlName="priceFrom" style="margin-right: 10px;"/>
+          <input type="text" formControlName="priceFrom" style="margin-right: 5px;"/>
           -
-          <input type="text" formControlName="priceTo" style="margin-left: 10px;"/>
+          <input type="text" formControlName="priceTo" style="margin-left: 5px;"/>
         </td>
+        <td><button [disabled]="submitted" class="takeButton">SEARCH</button></td>
+        <td class="statuses sBorder">
+          <form [formGroup]="StatusForm" (ngSubmit)="OnSubmitStatus()">
+            <h3>Status Filter</h3>
+              <input type="checkbox" formControlName="created" [checked]="false" value="Created" style="margin-right: 10px;"> Created<br>
+              <input type="checkbox" formControlName="cancelled" [checked]="false" value="Cancelled" style="margin-right: 10px;"> Cancelled<br>
+              <input type="checkbox" formControlName="formed" [checked]="false" value="Formed" style="margin-right: 10px;"> Formed<br>
+              <input type="checkbox" formControlName="proccessed" [checked]="false" value="Proccessed" style="margin-right: 10px;"> Proccessed<br>
+              <input type="checkbox" formControlName="accepted" [checked]="false" value="Accepted" style="margin-right: 10px;"> Accepted<br>
+              <input type="checkbox" formControlName="failed" [checked]="false" value="Failed" style="margin-right: 10px;"> Failed<br>
+              <input type="checkbox" formControlName="successfull" [checked]="false" value="Successfull" style="margin-right: 10px;"> Successfull<br>
+            <div *ngIf="showError" class="errorText">Please place a search first</div>
+          </form>
+        </td>
+      </tr>
+      <tr>
         <td>
-        <h3>Status</h3>
-          <input type="checkbox" formControlName="created" value="Created" style="margin-right: 10px;"> Created<br>
-          <input type="checkbox" formControlName="cancelled" value="Cancelled" style="margin-right: 10px;"> Cancelled<br>
-          <input type="checkbox" formControlName="formed" value="Formed" style="margin-right: 10px;"> Formed<br>
-          <input type="checkbox" formControlName="proccessed" value="Proccessed" style="margin-right: 10px;"> Proccessed<br>
-          <input type="checkbox" formControlName="accepted" value="Accepted" style="margin-right: 10px;"> Accepted<br>
-          <input type="checkbox" formControlName="failed" value="Failed" style="margin-right: 10px;"> Failed<br>
-          <input type="checkbox" formControlName="successfull" value="Successfull" style="margin-right: 10px;"> Successfull<br>
+          <div *ngIf="isAdmin()">
+              <input type="checkbox" formControlName="searchMine" [checked]="false" value="searchMine" style="margin-right: 10px;"> Search Mine Rides
+              <input type="checkbox" formControlName="searchAll" [checked]="true" value="searchAll" style="margin-left: 20px;margin-right: 10px;"> Search All<br>
+          </div>
+          <div *ngIf="isDriver()">
+              <input type="checkbox" formControlName="searchMineD" [checked]="true" value="searchMineD" style="margin-right: 10px;"> Search Mine Rides
+              <input type="checkbox" formControlName="searchFree" [checked]="false" value="searchFree" style="margin-left: 20px;margin-right: 10px;"> Search Created Rides
+          </div>
         </td>
-        <td><button  class="takeButton">SEARCH</button></td>
       </tr>
     </table>
-
   </form>
+  </div>
 
+  <div class="adminSearch" *ngIf="isAdmin()">
+    <h2>Seach Rides by personell</h2>
 
+    <form [formGroup]="SearchAdminForm" (ngSubmit)="OnSubmitAdmin()">
+    <table class="searchTable">
+        <tr>
+          <td>
+            <h3>Driver</h3>
+          </td>
+          <td>
+            <label style="margin-left:-10px;">Name</label>
+              <input type="text" formControlName="dName" style="margin-right: 5px;"/>
+              <label>Surname</label>
+              <input type="text" formControlName="dSurname" style="margin-left: 5px;"/>
+          </td>
+          <td>
+              <h3>Customer</h3>
+            </td>
+            <td>
+              <label  style="margin-left:-10px;">Name</label>
+                <input type="text" formControlName="cName" style="margin-right: 5px;"/>
+                <label>Surname</label>
+                <input type="text" formControlName="cSurname" style="margin-left: 5px;"/>
+            </td>
+            
+          <td><button [disabled]="submitted" class="takeButton">SEARCH</button></td>
+        </tr>
+      </table>
+  </form>   
+  </div>
 
+</div>
 
+<div *ngIf="hasErrorSearch" class="errorTextSearch">Please search first</div>
+
+<div class="result">
+    <table class="ridesTable">
+        <tr class="tRow">
+            <th class="header"><h3>Status</h3></th>
+            <th class="header">
+              <h3>Date Time Booked<button [disabled]="submitted" class="littleButton" (click)="SortDate()">sort</button></h3>
+            </th>
+            <th class="header"><h3>Start Location</h3></th>
+            <th class="header"><h3>Destination Location</h3></th>
+            <th class="header"><h3>Car Type</h3></th>
+            <th class="header"><h3>Customer</h3></th>
+            <th class="header"><h3>Dispatcher</h3></th>
+            <th class="header"><h3>Driver</h3></th>
+            <th class="header"><h3>Comment(Rating)<button [disabled]="submitted" class="littleButton" (click)="SortRating()">sort</button></h3></th>
+            <th class="header"><h3>Price</h3></th>
+        </tr>
+        <tr *ngFor="let ride of resultRides" class="tRow">
+            
+            <td class="statuses">
+                <div *ngIf="ride.Status == 0" style="color: rgb(0, 163, 141);">Created</div>
+                <div *ngIf="ride.Status == 1" style="color: rgb(128, 0, 96);">Cancelled</div>
+                <div *ngIf="ride.Status == 2" style="color: rgb(90, 44, 0);">Formed</div>
+                <div *ngIf="ride.Status == 3" style="color: rgb(0, 2, 128);">Proccessed</div>
+                <div *ngIf="ride.Status == 4" style="color: rgb(0, 0, 0);">Accepted</div>
+                <div *ngIf="ride.Status == 5" style="color: rgb(139, 0, 0);">Failed</div>
+                <div *ngIf="ride.Status == 6" style="color: green;">Successfull</div>
+            </td>
+            
+            <td>{{ride.OrderDT | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+  
+            <td>{{ride.StartLocation.Address.StreetName || ""}} {{ride.StartLocation.Address.Number || ""}} <br/>
+                {{ride.StartLocation.Address.Town || ""}} {{ride.StartLocation.Address.AreaCode || ""}}</td>
+            
+            <td><div *ngIf="ride.DestinationLocation != null">{{ride.DestinationLocation.Address.StreetName || ""}} {{ride.DestinationLocation.Address.Number || ""}} <br/>
+                {{ride.DestinationLocation.Address.Town || ""}} {{ride.DestinationLocation.Address.AreaCode || ""}}</div>
+            <div *ngIf="ride.DestinationLocation == null">No Destination Location</div></td>
+                
+            <td>{{ride.CarType}}</td>
+  
+            <td><div *ngIf="ride.Customer != null">{{ride.Customer.Username || "No Customer"}}</div>
+                <div *ngIf="ride.Customer == null">No Customer</div></td>
+  
+            <td><div *ngIf="ride.Dispatcher != null">{{ride.Dispatcher.Username || "No Dispatcher"}}</div>
+                <div *ngIf="ride.Dispatcher == null">No Dispatcher</div></td>
+  
+            <td><div *ngIf="ride.TaxiDriver != null">{{ride.TaxiDriver.Username || "No Driver"}}</div>
+                <div *ngIf="ride.TaxiDriver == null">No TaxiDriver</div></td>
+            
+            <div *ngIf="ride.UserComment.length == 0">
+                <td>No Comment</td>
+            </div>
+            <div *ngIf="ride.UserComment.length != 0">
+                <td *ngFor="let com of ride.UserComment">
+                    <div *ngIf="com != null">
+                        <div style="font-style: italic; font-weight:500; text-align:left;">{{com.Username}} {{com.DateCreated | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+                        <div style="text-align:right; margin-top: 5px;">{{com.Content || "No Comment"}} ({{com.Rating}})</div>
+                    </div>
+                </td>
+            </div>
+  
+            <td><div *ngIf="ride.Price != null">{{ride.Price || "No Price"}}</div>
+                <div *ngIf="ride.Price == null">No Price</div></td>
+  
+        </tr>
+        <tr *ngIf="resultRides == null">
+              <td colspan="10" class="NoRides">Search result empty</td>
+            </tr>
+        </table>
 </div>

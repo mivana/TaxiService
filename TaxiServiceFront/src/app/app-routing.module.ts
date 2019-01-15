@@ -67,7 +67,7 @@ export const routes: Routes = [
   {
     path: "search",
     component: SearchComponent,
-    canActivate: [AllUsersGuard]
+    canActivate: [AllUsersGuard],
   }
   
 ];

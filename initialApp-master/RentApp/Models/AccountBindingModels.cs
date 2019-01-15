@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using RentApp.Models.Entities;
@@ -235,10 +236,10 @@ namespace RentApp.Models
     public class SearchBindingModel
     {
         [Display(Name = "DateFrom")]
-        public DateTime DateFrom { get; set; }
+        public DateTime? DateFrom { get; set; }
 
         [Display(Name = "DateTo")]
-        public DateTime DateTo { get; set; }
+        public DateTime? DateTo { get; set; }
 
         [Display(Name = "RatingFrom")]
         public string RatingFrom { get; set; }
@@ -252,26 +253,65 @@ namespace RentApp.Models
         [Display(Name = "PriceTo")]
         public string PriceTo { get; set; }
 
-        //[Display(Name = "Created")]
-        //public bool Created { get; set; }
+        [Display(Name = "SearchMine")]
+        public bool? SearchMine { get; set; }
 
-        //[Display(Name = "Cancelled")]
-        //public bool Cancelled { get; set; }
+        [Display(Name = "SearchAll")]
+        public bool? SearchAll { get; set; }
 
-        //[Display(Name = "Formed")]
-        //public bool Formed { get; set; }
+        [Display(Name = "SearchMineD")]
+        public bool? SearchMineD { get; set; }
 
-        //[Display(Name = "Proccessed")]
-        //public bool Proccessed { get; set; }
+        [Display(Name = "SearchFree")]
+        public bool? SearchFree { get; set; }
 
-        //[Display(Name = "Accepted")]
-        //public bool Accepted { get; set; }
 
-        //[Display(Name = "Failed")]
-        //public bool Failed { get; set; }
+        [Display(Name = "Created")]
+        public bool? Created { get; set; }
 
-        //[Display(Name = "Successfull")]
-        //public bool Successfull { get; set; }
+        [Display(Name = "Cancelled")]
+        public bool? Cancelled { get; set; }
+
+        [Display(Name = "Formed")]
+        public bool? Formed { get; set; }
+
+        [Display(Name = "Proccessed")]
+        public bool? Proccessed { get; set; }
+
+        [Display(Name = "Accepted")]
+        public bool? Accepted { get; set; }
+
+        [Display(Name = "Failed")]
+        public bool? Failed { get; set; }
+
+        [Display(Name = "Successfull")]
+        public bool? Successfull { get; set; }
+
+    }
+
+    public class SearchAdminBindingModel
+    {
+        [Display(Name = "DName")]
+        public string DName { get; set; }
+
+        [Display(Name = "DSurname")]
+        public string DSurname { get; set; }
+
+        [Display(Name = "CName")]
+        public string CName { get; set; }
+
+        [Display(Name = "CSurname")]
+        public string CSurname { get; set; }
+
+    }
+
+    public class SortBindingModel
+    {
+        [Display(Name = "SortBy")]
+        public string SortBy { get; set; }
+
+        [Display(Name = "ResultList")]
+        public List<Ride> ResultList { get; set; }
 
     }
 

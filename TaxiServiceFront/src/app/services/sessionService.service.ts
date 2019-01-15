@@ -22,5 +22,9 @@ export class SessionService {
         return localStorage.role != "AppUser" && localStorage.role != "Driver";
     }
 
+    public static isUser():boolean
+    {
+        return localStorage.role == "AppUser";
+    }
     
 }

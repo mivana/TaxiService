@@ -18,6 +18,8 @@ import { AppUserAuthGuard } from '../guards/appUser.guard';
 import { Address } from '../models/Address.model';
 import { Search } from '../models/Search.Model';
 import { AssignDriver } from '../models/AssignDriver.model';
+import { SearchAdmin } from '../models/SearchAdmin.Model';
+import { SortModel } from '../models/Sort.Model';
  
 @Injectable()
 export class UserService {
@@ -111,11 +113,31 @@ export class UserService {
     }
 
     Search(search: Search):Observable<any>{
+        if(search.Created == null)
+            search.Created = false;
+        if(search.Accepted == null)
+            search.Accepted = false;
+        if(search.Proccessed == null)
+            search.Proccessed = false;
+        if(search.Failed == null)
+            search.Failed = false;
+        if(search.Formed == null)
+            search.Formed = false;
+        if(search.Successfull == null)
+            search.Successfull = false;
         return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/Search',search);
+    }
+
+    SearchAdmin(search: SearchAdmin):Observable<any>{
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/SearchAdmin',search);
     }
 
     AssignDriver(assignDriver: AssignDriver, ride: Ride){
         assignDriver.Ride = ride;
         return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/AssignDriver',assignDriver);
+    }
+
+    Sort(sortBy: SortModel):Observable<any>{
+        return this.http.post(AppSettings.API_ENDPOINT + '/api/Ride/Sort',sortBy);
     }
 }
